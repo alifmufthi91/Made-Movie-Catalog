@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MovieCatalogue-MADE-S2</string>
+
+    <string name="tab_text_1">Film</string>
+    <string name="tab_text_2">Serial TV</string>
+    <string name="tab_text_3">Tentang</string>
+    <string name="hello_blank_fragment">Halo kosong</string>
+    <string name="view_detail">Lihat Detail</string>
+    <string name="about_me">Tentang saya</string>
+    <string name="profile_photo">Foto Profile</string>
+    <string name="about_text">Aplikasi ini dibuat untuk memenuhi Modul Submission-2 pada Materi Belajar Menjadi Android Developer Expert \n\nAPI yang digunakan sebagai data pada aplikasi ini adalah \nhttps://api.themoviedb.org/</string>
+    <string name="about_email">alif.stinky@gmail.com</string>
+    <string name="about_name">Alif Mufthi</string>
+    <string name="change_language">Ganti Bahasa</string>
+    <string name="show_title">Judul</string>
+    <string name="show_overview">Sinopsis</string>
+    <string name="show_release_date">Tanggal Rilis</string>
+    <string name="show_popularity">Popularitas</string>
+    <string name="of_10"> dari 10</string>
+    <string name="rating">NILAI</string>
+    <string name="popularity">POPULARITAS</string>
+    <string name="voter">PENILAI</string>
+</resources>

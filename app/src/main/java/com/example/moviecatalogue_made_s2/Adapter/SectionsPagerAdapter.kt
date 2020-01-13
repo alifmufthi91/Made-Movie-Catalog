@@ -1,18 +1,27 @@
-package com.example.moviecatalogue_made_s2
+package com.example.moviecatalogue_made_s2.Adapter
 
 import android.content.Context
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+import com.example.moviecatalogue_made_s2.R
+import com.example.moviecatalogue_made_s2.ui.Fragment.AboutFragment
+import com.example.moviecatalogue_made_s2.ui.Fragment.ListFragment
 
 class SectionsPagerAdapter(private val mContext: Context, fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val TAB_TITLES = intArrayOf(
         R.string.tab_text_1,
-        R.string.tab_text_2)
+        R.string.tab_text_2,
+        R.string.tab_text_3
+    )
+
     override fun getItem(position: Int): Fragment {
-        val fragment = ListFragment.newListPage(position + 1)
+        var fragment:Fragment
+        fragment = when(position){
+            2 -> AboutFragment()
+            else -> ListFragment.newListPage(position + 1)
+        }
         return fragment
     }
 
@@ -22,7 +31,7 @@ class SectionsPagerAdapter(private val mContext: Context, fm: FragmentManager) :
     }
 
     override fun getCount(): Int {
-        return 2
+        return 3
     }
 
 }
