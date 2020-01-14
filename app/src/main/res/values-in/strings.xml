@@ -21,4 +21,6 @@
     <string name="rating">NILAI</string>
     <string name="popularity">POPULARITAS</string>
     <string name="voter">PENILAI</string>
+    <string name="show_cover">Cover Acara</string>
+    <string name="overview_list">%1$s…</string>
 </resources>

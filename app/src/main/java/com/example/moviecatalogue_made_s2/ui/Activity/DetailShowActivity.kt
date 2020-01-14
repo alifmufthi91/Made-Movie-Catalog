@@ -13,16 +13,11 @@ class DetailShowActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_show)
         val show = intent.getParcelableExtra<Show>("detailShow")
-        setSupportActionBar(toolbar)
-        collapsingToolBar.title = show?.name
-//        collapsingToolBar.setCollapsedTitleTextColor(
-//            ContextCompat.getColor(this, R.color.colorAccent))
-        collapsingToolBar.setExpandedTitleTextAppearance(R.style.CollapsingToolbarLayoutExpandedTextStyle)
         displayShowData(show)
     }
 
     private fun displayShowData(show: Show?){
-        Glide.with(applicationContext).load(show?.getLandscapePhoto()).into(collapsed_image)
+        Glide.with(applicationContext).load(show?.getLandscapePhoto()).into(show_cover)
         tv_movie_title.text = show?.name
         tv_movie_overview.text = show?.overview
         tv_movie_release.text = show?.aired_date

@@ -9,7 +9,7 @@
         android:layout_margin="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rectshape"
+        android:background="@drawable/rectangle_with_radius"
         android:orientation="vertical"
         android:backgroundTint="@color/colorPrimaryDark">
         <TextView

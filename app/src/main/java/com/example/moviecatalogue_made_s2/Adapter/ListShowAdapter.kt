@@ -1,6 +1,7 @@
 package com.example.moviecatalogue_made_s2.Adapter
 
 import android.content.Intent
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,9 +30,12 @@ class ListShowAdapter(private val listShow: ArrayList<Show>) : RecyclerView.Adap
                 com.bumptech.glide.Glide.with(itemView.context)
                     .load(show.getPortraitPhoto())
                     .into(img_item_photo)
-                tv_item_name.text = show.name?.substring(0, Math.min(show.name!!.length, 50))
-                val overview = show.overview?.substring(0, Math.min(show.overview!!.length, 120))+"..."
-                tv_item_overview.text = overview
+                show.name?.let {
+                    tv_item_name.text = show.name?.substring(0, it.length.coerceAtMost(50))
+                }
+                show.overview?.let {
+                    tv_item_overview.text = context.getString(R.string.overview_list,show.overview?.substring(0, it.length.coerceAtMost(120)))
+                }
 
                 itemView.setOnClickListener {
                     val detailIntent = Intent(context,

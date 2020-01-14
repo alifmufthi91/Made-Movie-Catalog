@@ -17,12 +17,10 @@ class SectionsPagerAdapter(private val mContext: Context, fm: FragmentManager) :
     )
 
     override fun getItem(position: Int): Fragment {
-        var fragment:Fragment
-        fragment = when(position){
+        return when(position){
             2 -> AboutFragment()
             else -> ListFragment.newListPage(position + 1)
         }
-        return fragment
     }
 
     @Nullable

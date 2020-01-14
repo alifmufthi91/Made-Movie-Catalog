@@ -21,4 +21,6 @@ This application was created to meet the Submission-2 Module on Learning Materia
     <string name="rating">RATING</string>
     <string name="popularity">POPULARITY</string>
     <string name="voter">VOTER</string>
+    <string name="show_cover">Show Cover</string>
+    <string name="overview_list">%1$s…</string>
 </resources>
