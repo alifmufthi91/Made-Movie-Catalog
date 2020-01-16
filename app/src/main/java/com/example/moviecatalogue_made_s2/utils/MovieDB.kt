@@ -1,6 +1,6 @@
-package com.example.moviecatalogue_made_s2.Utils
+package com.example.moviecatalogue_made_s2.utils
 
-import com.example.moviecatalogue_made_s2.Model.ShowList
+import com.example.moviecatalogue_made_s2.model.ShowList
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

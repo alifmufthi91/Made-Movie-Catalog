@@ -1,10 +1,10 @@
-package com.example.moviecatalogue_made_s2.ui.Activity
+package com.example.moviecatalogue_made_s2.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.moviecatalogue_made_s2.Model.Show
 import com.example.moviecatalogue_made_s2.R
+import com.example.moviecatalogue_made_s2.model.Show
 import kotlinx.android.synthetic.main.activity_detail_show.*
 
 class DetailShowActivity : AppCompatActivity() {
@@ -14,9 +14,12 @@ class DetailShowActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail_show)
         val show = intent.getParcelableExtra<Show>("detailShow")
         displayShowData(show)
+        ib_back_button.setOnClickListener {
+            onBackPressed()
+        }
     }
 
-    private fun displayShowData(show: Show?){
+    private fun displayShowData(show: Show?) {
         Glide.with(applicationContext).load(show?.getLandscapePhoto()).into(show_cover)
         tv_movie_title.text = show?.name
         tv_movie_overview.text = show?.overview

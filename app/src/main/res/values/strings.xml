@@ -4,7 +4,6 @@
     <string name="tab_text_1">Movie</string>
     <string name="tab_text_2">TV Show</string>
     <string name="tab_text_3">About</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="view_detail">View Detail</string>
     <string name="about_me">About me</string>
     <string name="profile_photo">Profile Photo</string>
@@ -16,11 +15,11 @@ This application was created to meet the Submission-2 Module on Learning Materia
     <string name="show_title">Title</string>
     <string name="show_overview">Overview</string>
     <string name="show_release_date">Release Date</string>
-    <string name="show_popularity">Popularity</string>
-    <string name="of_10"> of 10</string>
     <string name="rating">RATING</string>
     <string name="popularity">POPULARITY</string>
     <string name="voter">VOTER</string>
     <string name="show_cover">Show Cover</string>
     <string name="overview_list">%1$s…</string>
+    <string name="rate_placeholder">Rate Placeholder</string>
+    <string name="list_item_photo">List Item Photo</string>
 </resources>

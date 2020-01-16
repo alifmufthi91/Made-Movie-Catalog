@@ -5,7 +5,6 @@
     <string name="tab_text_1">Film</string>
     <string name="tab_text_2">Serial TV</string>
     <string name="tab_text_3">Tentang</string>
-    <string name="hello_blank_fragment">Halo kosong</string>
     <string name="view_detail">Lihat Detail</string>
     <string name="about_me">Tentang saya</string>
     <string name="profile_photo">Foto Profile</string>
@@ -16,11 +15,11 @@
     <string name="show_title">Judul</string>
     <string name="show_overview">Sinopsis</string>
     <string name="show_release_date">Tanggal Rilis</string>
-    <string name="show_popularity">Popularitas</string>
-    <string name="of_10"> dari 10</string>
     <string name="rating">NILAI</string>
     <string name="popularity">POPULARITAS</string>
     <string name="voter">PENILAI</string>
     <string name="show_cover">Cover Acara</string>
     <string name="overview_list">%1$s…</string>
+    <string name="rate_placeholder">Tempat Nilai</string>
+    <string name="list_item_photo">Foto Datum List</string>
 </resources>

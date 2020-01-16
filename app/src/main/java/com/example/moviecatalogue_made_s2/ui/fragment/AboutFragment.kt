@@ -1,11 +1,11 @@
-package com.example.moviecatalogue_made_s2.ui.Fragment
+package com.example.moviecatalogue_made_s2.ui.fragment
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.moviecatalogue_made_s2.R
 import kotlinx.android.synthetic.main.fragment_about.*
