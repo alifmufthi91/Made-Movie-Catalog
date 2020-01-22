@@ -10,8 +10,16 @@ import com.example.moviecatalogue_made_s2.model.Show
 import com.example.moviecatalogue_made_s2.ui.activity.DetailShowActivity
 import kotlinx.android.synthetic.main.item_show.view.*
 
-class ListShowAdapter(private val listShow: ArrayList<Show>) :
+class ListShowAdapter :
     RecyclerView.Adapter<ListShowAdapter.ListViewHolder>() {
+
+    private val listShow = ArrayList<Show>()
+
+    fun setData(items: ArrayList<Show>) {
+        listShow.clear()
+        listShow.addAll(items)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_show, parent, false)

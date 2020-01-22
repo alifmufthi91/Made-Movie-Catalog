@@ -7,7 +7,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.example.moviecatalogue_made_s2.R
 import com.example.moviecatalogue_made_s2.ui.fragment.AboutFragment
-import com.example.moviecatalogue_made_s2.ui.fragment.ListFragment
+import com.example.moviecatalogue_made_s2.ui.fragment.MovieFragment
+import com.example.moviecatalogue_made_s2.ui.fragment.TvFragment
 
 class SectionsPagerAdapter(private val mContext: Context, fm: FragmentManager) :
     FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -20,7 +21,8 @@ class SectionsPagerAdapter(private val mContext: Context, fm: FragmentManager) :
     override fun getItem(position: Int): Fragment {
         return when (position) {
             2 -> AboutFragment()
-            else -> ListFragment.newListPage(position + 1)
+            1 -> TvFragment()
+            else -> MovieFragment()
         }
     }
 
