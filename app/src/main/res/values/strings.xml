@@ -1,26 +1,28 @@
 <resources>
-    <string name="app_name">MovieCatalogue-MADE-S2</string>
+    <string name="app_name">MovieCatalogue-MADE</string>
 
     <string name="tab_text_1">Movie</string>
     <string name="tab_text_2">TV Show</string>
     <string name="tab_text_3">About</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="view_detail">View Detail</string>
     <string name="about_me">About me</string>
     <string name="profile_photo">Profile Photo</string>
     <string name="about_text">
-This application was created to meet the Submission-2 Module on Learning Materials to Become an Android Developer Expert \n \nAPI used as data source in this application is \nhttps://api.themoviedb.org/</string>
+This application was created to meet the Module on Learning Materials to Become an Android Developer Expert \n \nAPI used as data source in this application is \nhttps://api.themoviedb.org/</string>
     <string name="about_email">alif.stinky@gmail.com</string>
     <string name="about_name">Alif Mufthi</string>
     <string name="change_language">Change Language</string>
     <string name="show_title">Title</string>
     <string name="show_overview">Overview</string>
     <string name="show_release_date">Release Date</string>
-    <string name="show_popularity">Popularity</string>
-    <string name="of_10"> of 10</string>
     <string name="rating">RATING</string>
     <string name="popularity">POPULARITY</string>
     <string name="voter">VOTER</string>
     <string name="show_cover">Show Cover</string>
     <string name="overview_list">%1$s…</string>
+    <string name="rate_placeholder">Rate Placeholder</string>
+    <string name="list_item_photo">List Item Photo</string>
+    <string name="favorites">Favorites</string>
+    <string name="add_favorite"> %1$s is added to Favorites</string>
+    <string name="delete_favorite"> %1$s is removed from Favorites</string>
 </resources>

@@ -2,173 +2,169 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:paddingBottom="32dp">
-
-    <ImageView
-        android:id="@+id/show_cover"
-        android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:fitsSystemWindows="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_launcher_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/show_cover" />
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        app:layout_constraintTop_toBottomOf="@id/show_cover"
-        app:layout_constraintBottom_toBottomOf="@id/show_cover"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/show_info"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:orientation="horizontal"
-        android:background="@drawable/rectangle_with_radius"
-        android:backgroundTint="@color/colorAccent"
-        android:padding="8dp">
+        android:paddingBottom="32dp">
+
+        <ImageView
+            android:id="@+id/show_cover"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:contentDescription="@string/show_cover"
+            android:fitsSystemWindows="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/ib_back_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_keyboard_arrow_left"/>
+
+        <ImageButton
+            android:id="@+id/ib_favorites"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_favorite_border"/>
+
+        <ImageView
+            android:id="@+id/iv_rate_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/rectangle_with_radius"
+            android:contentDescription="@string/rate_placeholder"
+            app:layout_constraintBottom_toBottomOf="@id/show_cover"
+            app:layout_constraintTop_toBottomOf="@id/show_cover" />
 
         <TextView
             android:id="@+id/tv_movie_rating"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_rate_placeholder"
             app:layout_constraintEnd_toStartOf="@id/tv_movie_popularity"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
-            android:textSize="24sp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_rate_placeholder" />
+
         <TextView
-            android:layout_centerHorizontal="true"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_rating"
-            app:layout_constraintStart_toStartOf="@id/tv_movie_rating"
-            app:layout_constraintEnd_toEndOf="@id/tv_movie_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/rating"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/rating"/>
+            app:layout_constraintEnd_toEndOf="@id/tv_movie_rating"
+            app:layout_constraintStart_toStartOf="@id/tv_movie_rating"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_rating" />
+
         <TextView
             android:id="@+id/tv_movie_popularity"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_movie_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_rate_placeholder"
             app:layout_constraintEnd_toStartOf="@id/tv_movie_voter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
-            android:textSize="24sp"/>
+            app:layout_constraintStart_toEndOf="@id/tv_movie_rating"
+            app:layout_constraintTop_toTopOf="@id/iv_rate_placeholder" />
+
         <TextView
-            android:layout_below="@id/tv_movie_popularity"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_popularity"
-            app:layout_constraintStart_toStartOf="@id/tv_movie_popularity"
-            app:layout_constraintEnd_toEndOf="@id/tv_movie_popularity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tv_movie_popularity"
             android:text="@string/popularity"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/tv_movie_popularity"
+            app:layout_constraintStart_toStartOf="@id/tv_movie_popularity"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_popularity" />
+
         <TextView
             android:id="@+id/tv_movie_voter"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_movie_popularity"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
             android:textSize="24sp"
-            />
+            app:layout_constraintBottom_toBottomOf="@id/iv_rate_placeholder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_movie_popularity"
+            app:layout_constraintTop_toTopOf="@id/iv_rate_placeholder" />
+
         <TextView
-            android:layout_below="@id/tv_movie_voter"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_voter"
-            app:layout_constraintStart_toStartOf="@id/tv_movie_voter"
-            app:layout_constraintEnd_toEndOf="@id/tv_movie_voter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tv_movie_voter"
             android:text="@string/voter"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/tv_movie_voter"
+            app:layout_constraintStart_toStartOf="@id/tv_movie_voter"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_voter" />
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@drawable/rectangle_with_radius"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintTop_toBottomOf="@id/show_info">
 
         <TextView
             android:id="@+id/tv_movie_title"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/tv_overview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="16dp"
             android:text="@string/show_title"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_overview"
+            app:layout_constraintTop_toBottomOf="@id/iv_rate_placeholder" />
 
         <TextView
             android:id="@+id/tv_overview"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_title"
-            app:layout_constraintBottom_toTopOf="@id/tv_movie_overview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
             android:text="@string/show_overview"
             android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_title" />
 
         <TextView
             android:id="@+id/tv_movie_overview"
-            app:layout_constraintTop_toBottomOf="@id/tv_overview"
-            app:layout_constraintBottom_toTopOf="@id/tv_release"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
-            android:text="" />
+            app:layout_constraintTop_toBottomOf="@id/tv_overview" />
 
         <TextView
             android:id="@+id/tv_release"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_overview"
-            app:layout_constraintBottom_toTopOf="@id/tv_movie_release"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
             android:text="@string/show_release_date"
             android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_overview" />
 
         <TextView
             android:id="@+id/tv_movie_release"
-            app:layout_constraintTop_toBottomOf="@id/tv_release"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
-            android:text="" />
-
+            android:text=""
+            app:layout_constraintTop_toBottomOf="@id/tv_release" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

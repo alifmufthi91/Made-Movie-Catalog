@@ -3,15 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.Fragment.AboutFragment">
+    tools:context=".ui.fragment.AboutFragment">
 
     <LinearLayout
-        android:layout_margin="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="32dp"
         android:background="@drawable/rectangle_with_radius"
-        android:orientation="vertical"
-        android:backgroundTint="@color/colorPrimaryDark">
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,35 +20,39 @@
             android:text="@string/about_me"
             android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
+
         <de.hdodenhof.circleimageview.CircleImageView
-            android:contentDescription="@string/profile_photo"
+            android:id="@+id/about_img"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:id="@+id/about_img"
-            android:src="@drawable/ic_launcher_background"/>
+            android:contentDescription="@string/profile_photo"
+            android:src="@drawable/ic_launcher_background" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
-            android:textAlignment="center"
             android:text="@string/about_name"
-            android:textSize="32sp"/>
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="32sp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:textColor="@android:color/white"
+            android:text="@string/about_email"
             android:textAlignment="center"
-            android:text="@string/about_email"/>
+            android:textColor="@android:color/white" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="24dp"
-            android:textColor="@android:color/white"
+            android:text="@string/about_text"
             android:textAlignment="center"
-            android:text="@string/about_text"/>
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </FrameLayout>

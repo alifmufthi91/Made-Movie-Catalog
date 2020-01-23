@@ -1,4 +1,4 @@
-package com.example.moviecatalogue_made_s2.Adapter
+package com.example.moviecatalogue_made_s2.adapter
 
 import android.content.Context
 import androidx.annotation.Nullable
@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.example.moviecatalogue_made_s2.R
-import com.example.moviecatalogue_made_s2.ui.Fragment.AboutFragment
-import com.example.moviecatalogue_made_s2.ui.Fragment.ListFragment
+import com.example.moviecatalogue_made_s2.ui.fragment.AboutFragment
+import com.example.moviecatalogue_made_s2.ui.fragment.MovieFragment
+import com.example.moviecatalogue_made_s2.ui.fragment.TvFragment
 
-class SectionsPagerAdapter(private val mContext: Context, fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class SectionsPagerAdapter(private val mContext: Context, fm: FragmentManager) :
+    FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val TAB_TITLES = intArrayOf(
         R.string.tab_text_1,
         R.string.tab_text_2,
@@ -17,9 +19,10 @@ class SectionsPagerAdapter(private val mContext: Context, fm: FragmentManager) :
     )
 
     override fun getItem(position: Int): Fragment {
-        return when(position){
+        return when (position) {
             2 -> AboutFragment()
-            else -> ListFragment.newListPage(position + 1)
+            1 -> TvFragment()
+            else -> MovieFragment()
         }
     }
 
