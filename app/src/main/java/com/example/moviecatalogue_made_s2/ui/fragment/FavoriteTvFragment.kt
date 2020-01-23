@@ -1,32 +1,33 @@
 package com.example.moviecatalogue_made_s2.ui.fragment
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviecatalogue_made_s2.R
 import com.example.moviecatalogue_made_s2.adapter.ListShowAdapter
+import com.example.moviecatalogue_made_s2.db.FavoritesHelper
+import com.example.moviecatalogue_made_s2.model.Show
+import com.example.moviecatalogue_made_s2.ui.activity.DetailShowActivity
+import com.example.moviecatalogue_made_s2.ui.activity.DetailShowActivity.Companion.EXTRA_POSITION
+import com.example.moviecatalogue_made_s2.ui.fragment.TvFragment.Companion.SHOW_TV
 import com.example.moviecatalogue_made_s2.ui.viewmodel.ListViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
-
 
 /**
  * A simple [Fragment] subclass.
  */
-class TvFragment : Fragment() {
+class FavoriteTvFragment : Fragment() {
 
     private lateinit var listShowAdapter: ListShowAdapter
     private lateinit var listViewModel: ListViewModel
-
-    companion object {
-        const val SHOW_TV = "Tv"
-    }
+    private lateinit var listShows: ArrayList<Show>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,15 +40,13 @@ class TvFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         showRecyclerList()
         Log.d("listCategory", SHOW_TV)
-        listViewModel.setShows(SHOW_TV)
-        listViewModel.getShows(SHOW_TV).observe(this, Observer { Shows ->
-            if (Shows != null) {
-                listShowAdapter.setData(Shows)
-            }
-        })
 
+        val favoritesHelper = FavoritesHelper.getInstance(activity!!.applicationContext)
+        favoritesHelper.open()
+        listShows = favoritesHelper.getDataByShowType(SHOW_TV)
+        favoritesHelper.close()
+        listShowAdapter.setData(listShows)
     }
-
 
     private fun showRecyclerList() {
         listShowAdapter = ListShowAdapter(this, SHOW_TV)
@@ -62,5 +61,15 @@ class TvFragment : Fragment() {
         )
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null) {
+            if (resultCode == DetailShowActivity.RESULT_REMOVED) {
+                val position = data.getIntExtra(EXTRA_POSITION, 0)
+                listShowAdapter.removeItem(position)
+            }
+        }
+    }
 
 }

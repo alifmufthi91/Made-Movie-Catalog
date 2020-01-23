@@ -24,6 +24,10 @@ class MovieFragment : Fragment() {
     private lateinit var listShowAdapter: ListShowAdapter
     private lateinit var listViewModel: ListViewModel
 
+    companion object {
+        const val SHOW_MOVIE = "Movie"
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +39,10 @@ class MovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showRecyclerList()
-        Log.d("listCategory", "movie")
-        listViewModel.setShows("movie")
-        listViewModel.getShows("movie").observe(this, Observer { Shows ->
-            if(Shows != null) {
+        Log.d("listCategory", SHOW_MOVIE)
+        listViewModel.setShows(SHOW_MOVIE)
+        listViewModel.getShows(SHOW_MOVIE).observe(this, Observer { Shows ->
+            if (Shows != null) {
                 listShowAdapter.setData(Shows)
             }
         })
@@ -47,12 +51,16 @@ class MovieFragment : Fragment() {
 
 
     private fun showRecyclerList() {
-        listShowAdapter = ListShowAdapter()
+        listShowAdapter = ListShowAdapter(this, SHOW_MOVIE)
         listShowAdapter.notifyDataSetChanged()
         rv_shows.layoutManager = LinearLayoutManager(activity)
         rv_shows.adapter = listShowAdapter
-        listViewModel = ViewModelProvider(activity!!.viewModelStore, ViewModelProvider.NewInstanceFactory()).get(
-            ListViewModel::class.java)
+        listViewModel = ViewModelProvider(
+            activity!!.viewModelStore,
+            ViewModelProvider.NewInstanceFactory()
+        ).get(
+            ListViewModel::class.java
+        )
     }
 
 
