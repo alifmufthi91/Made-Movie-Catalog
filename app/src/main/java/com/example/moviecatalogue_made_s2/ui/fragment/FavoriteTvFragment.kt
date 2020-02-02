@@ -28,6 +28,7 @@ class FavoriteTvFragment : Fragment() {
     private lateinit var listShowAdapter: ListShowAdapter
     private lateinit var listViewModel: ListViewModel
     private lateinit var listShows: ArrayList<Show>
+    private lateinit var favoritesHelper: FavoritesHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,11 +42,15 @@ class FavoriteTvFragment : Fragment() {
         showRecyclerList()
         Log.d("listCategory", SHOW_TV)
 
-        val favoritesHelper = FavoritesHelper.getInstance(activity!!.applicationContext)
+        favoritesHelper = FavoritesHelper.getInstance(activity!!.applicationContext)
         favoritesHelper.open()
         listShows = favoritesHelper.getDataByShowType(SHOW_TV)
-        favoritesHelper.close()
         listShowAdapter.setData(listShows)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        favoritesHelper.close()
     }
 
     private fun showRecyclerList() {

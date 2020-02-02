@@ -1,9 +1,9 @@
-package com.example.moviecatalogue_made_s2.db
+package com.example.favoritesmovie.db
 
 import android.net.Uri
 import android.provider.BaseColumns
-import com.example.moviecatalogue_made_s2.ui.fragment.MovieFragment.Companion.SHOW_MOVIE
-import com.example.moviecatalogue_made_s2.ui.fragment.TvFragment.Companion.SHOW_TV
+import com.example.favoritesmovie.ui.fragment.FavoriteMovieFragment.Companion.SHOW_MOVIE
+import com.example.favoritesmovie.ui.fragment.FavoriteTvFragment.Companion.SHOW_TV
 
 object DatabaseContract {
 

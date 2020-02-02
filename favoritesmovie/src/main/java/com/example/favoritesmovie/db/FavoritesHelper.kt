@@ -1,4 +1,4 @@
-package com.example.moviecatalogue_made_s2.db
+package com.example.favoritesmovie.db
 
 import android.content.ContentValues
 import android.content.Context
@@ -7,18 +7,19 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
-import com.example.moviecatalogue_made_s2.db.DatabaseContract.FavoritesColumns.Companion.DESCRIPTION
-import com.example.moviecatalogue_made_s2.db.DatabaseContract.FavoritesColumns.Companion.MOVIEDB_ID
-import com.example.moviecatalogue_made_s2.db.DatabaseContract.FavoritesColumns.Companion.NAME
-import com.example.moviecatalogue_made_s2.db.DatabaseContract.FavoritesColumns.Companion.POSTER
-import com.example.moviecatalogue_made_s2.db.DatabaseContract.FavoritesColumns.Companion.SHOW_TYPE
-import com.example.moviecatalogue_made_s2.db.DatabaseContract.FavoritesColumns.Companion.TABLE_NAME
-import com.example.moviecatalogue_made_s2.model.Show
+import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.DESCRIPTION
+import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.MOVIEDB_ID
+import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.NAME
+import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.POSTER
+import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.SHOW_TYPE
+import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.TABLE_NAME
+import com.example.favoritesmovie.model.Show
 import java.sql.SQLException
 
 class FavoritesHelper(context: Context) {
 
     companion object {
+        private val TAG = FavoritesHelper::class.java.simpleName
         private const val DATABASE_TABLE = TABLE_NAME
         private lateinit var dataBaseHelper: DatabaseHelper
         private var INSTANCE: FavoritesHelper? = null
@@ -42,10 +43,13 @@ class FavoritesHelper(context: Context) {
 
     @Throws(SQLException::class)
     fun open() {
+        Log.d(TAG, "Open()")
         database = dataBaseHelper.writableDatabase
+        Log.d(TAG, "Database is ${database.isOpen}")
     }
 
     fun close() {
+        Log.d(TAG, "Close()")
         dataBaseHelper.close()
         if (database.isOpen)
             database.close()
@@ -74,7 +78,6 @@ class FavoritesHelper(context: Context) {
     }
 
     fun queryByShowType(showType: String): Cursor {
-
         return database.query(
             TABLE_NAME,
             null,
@@ -96,7 +99,8 @@ class FavoritesHelper(context: Context) {
             null,
             null,
             null,
-            null)
+            null
+        )
     }
 
     fun getDataByShowType(showType: String): ArrayList<Show> {
@@ -140,6 +144,16 @@ class FavoritesHelper(context: Context) {
             null
         )
         cursor.moveToFirst()
+        var show: Show
+        if (cursor.count > 0) {
+            do {
+                show = Show()
+                show.movieDbId = cursor.getString(cursor.getColumnIndexOrThrow(MOVIEDB_ID)).toLong()
+                show.name = cursor.getString(cursor.getColumnIndexOrThrow(NAME))
+                Log.d("favorited", "${show.name} as  ${show.movieDbId}")
+                cursor.moveToNext()
+            } while (!cursor.isAfterLast)
+        }
         val isFavorited = cursor.count > 0
         cursor.close()
         return isFavorited
@@ -169,7 +183,6 @@ class FavoritesHelper(context: Context) {
         Log.d("delete movie id: ", id)
         return database.delete(DATABASE_TABLE, "$MOVIEDB_ID = '$id'", null)
     }
-
 
 
     fun insertTransaction(show: Show, showType: String) {
