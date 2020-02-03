@@ -25,4 +25,6 @@ class FavoritesActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.favorites)
     }
 
+    
+
 }

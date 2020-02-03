@@ -1,19 +1,22 @@
 package com.example.favoritesmovie.ui.activity
 
-import android.content.Intent
+import android.content.ContentValues
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.favoritesmovie.BuildConfig
 import com.example.favoritesmovie.R
-import com.example.favoritesmovie.db.FavoritesHelper
+import com.example.favoritesmovie.db.DatabaseContract
+import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_MOVIE_URI
+import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_TV_URI
 import com.example.favoritesmovie.model.Show
 import com.example.favoritesmovie.ui.fragment.FavoriteMovieFragment.Companion.SHOW_MOVIE
 import com.example.favoritesmovie.utils.MovieDB
-
 import kotlinx.android.synthetic.main.activity_detail_show.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -25,6 +28,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class DetailShowActivity : AppCompatActivity() {
+
+    private lateinit var builder : AlertDialog
 
     private var favorited = false
     private var position: Int = 0
@@ -45,11 +50,18 @@ class DetailShowActivity : AppCompatActivity() {
         showData = intent.getParcelableExtra<Show>(DETAIL_SHOW) as Show
         showType = intent.getStringExtra(EXTRA_TYPE) as String
 
+        builder = AlertDialog.Builder(this)
+            .setTitle(R.string.dialog_title_failed_execute)
+            .setMessage(R.string.dialog_text)
+            .setNegativeButton("OK") { _, _ ->
+                finish()
+            }
+            .setCancelable(false)
+            .create()
+
         getShowInfo(showData.movieDbId.toInt())
         Log.d("show type", showType)
         position = intent.getIntExtra(EXTRA_POSITION, 0)
-        val favoritesHelper = FavoritesHelper.getInstance(applicationContext)
-
 
         favorited = true
 
@@ -59,11 +71,17 @@ class DetailShowActivity : AppCompatActivity() {
         }
         ib_favorites.setOnClickListener {
             try {
-                favoritesHelper.open()
-                favoritesHelper.beginTransaction()
                 if (favorited) {
-                    favoritesHelper.deleteById(showData.movieDbId.toString())
-                    favoritesHelper.setTransactionSuccess()
+                    when (showType){
+                        SHOW_MOVIE -> {
+                            val uriWithId = Uri.parse(CONTENT_MOVIE_URI.toString() + "/" + showData.movieDbId)
+                            contentResolver.delete(uriWithId, null, null)
+                        }
+                        else -> {
+                            val uriWithId = Uri.parse(CONTENT_TV_URI.toString() + "/" + showData.movieDbId)
+                            contentResolver.delete(uriWithId, null, null)
+                        }
+                    }
                     setFavorite(false)
                     Toast.makeText(
                         applicationContext,
@@ -71,8 +89,10 @@ class DetailShowActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    favoritesHelper.insertTransaction(showData, showType)
-                    favoritesHelper.setTransactionSuccess()
+                    when (showType){
+                        SHOW_MOVIE -> contentResolver.insert(CONTENT_MOVIE_URI, setValues(showData, showType))
+                        else -> contentResolver.insert(CONTENT_TV_URI, setValues(showData, showType))
+                    }
                     setFavorite(true)
                     Toast.makeText(
                         applicationContext,
@@ -82,9 +102,7 @@ class DetailShowActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-            } finally {
-                favoritesHelper.endTransaction()
-                favoritesHelper.close()
+                showWarningDialog()
             }
         }
     }
@@ -95,6 +113,14 @@ class DetailShowActivity : AppCompatActivity() {
         tv_movie_overview.text = show?.overview
         displayShowInfo(show)
         setFavorite(favorited)
+    }
+
+    private fun showWarningDialog(){
+        if (!builder.isShowing){
+            this.runOnUiThread {
+                builder.show()
+            }
+        }
     }
 
     private fun displayShowInfo(show: Show?) {
@@ -124,20 +150,20 @@ class DetailShowActivity : AppCompatActivity() {
     private fun setFavorite(favorited: Boolean) {
         this.favorited = favorited
         if (favorited) {
-            ib_favorites.background = resources.getDrawable(R.drawable.ic_favorite)
+            ib_favorites.background = resources.getDrawable(R.drawable.ic_favorite, null)
         } else {
-            ib_favorites.background = resources.getDrawable(R.drawable.ic_favorite_border)
+            ib_favorites.background = resources.getDrawable(R.drawable.ic_favorite_border, null)
         }
     }
 
-    override fun onBackPressed() {
-        if (!favorited) {
-            val intent = Intent()
-            intent.putExtra(EXTRA_POSITION, position)
-            setResult(RESULT_REMOVED, intent)
-        }
-        finish()
-        super.onBackPressed()
+    private fun setValues(show: Show, showType: String) : ContentValues {
+        val values = ContentValues()
+        values.put(DatabaseContract.FavoritesColumns.NAME,show.name)
+        values.put(DatabaseContract.FavoritesColumns.DESCRIPTION,show.overview)
+        values.put(DatabaseContract.FavoritesColumns.MOVIEDB_ID, show.movieDbId.toString())
+        values.put(DatabaseContract.FavoritesColumns.POSTER, show.imgPath)
+        values.put(DatabaseContract.FavoritesColumns.SHOW_TYPE, showType)
+        return values
     }
 
     private fun getShowInfo(showId: Int) {

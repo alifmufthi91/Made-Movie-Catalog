@@ -30,6 +30,10 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
         notifyDataSetChanged()
     }
 
+    fun getData(): ArrayList<Show>{
+        return listShow
+    }
+
     fun addItem(show: Show) {
         this.listShow.add(show)
         notifyItemInserted(this.listShow.size - 1)

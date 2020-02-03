@@ -91,7 +91,7 @@ class FavoritesHelper(context: Context) {
         return database.query(
             DATABASE_TABLE,
             null,
-            "$$MOVIEDB_ID = ?",
+            "$MOVIEDB_ID = ?",
             arrayOf(id),
             null,
             null,
@@ -170,7 +170,15 @@ class FavoritesHelper(context: Context) {
         return database.delete(DATABASE_TABLE, "$MOVIEDB_ID = '$id'", null)
     }
 
-
+    fun setValues(show: Show, showType: String) : ContentValues {
+        val values = ContentValues()
+        values.put(NAME,show.name)
+        values.put(DESCRIPTION,show.overview)
+        values.put(MOVIEDB_ID, show.movieDbId.toString())
+        values.put(POSTER, show.imgPath)
+        values.put(SHOW_TYPE, showType)
+        return values
+    }
 
     fun insertTransaction(show: Show, showType: String) {
         val sql =

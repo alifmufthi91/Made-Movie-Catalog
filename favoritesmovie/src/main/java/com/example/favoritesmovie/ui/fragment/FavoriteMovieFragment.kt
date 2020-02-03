@@ -1,12 +1,12 @@
 package com.example.favoritesmovie.ui.fragment
 
 
-import android.content.Intent
 import android.database.ContentObserver
 import android.database.Cursor
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import android.provider.BaseColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +15,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.favoritesmovie.R
 import com.example.favoritesmovie.adapter.ListShowAdapter
+import com.example.favoritesmovie.db.DatabaseContract.AUTHORITY
 import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_MOVIE_URI
 import com.example.favoritesmovie.helper.MappingHelper
 import com.example.favoritesmovie.model.Show
-import com.example.favoritesmovie.ui.activity.DetailShowActivity
-import com.example.favoritesmovie.ui.activity.DetailShowActivity.Companion.EXTRA_POSITION
+import com.example.favoritesmovie.ui.activity.MainActivity
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -36,6 +36,7 @@ class FavoriteMovieFragment : Fragment() {
     companion object {
         const val SHOW_MOVIE = "Movie"
         private const val EXTRA_STATE = "EXTRA_MOVIE_STATE"
+        private const val DATA_OBSERVER = "MovieObserver"
     }
 
     override fun onCreateView(
@@ -55,7 +56,7 @@ class FavoriteMovieFragment : Fragment() {
         showRecyclerList()
         Log.d("listCategory", SHOW_MOVIE)
 
-        val handlerThread = HandlerThread("DataObserver")
+        val handlerThread = HandlerThread(DATA_OBSERVER)
         handlerThread.start()
         val handler = Handler(handlerThread.looper)
         val myObserver = object : ContentObserver(handler) {
@@ -87,37 +88,33 @@ class FavoriteMovieFragment : Fragment() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (data != null) {
-            if (resultCode == DetailShowActivity.RESULT_REMOVED) {
-                val position = data.getIntExtra(EXTRA_POSITION, 0)
-                listShowAdapter.removeItem(position)
-            }
-        }
-    }
 
     private fun loadShowsAsync() {
-        GlobalScope.launch(Dispatchers.Main) {
-            val deferredNotes = async(Dispatchers.IO) {
-                val cursor = context?.contentResolver?.query(
-                    CONTENT_MOVIE_URI,
-                    null,
-                    null,
-                    null,
-                    null
-                ) as Cursor
-                MappingHelper.mapCursorToArrayList(cursor)
+            GlobalScope.launch(Dispatchers.Main) {
+                val deferredShows = async(Dispatchers.IO) {
+                    if (context?.contentResolver?.acquireContentProviderClient(AUTHORITY) == null){
+                        activity.let {
+                            (it as MainActivity).showWarningDialog()
+                        }
+                        ArrayList()
+                    }else{
+                        val cursor = context?.contentResolver?.query(
+                            CONTENT_MOVIE_URI,
+                            null,
+                            null,
+                            null,
+                            "${BaseColumns._ID} ASC"
+                        ) as Cursor
+                        MappingHelper.mapCursorToArrayList(cursor)
+                    }
+                }
+                val shows = deferredShows.await()
+                if (shows.size > 0) {
+                    listShowAdapter.setData(shows)
+                } else {
+                    listShowAdapter.setData(ArrayList())
+                }
             }
-
-            val shows = deferredNotes.await()
-            if (shows.size > 0) {
-                listShowAdapter.setData(shows)
-            } else {
-                listShowAdapter.setData(ArrayList())
-            }
-        }
     }
 
 }
