@@ -12,13 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.favoritesmovie.helper.MappingHelper
 import com.example.moviecatalogue_made_s2.BuildConfig
-import com.example.moviecatalogue_made_s2.R
 import com.example.moviecatalogue_made_s2.db.DatabaseContract
 import com.example.moviecatalogue_made_s2.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_MOVIE_URI
 import com.example.moviecatalogue_made_s2.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_TV_URI
 import com.example.moviecatalogue_made_s2.model.Show
 import com.example.moviecatalogue_made_s2.ui.fragment.MovieFragment.Companion.SHOW_MOVIE
 import com.example.moviecatalogue_made_s2.utils.MovieDB
+import com.example.moviecatalogue_made_s2.utils.longToSuffixes
 import kotlinx.android.synthetic.main.activity_detail_show.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -30,6 +30,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+
+
+
+
 class DetailShowActivity : AppCompatActivity() {
 
     private var favorited = false
@@ -39,7 +43,6 @@ class DetailShowActivity : AppCompatActivity() {
 
     companion object {
         const val REQUEST_VIEW = 100
-        const val RESULT_REMOVED = 201
         const val DETAIL_SHOW = "detailShow"
         const val EXTRA_POSITION = "position"
         const val EXTRA_TYPE = "movie type"
@@ -47,10 +50,9 @@ class DetailShowActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_show)
+        setContentView(com.example.moviecatalogue_made_s2.R.layout.activity_detail_show)
         showData = intent.getParcelableExtra<Show>(DETAIL_SHOW) as Show
         showType = intent.getStringExtra(EXTRA_TYPE) as String
-
         getShowInfo(showData.movieDbId.toInt())
         Log.d("show type", showType)
         position = intent.getIntExtra(EXTRA_POSITION, 0)
@@ -76,7 +78,7 @@ class DetailShowActivity : AppCompatActivity() {
                     setFavorite(false)
                     Toast.makeText(
                         applicationContext,
-                        getString(R.string.delete_favorite, showData.name),
+                        getString(com.example.moviecatalogue_made_s2.R.string.delete_favorite, showData.name),
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
@@ -87,7 +89,7 @@ class DetailShowActivity : AppCompatActivity() {
                     setFavorite(true)
                     Toast.makeText(
                         applicationContext,
-                        getString(R.string.add_favorite, showData.name),
+                        getString(com.example.moviecatalogue_made_s2.R.string.add_favorite, showData.name),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -116,12 +118,12 @@ class DetailShowActivity : AppCompatActivity() {
             null -> View.INVISIBLE
             else -> View.VISIBLE
         }
-        tv_movie_popularity.text = show?.popularity.toString()
+        tv_movie_popularity.text = show?.popularity?.toLong()?.let { longToSuffixes(it) }
         tv_movie_popularity.visibility = when (show?.popularity) {
             null -> View.INVISIBLE
             else -> View.VISIBLE
         }
-        tv_movie_voter.text = show?.voter.toString()
+        tv_movie_voter.text = show?.voter?.toLong()?.let { longToSuffixes(it) }
         tv_movie_voter.visibility = when (show?.voter) {
             0 -> View.INVISIBLE
             else -> View.VISIBLE
@@ -129,18 +131,20 @@ class DetailShowActivity : AppCompatActivity() {
     }
 
 
+
     private fun setFavorite(favorited: Boolean) {
+
         this.favorited = favorited
         if (favorited) {
-            ib_favorites.background = resources.getDrawable(R.drawable.ic_favorite, null)
+            ib_favorites.setImageDrawable(resources.getDrawable(com.example.moviecatalogue_made_s2.R.drawable.ic_favorite, null))
         } else {
-            ib_favorites.background = resources.getDrawable(R.drawable.ic_favorite_border, null)
+            ib_favorites.setImageDrawable(resources.getDrawable(com.example.moviecatalogue_made_s2.R.drawable.ic_favorite_border, null))
         }
     }
 
 
 
-    fun setValues(show: Show, showType: String) : ContentValues {
+    private fun setValues(show: Show, showType: String) : ContentValues {
         val values = ContentValues()
         values.put(DatabaseContract.FavoritesColumns.NAME,show.name)
         values.put(DatabaseContract.FavoritesColumns.DESCRIPTION,show.overview)

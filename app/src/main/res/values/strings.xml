@@ -25,4 +25,5 @@ This application was created to meet the Module on Learning Materials to Become 
     <string name="favorites">Favorites</string>
     <string name="add_favorite"> %1$s is added to Favorites</string>
     <string name="delete_favorite"> %1$s is removed from Favorites</string>
+    <string name="search">search</string>
 </resources>

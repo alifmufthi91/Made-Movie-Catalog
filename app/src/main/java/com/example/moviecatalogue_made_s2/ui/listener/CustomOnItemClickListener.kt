@@ -1,4 +1,4 @@
-package com.example.moviecatalogue_made_s2.ui
+package com.example.moviecatalogue_made_s2.ui.listener
 
 import android.view.View
 

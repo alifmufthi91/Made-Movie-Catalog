@@ -25,4 +25,5 @@
     <string name="favorites">Favorit</string>
     <string name="add_favorite"> %1$s ditambahkan ke Favorit</string>
     <string name="delete_favorite"> %1$s dihapus dari Favorit</string>
+    <string name="search">pencarian</string>
 </resources>

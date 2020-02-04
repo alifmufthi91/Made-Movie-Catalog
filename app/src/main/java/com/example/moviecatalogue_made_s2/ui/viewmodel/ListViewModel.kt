@@ -20,25 +20,37 @@ class ListViewModel : ViewModel() {
     val tvShows = MutableLiveData<ArrayList<Show>>()
 
 
-    internal fun setShows(category: String?) {
+    internal fun setShows(category: String?, page: Int) {
         Log.d("setShows()", this.toString())
-        val showList = ArrayList<Show>()
+        val listShows= ArrayList<Show>()
+        when (category){
+            SHOW_MOVIE -> {
+                if (movieShows.value != null){
+                    listShows.addAll(movieShows.value as ArrayList<Show>)
+                }
+            }
+            else -> {
+                if (tvShows.value != null){
+                    listShows.addAll(tvShows.value as ArrayList<Show>)
+                }
+            }
+        }
         val builder = Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org")
             .addConverterFactory(GsonConverterFactory.create())
         val retrofit = builder.build()
         val movieDBClient = retrofit.create(MovieDB::class.java)
-        val call = movieDBClient.showList(category?.toLowerCase(), BuildConfig.API_KEY)
+        Log.d("setShows()", "page : $page")
+        val call = movieDBClient.showList(category?.toLowerCase(), BuildConfig.API_KEY, page)
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
-                val shows = response.body()
-                if (shows != null) {
-                    showList.addAll(shows.list)
+                val showList = response.body()
+                if (showList != null) {
+                    listShows.addAll(showList.list)
                 }
-                showList.forEach { (index) -> Log.d("title $category", index.toString()) }
                 when (category) {
-                    SHOW_MOVIE -> movieShows.postValue(showList)
-                    else -> tvShows.postValue(showList)
+                    SHOW_MOVIE -> movieShows.postValue(listShows)
+                    else -> tvShows.postValue(listShows)
                 }
             }
 
@@ -55,4 +67,6 @@ class ListViewModel : ViewModel() {
             else -> tvShows
         }
     }
+
+
 }

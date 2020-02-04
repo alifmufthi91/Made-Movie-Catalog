@@ -9,5 +9,11 @@ data class ShowList(
     var list: ArrayList<Show>,
     @SerializedName("total_results")
     @Expose
-    var total: Int
+    var total: Int,
+    @SerializedName("total_pages")
+    @Expose
+    var pages: Int,
+    @SerializedName("page")
+    @Expose
+    var page: Int
 )
