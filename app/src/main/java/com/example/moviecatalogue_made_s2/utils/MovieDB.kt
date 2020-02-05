@@ -16,4 +16,7 @@ interface MovieDB {
 
     @GET("3/tv/{tv_id}")
     fun tv(@Path("tv_id") movieId: Int, @Query("api_key") apiKey: String?): Call<Show>
+
+    @GET("3/search/{category}")
+    fun search(@Path("category") category: String?, @Query("api_key") apiKey: String?, @Query("page") page: Int, @Query("query") query: String): Call<ShowList>
 }

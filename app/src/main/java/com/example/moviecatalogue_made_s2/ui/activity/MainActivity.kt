@@ -42,6 +42,10 @@ class MainActivity : AppCompatActivity() {
                 val mIntent = Intent(this@MainActivity, FavoritesActivity::class.java)
                 startActivity(mIntent)
             }
+            R.id.action_search -> {
+                val mIntent = Intent(this@MainActivity, SearchActivity::class.java)
+                startActivity(mIntent)
+            }
         }
         return super.onOptionsItemSelected(item)
     }

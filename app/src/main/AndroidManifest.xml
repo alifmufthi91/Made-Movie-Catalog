@@ -4,9 +4,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-
-    <permission android:name="com.example.moviecatalogue_made_s2.READ_DATABASE" android:protectionLevel="normal"/>
-    <permission android:name="com.example.moviecatalogue_made_s2.WRITE_DATABASE" android:protectionLevel="normal"/>
+    <permission
+        android:name="com.example.moviecatalogue_made_s2.READ_DATABASE"
+        android:protectionLevel="normal" />
+    <permission
+        android:name="com.example.moviecatalogue_made_s2.WRITE_DATABASE"
+        android:protectionLevel="normal" />
 
     <application
         android:allowBackup="true"
@@ -15,13 +18,21 @@
         android:roundIcon="@mipmap/ic_movie_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.activity.SearchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
+
         <provider
             android:name=".provider.FavoritesProvider"
             android:authorities="com.example.moviecatalogue_made_s2"
             android:enabled="true"
             android:exported="true"
             android:readPermission="com.example.moviecatalogue_made_s2.READ_DATABASE"
-            android:writePermission="com.example.moviecatalogue_made_s2.WRITE_DATABASE"></provider>
+            android:writePermission="com.example.moviecatalogue_made_s2.WRITE_DATABASE" />
 
         <activity android:name=".ui.activity.FavoritesActivity" />
         <activity

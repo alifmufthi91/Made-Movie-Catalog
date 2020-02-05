@@ -15,10 +15,11 @@ import com.example.moviecatalogue_made_s2.BuildConfig
 import com.example.moviecatalogue_made_s2.db.DatabaseContract
 import com.example.moviecatalogue_made_s2.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_MOVIE_URI
 import com.example.moviecatalogue_made_s2.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_TV_URI
+import com.example.moviecatalogue_made_s2.model.Genre
 import com.example.moviecatalogue_made_s2.model.Show
 import com.example.moviecatalogue_made_s2.ui.fragment.MovieFragment.Companion.SHOW_MOVIE
 import com.example.moviecatalogue_made_s2.utils.MovieDB
-import com.example.moviecatalogue_made_s2.utils.longToSuffixes
+import com.example.moviecatalogue_made_s2.utils.Utility
 import kotlinx.android.synthetic.main.activity_detail_show.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -118,14 +119,19 @@ class DetailShowActivity : AppCompatActivity() {
             null -> View.INVISIBLE
             else -> View.VISIBLE
         }
-        tv_movie_popularity.text = show?.popularity?.toLong()?.let { longToSuffixes(it) }
+        tv_movie_popularity.text = show?.popularity?.toLong()?.let { Utility.longToSuffixes(it) }
         tv_movie_popularity.visibility = when (show?.popularity) {
             null -> View.INVISIBLE
             else -> View.VISIBLE
         }
-        tv_movie_voter.text = show?.voter?.toLong()?.let { longToSuffixes(it) }
+        tv_movie_voter.text = show?.voter?.toLong()?.let { Utility.longToSuffixes(it) }
         tv_movie_voter.visibility = when (show?.voter) {
             0 -> View.INVISIBLE
+            else -> View.VISIBLE
+        }
+        tv_movie_genre.text = getGenres(show?.genreList)
+        tv_movie_genre.visibility = when (show?.genreList) {
+            null -> View.INVISIBLE
             else -> View.VISIBLE
         }
     }
@@ -202,5 +208,17 @@ class DetailShowActivity : AppCompatActivity() {
             setFavorite(isShowFavorited)
             favorited = isShowFavorited
         }
+    }
+
+    private fun getGenres(list: ArrayList<Genre>?): String?{
+        var genres = ""
+        list?.forEach {
+            genres += if (it != list[0]){
+                ", "+it.name
+            }else{
+                it.name
+            }
+        }
+        return genres
     }
 }

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
         android:background="@drawable/rectangle_with_radius"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:backgroundTint="@android:color/black"
         android:orientation="vertical">
 
         <TextView

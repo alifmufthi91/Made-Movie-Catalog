@@ -26,4 +26,12 @@ This application was created to meet the Module on Learning Materials to Become 
     <string name="add_favorite"> %1$s is added to Favorites</string>
     <string name="delete_favorite"> %1$s is removed from Favorites</string>
     <string name="search">search</string>
+    <string name="back_button">Back Button</string>
+    <string name="favorite_button">Favorite Button</string>
+    <string name="query_hint">Search show, tv show</string>
+    <string name="search_result">Search result :</string>
+    <string name="genre">Genre</string>
+    <string name="category">Category</string>
+    <string name="movie">Movie</string>
+    <string name="tv_show">Tv show</string>
 </resources>
