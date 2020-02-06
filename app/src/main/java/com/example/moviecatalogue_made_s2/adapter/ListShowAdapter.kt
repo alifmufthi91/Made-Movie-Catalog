@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecatalogue_made_s2.R
 import com.example.moviecatalogue_made_s2.model.Show
-import com.example.moviecatalogue_made_s2.ui.listener.CustomOnItemClickListener
 import com.example.moviecatalogue_made_s2.ui.activity.DetailShowActivity
 import com.example.moviecatalogue_made_s2.ui.activity.DetailShowActivity.Companion.DETAIL_SHOW
 import com.example.moviecatalogue_made_s2.ui.activity.DetailShowActivity.Companion.EXTRA_POSITION
 import com.example.moviecatalogue_made_s2.ui.activity.DetailShowActivity.Companion.EXTRA_TYPE
+import com.example.moviecatalogue_made_s2.ui.listener.CustomOnItemClickListener
 import com.example.moviecatalogue_made_s2.utils.Constant
 import kotlinx.android.synthetic.main.item_show.view.*
 
@@ -36,21 +36,6 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
         return listShow
     }
 
-    fun addData( data : ArrayList<Show>){
-        listShow.addAll(data)
-        notifyDataSetChanged()
-    }
-
-    fun addItem(show: Show?) {
-        this.listShow.add(show)
-        notifyItemInserted(this.listShow.size - 1)
-    }
-
-    fun removeItem(position: Int) {
-        this.listShow.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, this.listShow.size)
-    }
 
     override fun getItemViewType(position: Int): Int {
         return if (listShow[position] == null) {
@@ -61,7 +46,6 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
     }
 
     fun addLoadingView() {
-        //Add loading item
         Handler().post {
             listShow.add(null)
             notifyItemInserted(listShow.size - 1)
@@ -69,7 +53,6 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
     }
 
     fun removeLoadingView() {
-        //Remove loading item
         if (listShow.size != 0) {
             listShow.removeAt(listShow.size - 1)
             notifyItemRemoved(listShow.size)
@@ -89,9 +72,6 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
         }
     }
 
-    fun getItemAtPosition(position: Int): Show? {
-        return listShow[position]
-    }
 
     override fun getItemCount(): Int = listShow.size
 

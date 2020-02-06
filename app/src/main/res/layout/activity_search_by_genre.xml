@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.fragment.SearchResultFragment">
+    tools:context=".ui.activity.SearchByGenreActivity">
 
     <TextView
-        android:id="@+id/search_result_fragment"
+        android:id="@+id/search_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="@string/search_result"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search"
+        android:id="@+id/rv_search_genre"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"

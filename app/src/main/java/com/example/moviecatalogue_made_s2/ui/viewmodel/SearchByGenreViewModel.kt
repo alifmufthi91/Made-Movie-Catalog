@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.moviecatalogue_made_s2.BuildConfig
-import com.example.moviecatalogue_made_s2.model.Genre
-import com.example.moviecatalogue_made_s2.model.GenreList
 import com.example.moviecatalogue_made_s2.model.Show
 import com.example.moviecatalogue_made_s2.model.ShowList
 import com.example.moviecatalogue_made_s2.ui.fragment.MovieFragment.Companion.SHOW_MOVIE
@@ -19,14 +17,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SearchViewModel : ViewModel() {
+class SearchByGenreViewModel : ViewModel() {
     val searchResults = MutableLiveData<ArrayList<Show>>()
     var category = SHOW_MOVIE
     var currentPage = 1
-    var query= ""
-    val genreResult = MutableLiveData<ArrayList<Genre>>()
-    val listGenre = ArrayList<Genre>()
-    var totalResult = 0
+    var totalResults = 0
+
 
 
     private val retrofit = Retrofit.Builder()
@@ -40,17 +36,17 @@ class SearchViewModel : ViewModel() {
     }
 
 
-    internal fun setShows(category: String?, page: Int, query: String) {
+    internal fun setShows(category: String?, page: Int, genre: String) {
         Log.d("setShows()", this.toString())
         val listShows= ArrayList<Show>()
         Log.d("setShows()", "page : $page")
-        val call = movieDBClient.search(category?.toLowerCase(Locale.US), BuildConfig.API_KEY, page, query)
+        val call = movieDBClient.showList(category?.toLowerCase(Locale.US), BuildConfig.API_KEY, page, genre)
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()
                 if (showList != null) {
                     listShows.addAll(showList.list)
-                    totalResult = showList.total
+                    totalResults = showList.total
                 }
                 searchResults.postValue(listShows)
             }
@@ -70,7 +66,7 @@ class SearchViewModel : ViewModel() {
             listShows.addAll(searchResults.value as ArrayList<Show>)
         }
         Log.d("loadMore()", "page : $page")
-        val call = movieDBClient.search(category?.toLowerCase(Locale.US), BuildConfig.API_KEY, page, query)
+        val call = movieDBClient.showList(category?.toLowerCase(Locale.US), BuildConfig.API_KEY, page, query)
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()
@@ -91,24 +87,5 @@ class SearchViewModel : ViewModel() {
         return searchResults
     }
 
-    internal fun setGenres(category: String?){
-        listGenre.clear()
-        val call = movieDBClient.getGenreList(category?.toLowerCase(Locale.US), BuildConfig.API_KEY)
-        call.enqueue(object : Callback<GenreList> {
-            override fun onResponse(call: Call<GenreList>, response: Response<GenreList>) {
-                val genreList = response.body()
-                if (genreList != null) {
-                    listGenre.addAll(genreList.list)
-                }
-                genreResult.postValue(listGenre)
-            }
-            override fun onFailure(call: Call<GenreList>, t: Throwable) {
-                Log.d("getGenre()", "failed..")
-            }
-        })
-    }
 
-    internal fun getGenre(): LiveData<ArrayList<Genre>> {
-        return genreResult
-    }
 }

@@ -1,6 +1,7 @@
 package com.example.moviecatalogue_made_s2.ui.fragment
 
 
+import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -10,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviecatalogue_made_s2.R
 import com.example.moviecatalogue_made_s2.adapter.SearchShowAdapter
 import com.example.moviecatalogue_made_s2.ui.listener.CustomRecyclerViewScrollListener
@@ -37,19 +37,21 @@ class SearchResultFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search_result, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        search_result_fragment.text = getString(R.string.search_result,"0")
         showRecyclerList()
         searchViewModel.getShows().observe(this, Observer { Shows ->
             if (Shows != null) {
                 searchShowAdapter.setData(Shows)
+                search_result_fragment.text = getString(R.string.search_result, searchViewModel.totalResult.toString())
             }
         })
     }
+
 
     private fun showRecyclerList() {
         searchViewModel = ViewModelProvider(
@@ -58,7 +60,7 @@ class SearchResultFragment : Fragment() {
         ).get(
             SearchViewModel::class.java
         )
-        searchShowAdapter = SearchShowAdapter(this, searchViewModel.category)
+        searchShowAdapter = SearchShowAdapter(activity as Activity, searchViewModel.category)
         searchShowAdapter.notifyDataSetChanged()
         mLayoutManager = GridLayoutManager(activity, GRID_COLUMN)
         mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -74,7 +76,7 @@ class SearchResultFragment : Fragment() {
         rv_search.layoutManager = mLayoutManager
         scrollListener =
             CustomRecyclerViewScrollListener(
-                mLayoutManager as LinearLayoutManager
+                mLayoutManager
             )
         scrollListener.setOnLoadMoreListener(object : CustomRecyclerViewScrollListener.OnLoadMoreListener{
             override fun onLoadMore() {
@@ -93,8 +95,10 @@ class SearchResultFragment : Fragment() {
             //end//
             searchShowAdapter.removeLoadingView()
             scrollListener.setLoaded()
-            rv_search.post {
-                searchShowAdapter.notifyDataSetChanged()
+            if(this.isVisible){
+                rv_search.post {
+                    searchShowAdapter.notifyDataSetChanged()
+                }
             }
         }, 2000)
 

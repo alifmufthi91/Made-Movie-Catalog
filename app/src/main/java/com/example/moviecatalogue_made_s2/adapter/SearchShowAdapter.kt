@@ -1,12 +1,12 @@
 package com.example.moviecatalogue_made_s2.adapter
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecatalogue_made_s2.R
 import com.example.moviecatalogue_made_s2.model.Show
@@ -18,7 +18,7 @@ import com.example.moviecatalogue_made_s2.ui.listener.CustomOnItemClickListener
 import com.example.moviecatalogue_made_s2.utils.Constant
 import kotlinx.android.synthetic.main.item_show_grid.view.*
 
-class SearchShowAdapter(private val fragment: Fragment, showType: String) :
+class SearchShowAdapter(private val activity: Activity, showType: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val showsType = showType
@@ -36,21 +36,6 @@ class SearchShowAdapter(private val fragment: Fragment, showType: String) :
         return listShow
     }
 
-    fun addData( data : ArrayList<Show>){
-        listShow.addAll(data)
-        notifyDataSetChanged()
-    }
-
-    fun addItem(show: Show?) {
-        this.listShow.add(show)
-        notifyItemInserted(this.listShow.size - 1)
-    }
-
-    fun removeItem(position: Int) {
-        this.listShow.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, this.listShow.size)
-    }
 
     override fun getItemViewType(position: Int): Int {
         return if (listShow[position] == null) {
@@ -61,7 +46,6 @@ class SearchShowAdapter(private val fragment: Fragment, showType: String) :
     }
 
     fun addLoadingView() {
-        //Add loading item
         Handler().post {
             listShow.add(null)
             notifyItemInserted(listShow.size - 1)
@@ -69,7 +53,6 @@ class SearchShowAdapter(private val fragment: Fragment, showType: String) :
     }
 
     fun removeLoadingView() {
-        //Remove loading item
         if (listShow.size != 0) {
             listShow.removeAt(listShow.size - 1)
             notifyItemRemoved(listShow.size)
@@ -125,12 +108,12 @@ class SearchShowAdapter(private val fragment: Fragment, showType: String) :
                             CustomOnItemClickListener.OnItemClickCallback {
                             override fun onItemClicked(view: View, position: Int) {
                                 val detailIntent =
-                                    Intent(fragment.context, DetailShowActivity::class.java)
+                                    Intent(context, DetailShowActivity::class.java)
                                 Log.d("show type", showsType)
                                 detailIntent.putExtra(DETAIL_SHOW, show)
                                 detailIntent.putExtra(EXTRA_TYPE, showsType)
                                 detailIntent.putExtra(EXTRA_POSITION, position)
-                                fragment.startActivityForResult(
+                                activity.startActivityForResult(
                                     detailIntent,
                                     DetailShowActivity.REQUEST_VIEW
                                 )

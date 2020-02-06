@@ -14,6 +14,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ListViewModel : ViewModel() {
     val movieShows = MutableLiveData<ArrayList<Show>>()
@@ -41,7 +43,7 @@ class ListViewModel : ViewModel() {
         val retrofit = builder.build()
         val movieDBClient = retrofit.create(MovieDB::class.java)
         Log.d("setShows()", "page : $page")
-        val call = movieDBClient.showList(category?.toLowerCase(), BuildConfig.API_KEY, page)
+        val call = movieDBClient.showList(category?.toLowerCase(Locale.US), BuildConfig.API_KEY, page, null)
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()

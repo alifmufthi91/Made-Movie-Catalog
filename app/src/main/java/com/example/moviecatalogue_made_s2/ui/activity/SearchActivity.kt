@@ -42,6 +42,7 @@ class SearchActivity : AppCompatActivity() {
         ).get(
             SearchViewModel::class.java
         )
+
     }
 
 
@@ -103,5 +104,6 @@ class SearchActivity : AppCompatActivity() {
         }
         return true
     }
+
 
 }
