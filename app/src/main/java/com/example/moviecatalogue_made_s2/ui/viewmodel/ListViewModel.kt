@@ -43,7 +43,7 @@ class ListViewModel : ViewModel() {
         val retrofit = builder.build()
         val movieDBClient = retrofit.create(MovieDB::class.java)
         Log.d("setShows()", "page : $page")
-        val call = movieDBClient.showList(category?.toLowerCase(Locale.US), BuildConfig.API_KEY, page, null)
+        val call = movieDBClient.showList(category?.toLowerCase(Locale.getDefault()), BuildConfig.API_KEY, page, null)
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()

@@ -44,7 +44,7 @@ class SearchViewModel : ViewModel() {
         Log.d("setShows()", this.toString())
         val listShows= ArrayList<Show>()
         Log.d("setShows()", "page : $page")
-        val call = movieDBClient.search(category?.toLowerCase(Locale.US), BuildConfig.API_KEY, page, query)
+        val call = movieDBClient.search(category?.toLowerCase(Locale.getDefault()), BuildConfig.API_KEY, page, query)
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()
@@ -70,7 +70,7 @@ class SearchViewModel : ViewModel() {
             listShows.addAll(searchResults.value as ArrayList<Show>)
         }
         Log.d("loadMore()", "page : $page")
-        val call = movieDBClient.search(category?.toLowerCase(Locale.US), BuildConfig.API_KEY, page, query)
+        val call = movieDBClient.search(category?.toLowerCase(Locale.getDefault()), BuildConfig.API_KEY, page, query)
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()
@@ -93,7 +93,7 @@ class SearchViewModel : ViewModel() {
 
     internal fun setGenres(category: String?){
         listGenre.clear()
-        val call = movieDBClient.getGenreList(category?.toLowerCase(Locale.US), BuildConfig.API_KEY)
+        val call = movieDBClient.getGenreList(category?.toLowerCase(Locale.getDefault()), BuildConfig.API_KEY)
         call.enqueue(object : Callback<GenreList> {
             override fun onResponse(call: Call<GenreList>, response: Response<GenreList>) {
                 val genreList = response.body()

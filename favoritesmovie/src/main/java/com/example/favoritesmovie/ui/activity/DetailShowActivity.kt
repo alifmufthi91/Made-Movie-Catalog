@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class DetailShowActivity : AppCompatActivity() {
 
-    private lateinit var builder : AlertDialog
+    private lateinit var dialogBuilder : AlertDialog
 
     private var favorited = false
     private var position: Int = 0
@@ -50,7 +50,7 @@ class DetailShowActivity : AppCompatActivity() {
         showData = intent.getParcelableExtra<Show>(DETAIL_SHOW) as Show
         showType = intent.getStringExtra(EXTRA_TYPE) as String
 
-        builder = AlertDialog.Builder(this)
+        dialogBuilder = AlertDialog.Builder(this)
             .setTitle(R.string.dialog_title_failed_execute)
             .setMessage(R.string.dialog_text)
             .setNegativeButton("OK") { _, _ ->
@@ -116,9 +116,9 @@ class DetailShowActivity : AppCompatActivity() {
     }
 
     private fun showWarningDialog(){
-        if (!builder.isShowing){
+        if (!dialogBuilder.isShowing){
             this.runOnUiThread {
-                builder.show()
+                dialogBuilder.show()
             }
         }
     }

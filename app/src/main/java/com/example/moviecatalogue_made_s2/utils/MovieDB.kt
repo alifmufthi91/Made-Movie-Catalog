@@ -23,4 +23,7 @@ interface MovieDB {
 
     @GET("3/genre/{category}/list")
     fun getGenreList(@Path("category") category: String?, @Query("api_key") apiKey: String?): Call<GenreList>
+
+    @GET("3/discover/{category}")
+    fun getTodayReleases(@Path("category") category: String?, @Query("api_key") apiKey: String?, @Query("primary_release_date.gte") gteReleaseDate: String, @Query("primary_release_date.lte") lteReleaseDate: String): Call<ShowList>
 }

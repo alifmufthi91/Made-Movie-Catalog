@@ -9,12 +9,10 @@
     <item
         android:title="@string/favorites"
         android:id="@+id/action_favorites"
-        android:icon="@drawable/ic_favorite_black"
         app:showAsAction="never"/>
     <item
-        android:title="@string/change_language"
-        android:id="@+id/action_change_language"
-        android:icon="@drawable/ic_language_black"
+        android:title="@string/settings"
+        android:id="@+id/action_settings"
         app:showAsAction="never"/>
 
 </menu>

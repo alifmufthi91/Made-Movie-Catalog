@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -49,7 +50,14 @@ class SearchMenuFragment : Fragment() {
         ).get(
             SearchViewModel::class.java
         )
-        adapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1)
+
+        adapter = object : ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1){
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val customTv = super.getView(position, convertView, parent) as TextView
+                customTv.setTextColor(resources.getColor(R.color.textPrimary))
+                return customTv
+            }
+        }
         lv_genre.adapter = adapter
         rg_category.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {

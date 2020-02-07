@@ -2,6 +2,7 @@ package com.example.moviecatalogue_made_s2.ui.activity
 
 import android.os.Bundle
 import android.os.Handler
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -39,6 +40,7 @@ class SearchByGenreActivity : AppCompatActivity() {
         val genre = intent.getParcelableExtra<Genre>(SELECTED_GENRE)
 
         supportActionBar?.title = genre?.name
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewModel = ViewModelProvider(
             viewModelStore,
@@ -100,5 +102,12 @@ class SearchByGenreActivity : AppCompatActivity() {
             }
         }, 2000)
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == android.R.id.home){
+            onBackPressed()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -48,6 +48,11 @@ class SearchResultFragment : Fragment() {
             if (Shows != null) {
                 searchShowAdapter.setData(Shows)
                 search_result_fragment.text = getString(R.string.search_result, searchViewModel.totalResult.toString())
+                if (Shows.size < 1){
+                    empty_result_fragment_search.visibility = View.VISIBLE
+                }else{
+                    empty_result_fragment_search.visibility = View.GONE
+                }
             }
         })
     }

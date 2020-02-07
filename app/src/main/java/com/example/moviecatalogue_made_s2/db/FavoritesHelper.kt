@@ -170,6 +170,11 @@ class FavoritesHelper(context: Context) {
         return database.delete(DATABASE_TABLE, "$MOVIEDB_ID = '$id'", null)
     }
 
+    fun deleteAll(): Int {
+        Log.d("delete all data: ", "start..")
+        return database.delete(DATABASE_TABLE,"1",null)
+    }
+
     fun setValues(show: Show, showType: String) : ContentValues {
         val values = ContentValues()
         values.put(NAME,show.name)

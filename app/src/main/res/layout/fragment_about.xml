@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".ui.fragment.AboutFragment">
 
     <LinearLayout
@@ -10,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
         android:background="@drawable/rectangle_with_radius"
-        android:backgroundTint="@android:color/black"
+        android:backgroundTint="@color/textSecondary"
         android:orientation="vertical">
 
         <TextView
@@ -19,7 +20,7 @@
             android:layout_margin="16dp"
             android:text="@string/about_me"
             android:textAlignment="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="18sp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -44,7 +45,7 @@
             android:layout_margin="8dp"
             android:text="@string/about_email"
             android:textAlignment="center"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/colorPrimary" />
 
         <TextView
             android:layout_width="match_parent"
@@ -52,7 +53,7 @@
             android:layout_margin="24dp"
             android:text="@string/about_text"
             android:textAlignment="center"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
 </FrameLayout>

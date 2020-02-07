@@ -23,7 +23,7 @@
             android:id="@+id/tv_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#181818"
+            android:textColor="@color/textPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_item_name"
-            android:textColor="#222222"
+            android:textColor="@color/textSecondary"
             android:textSize="14sp" />
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_item_overview"
             android:layout_alignParentBottom="true"
-            android:gravity="bottom|right"
+            android:gravity="bottom|end"
             android:padding="@dimen/cardview_default_elevation"
             android:text="@string/view_detail"
             android:textColor="@color/colorAccent" />

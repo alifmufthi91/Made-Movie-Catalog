@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@color/colorPrimary"
     tools:context=".ui.fragment.SearchMenuFragment">
 
     <TextView
@@ -12,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/category" />
+        android:text="@string/category"
+        android:textColor="@color/textPrimary"/>
 
     <RadioGroup
         android:id="@+id/rg_category"
@@ -23,19 +25,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/movie"
+            android:textColor="@color/textPrimary"
             android:checked="true"/>
         <RadioButton
             android:id="@+id/radio_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_show"/>
+            android:text="@string/tv_show"
+            android:textColor="@color/textPrimary"/>
     </RadioGroup>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/find_by_genre" />
+        android:text="@string/find_by_genre"
+        android:textColor="@color/textPrimary"/>
 
     <ListView
         android:id="@+id/lv_genre"

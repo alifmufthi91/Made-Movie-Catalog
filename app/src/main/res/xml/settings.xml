@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/category_reminder"
+        app:iconSpaceReserved="false">
+        <SwitchPreferenceCompat
+            android:title="@string/title_reminder"
+            android:summary="@string/summary_reminder"
+            android:key="@string/key_reminder"
+            app:iconSpaceReserved="false"
+            />
+        <SwitchPreferenceCompat
+            android:title="@string/title_release"
+            android:summary="@string/summary_release"
+            android:key="@string/key_release"
+            app:iconSpaceReserved="false"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/category_advanced"
+        app:iconSpaceReserved="false">
+        <Preference android:title="@string/change_language"
+            android:key="@string/key_change_language"
+            app:iconSpaceReserved="false"/>
+        <Preference android:title="@string/delete_favorites"
+            android:key="@string/key_delete_favorites"
+            app:iconSpaceReserved="false" />
+<!--        Lagi Belajar -->
+<!--        <SwitchPreferenceCompat-->
+<!--            android:title="@string/night_mode"-->
+<!--            android:key="@string/key_night_mode"-->
+<!--            app:iconSpaceReserved="false"/>-->
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

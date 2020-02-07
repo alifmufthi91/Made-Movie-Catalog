@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var builder : AlertDialog
+    private lateinit var dialogBuilder : AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         tabs.setupWithViewPager(view_pager)
         supportActionBar?.elevation = 0f
 
-        builder = AlertDialog.Builder(this@MainActivity)
+        dialogBuilder = AlertDialog.Builder(this@MainActivity)
             .setTitle(R.string.dialog_title_failed_retrieve)
             .setMessage(R.string.dialog_text)
             .setNegativeButton("OK") { _, _ ->
@@ -40,16 +40,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showWarningDialog(){
-        if (!builder.isShowing){
+        if (!dialogBuilder.isShowing){
             runOnUiThread {
-                builder.show()
+                dialogBuilder.show()
             }
         }
     }
 
     override fun onDestroy() {
-        if (builder.isShowing){
-            builder.dismiss()
+        if (dialogBuilder.isShowing){
+            dialogBuilder.dismiss()
         }
         super.onDestroy()
     }

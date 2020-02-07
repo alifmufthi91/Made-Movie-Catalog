@@ -36,4 +36,26 @@
     <string name="movie">Film</string>
     <string name="tv_show">Acara TV</string>
     <string name="find_by_genre">Pencarian menggunakan Genre</string>
+    <string name="today_release_title">%1$s telah tayang hari ini</string>
+    <string name="today_release_subtitle">tonton film di bioskop terdekat</string>
+    <string name="reminder">Kami kangen sama kamu !</string>
+    <string name="settings">Pengaturan</string>
+    <string name="key_reminder">KEY_DAILY_REMINDER</string>
+    <string name="key_release">KEY_TODAY_RELEASE</string>
+    <string name="summary_release">Beritahu apabila ada acara yang dirilis</string>
+    <string name="title_release">Rilis Harian</string>
+    <string name="summary_reminder">Ingatkan aku untuk membuka aplikasi setiap hari</string>
+    <string name="title_reminder">Pengingat Harian</string>
+    <string name="category_reminder">Pengingat</string>
+    <string name="category_advanced">Lanjutan</string>
+    <string name="delete_favorites">Hapus Acara Favorit</string>
+    <string name="night_mode">Mode Malam</string>
+    <string name="key_change_language">KEY_CHANGE_LANGUAGE</string>
+    <string name="key_night_mode">KEY_NIGHT_MODE</string>
+    <string name="key_delete_favorites">KEY_DELETE_FAVORITES</string>
+    <string name="are_you_sure">Apakah kamu yakin?</string>
+    <string name="will_be_deleted">Semua acara favorit akan dihapus</string>
+    <string name="no">TIDAK</string>
+    <string name="yes">YA</string>
+    <string name="count_deleted">"%1$s acara favorit dihapus"</string>
 </resources>
