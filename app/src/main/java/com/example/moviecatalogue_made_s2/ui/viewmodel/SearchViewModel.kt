@@ -23,7 +23,7 @@ class SearchViewModel : ViewModel() {
     val searchResults = MutableLiveData<ArrayList<Show>>()
     var category = SHOW_MOVIE
     var currentPage = 1
-    var query= ""
+    var query = ""
     val genreResult = MutableLiveData<ArrayList<Genre>>()
     val listGenre = ArrayList<Genre>()
     var totalResult = 0
@@ -35,16 +35,21 @@ class SearchViewModel : ViewModel() {
         .build()
     private val movieDBClient = retrofit.create(MovieDB::class.java)
 
-    companion object{
+    companion object {
         const val FIRST_PAGE = 1
     }
 
 
     internal fun setShows(category: String?, page: Int, query: String) {
         Log.d("setShows()", this.toString())
-        val listShows= ArrayList<Show>()
+        val listShows = ArrayList<Show>()
         Log.d("setShows()", "page : $page")
-        val call = movieDBClient.search(category?.toLowerCase(Locale.getDefault()), BuildConfig.API_KEY, page, query)
+        val call = movieDBClient.search(
+            category?.toLowerCase(Locale.getDefault()),
+            BuildConfig.API_KEY,
+            page,
+            query
+        )
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()
@@ -65,12 +70,17 @@ class SearchViewModel : ViewModel() {
 
     internal fun loadMore(category: String?, page: Int, query: String) {
         Log.d("loadMore()", this.toString())
-        val listShows= ArrayList<Show>()
-        if (searchResults.value != null){
+        val listShows = ArrayList<Show>()
+        if (searchResults.value != null) {
             listShows.addAll(searchResults.value as ArrayList<Show>)
         }
         Log.d("loadMore()", "page : $page")
-        val call = movieDBClient.search(category?.toLowerCase(Locale.getDefault()), BuildConfig.API_KEY, page, query)
+        val call = movieDBClient.search(
+            category?.toLowerCase(Locale.getDefault()),
+            BuildConfig.API_KEY,
+            page,
+            query
+        )
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()
@@ -91,9 +101,12 @@ class SearchViewModel : ViewModel() {
         return searchResults
     }
 
-    internal fun setGenres(category: String?){
+    internal fun setGenres(category: String?) {
         listGenre.clear()
-        val call = movieDBClient.getGenreList(category?.toLowerCase(Locale.getDefault()), BuildConfig.API_KEY)
+        val call = movieDBClient.getGenreList(
+            category?.toLowerCase(Locale.getDefault()),
+            BuildConfig.API_KEY
+        )
         call.enqueue(object : Callback<GenreList> {
             override fun onResponse(call: Call<GenreList>, response: Response<GenreList>) {
                 val genreList = response.body()
@@ -102,6 +115,7 @@ class SearchViewModel : ViewModel() {
                 }
                 genreResult.postValue(listGenre)
             }
+
             override fun onFailure(call: Call<GenreList>, t: Throwable) {
                 Log.d("getGenre()", "failed..")
             }

@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/textSecondary"
+    android:orientation="vertical"
     tools:context=".ui.fragment.SearchResultFragment">
 
     <TextView
@@ -12,24 +12,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:textColor="@color/colorPrimary"
-        android:text="@string/search_result"/>
+        android:text="@string/search_result"
+        android:textColor="@color/colorPrimary" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
+        android:background="@color/colorPrimary"
         android:scrollbarFadeDuration="@android:integer/config_mediumAnimTime"
         android:scrollbarSize="8dp"
         android:scrollbarStyle="insideInset"
-        android:background="@color/colorPrimary"
-        tools:listitem="@layout/item_show_grid"/>
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_show_grid" />
 
-    <include layout="@layout/empty_result"
+    <include
         android:id="@+id/empty_result_fragment_search"
+        layout="@layout/empty_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

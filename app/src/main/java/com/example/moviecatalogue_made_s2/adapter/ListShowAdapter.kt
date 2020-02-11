@@ -32,7 +32,7 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
         notifyDataSetChanged()
     }
 
-    fun getData(): ArrayList<Show?>{
+    fun getData(): ArrayList<Show?> {
         return listShow
     }
 
@@ -60,13 +60,15 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType){
+        return when (viewType) {
             Constant.VIEW_TYPE_ITEM -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_show, parent, false)
+                val view =
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_show, parent, false)
                 ListViewHolder(view)
             }
-            else ->{
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_load, parent, false)
+            else -> {
+                val view =
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_load, parent, false)
                 LoadingViewHolder(view)
             }
         }
@@ -76,7 +78,7 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
     override fun getItemCount(): Int = listShow.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder.itemViewType == Constant.VIEW_TYPE_ITEM){
+        if (holder.itemViewType == Constant.VIEW_TYPE_ITEM) {
             listShow[position]?.let { (holder as ListViewHolder).bind(it) }
         }
     }

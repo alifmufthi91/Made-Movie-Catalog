@@ -24,23 +24,27 @@ class SearchByGenreViewModel : ViewModel() {
     var totalResults = 0
 
 
-
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://api.themoviedb.org")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val movieDBClient = retrofit.create(MovieDB::class.java)
 
-    companion object{
+    companion object {
         const val FIRST_PAGE = 1
     }
 
 
     internal fun setShows(category: String?, page: Int, genre: String) {
         Log.d("setShows()", this.toString())
-        val listShows= ArrayList<Show>()
+        val listShows = ArrayList<Show>()
         Log.d("setShows()", "page : $page")
-        val call = movieDBClient.showList(category?.toLowerCase(Locale.getDefault()), BuildConfig.API_KEY, page, genre)
+        val call = movieDBClient.showList(
+            category?.toLowerCase(Locale.getDefault()),
+            BuildConfig.API_KEY,
+            page,
+            genre
+        )
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()
@@ -61,12 +65,17 @@ class SearchByGenreViewModel : ViewModel() {
 
     internal fun loadMore(category: String?, page: Int, query: String) {
         Log.d("loadMore()", this.toString())
-        val listShows= ArrayList<Show>()
-        if (searchResults.value != null){
+        val listShows = ArrayList<Show>()
+        if (searchResults.value != null) {
             listShows.addAll(searchResults.value as ArrayList<Show>)
         }
         Log.d("loadMore()", "page : $page")
-        val call = movieDBClient.showList(category?.toLowerCase(Locale.getDefault()), BuildConfig.API_KEY, page, query)
+        val call = movieDBClient.showList(
+            category?.toLowerCase(Locale.getDefault()),
+            BuildConfig.API_KEY,
+            page,
+            query
+        )
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()

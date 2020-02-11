@@ -61,7 +61,8 @@ class TvFragment : Fragment() {
         mLayoutManger = LinearLayoutManager(activity)
         rv_shows.layoutManager = mLayoutManger
         scrollListener = CustomRecyclerViewScrollListener(mLayoutManger as LinearLayoutManager)
-        scrollListener.setOnLoadMoreListener(object : CustomRecyclerViewScrollListener.OnLoadMoreListener{
+        scrollListener.setOnLoadMoreListener(object :
+            CustomRecyclerViewScrollListener.OnLoadMoreListener {
             override fun onLoadMore() {
                 loadMoreData()
             }

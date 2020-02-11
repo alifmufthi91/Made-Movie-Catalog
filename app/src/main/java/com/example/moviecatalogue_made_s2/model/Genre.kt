@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Genre(
     @SerializedName("id")
-    var id : Int?,
+    var id: Int?,
     @SerializedName("name")
-    var name : String?
+    var name: String?
 ) : Parcelable

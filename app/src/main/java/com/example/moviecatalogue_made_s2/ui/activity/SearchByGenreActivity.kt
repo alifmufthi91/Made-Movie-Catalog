@@ -25,7 +25,7 @@ class SearchByGenreActivity : AppCompatActivity() {
     private lateinit var viewModel: SearchByGenreViewModel
 
 
-    companion object{
+    companion object {
         const val SELECTED_GENRE = "selectedGenre"
         const val SELECTED_CATEGORY = "selectedCategory"
     }
@@ -34,7 +34,7 @@ class SearchByGenreActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_by_genre)
 
-        search_result.text = getString(R.string.search_result,"0")
+        search_result.text = getString(R.string.search_result, "0")
 
         val category = intent.getStringExtra(SELECTED_CATEGORY)
         val genre = intent.getParcelableExtra<Genre>(SELECTED_GENRE)
@@ -54,7 +54,7 @@ class SearchByGenreActivity : AppCompatActivity() {
         mLayoutManager = GridLayoutManager(this, SearchResultFragment.GRID_COLUMN)
         mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                when(searchShowAdapter.getItemViewType(position)){
+                when (searchShowAdapter.getItemViewType(position)) {
                     Constant.VIEW_TYPE_ITEM -> return 1
                     Constant.VIEW_TYPE_LOADING -> return SearchResultFragment.GRID_COLUMN
                 }
@@ -69,7 +69,8 @@ class SearchByGenreActivity : AppCompatActivity() {
             CustomRecyclerViewScrollListener(
                 mLayoutManager
             )
-        scrollListener.setOnLoadMoreListener(object : CustomRecyclerViewScrollListener.OnLoadMoreListener{
+        scrollListener.setOnLoadMoreListener(object :
+            CustomRecyclerViewScrollListener.OnLoadMoreListener {
             override fun onLoadMore() {
                 loadMoreData(genre?.id.toString())
             }
@@ -80,13 +81,13 @@ class SearchByGenreActivity : AppCompatActivity() {
 
         viewModel.setShows(category, FIRST_PAGE, genre?.id.toString())
         viewModel.getShows().observe(this, Observer {
-            if(it != null){
+            if (it != null) {
                 searchShowAdapter.setData(it)
-                search_result.text = getString(R.string.search_result,viewModel.totalResults.toString())
+                search_result.text =
+                    getString(R.string.search_result, viewModel.totalResults.toString())
             }
         })
     }
-
 
 
     private fun loadMoreData(genre: String) {
@@ -105,7 +106,7 @@ class SearchByGenreActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == android.R.id.home){
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
         }
         return super.onOptionsItemSelected(item)

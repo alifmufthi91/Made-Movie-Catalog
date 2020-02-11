@@ -18,6 +18,8 @@
     <string name="delete_favorite"> %1$s is removed from Favorites</string>
     <string name="change_language">Change Language</string>
     <string name="dialog_title_failed_retrieve">Failed to retrieve data</string>
-    <string name="dialog_title_failed_execute">Failed to execute request</string>
     <string name="dialog_text">Please make sure provider application is running</string>
+    <string name="back_button">Back Button</string>
+    <string name="favorite_button">Favorite Button</string>
+    <string name="genre">Genre</string>
 </resources>

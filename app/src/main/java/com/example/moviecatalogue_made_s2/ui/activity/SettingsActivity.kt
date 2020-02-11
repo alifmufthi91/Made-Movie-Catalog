@@ -43,21 +43,21 @@ class SettingsActivity : AppCompatActivity() {
     class SettingsPreferenceFragment : PreferenceFragmentCompat(),
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-        private lateinit var REMINDER : String
-        private lateinit var RELEASE_TODAY : String
-        private lateinit var NIGHT_MODE : String
-        private lateinit var CHANGE_LANGUAGE : String
-        private lateinit var DELETE_FAVORITES : String
+        private lateinit var REMINDER: String
+        private lateinit var RELEASE_TODAY: String
+        private lateinit var NIGHT_MODE: String
+        private lateinit var CHANGE_LANGUAGE: String
+        private lateinit var DELETE_FAVORITES: String
 
         private lateinit var alarmReceiver: AlarmReceiver
 
-        private lateinit var reminderPreference : SwitchPreferenceCompat
-        private lateinit var releaseTodayPreference : SwitchPreferenceCompat
-        private lateinit var changeLanguagePreference : Preference
-        private lateinit var deleteFavoritesPreference : Preference
-        private lateinit var changeNightMode : SwitchPreferenceCompat
+        private lateinit var reminderPreference: SwitchPreferenceCompat
+        private lateinit var releaseTodayPreference: SwitchPreferenceCompat
+        private lateinit var changeLanguagePreference: Preference
+        private lateinit var deleteFavoritesPreference: Preference
+        private lateinit var changeNightMode: SwitchPreferenceCompat
 
-        private lateinit var favsHelper : FavoritesHelper
+        private lateinit var favsHelper: FavoritesHelper
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.settings, rootKey)
@@ -75,13 +75,13 @@ class SettingsActivity : AppCompatActivity() {
             preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         }
 
-        private fun setSummaries(){
+        private fun setSummaries() {
             val sh = preferenceManager.sharedPreferences
             reminderPreference.isChecked = sh.getBoolean(REMINDER, false)
             releaseTodayPreference.isChecked = sh.getBoolean(RELEASE_TODAY, false)
         }
 
-        private fun init(){
+        private fun init() {
             favsHelper = FavoritesHelper(requireContext())
             REMINDER = resources.getString(R.string.key_reminder)
             RELEASE_TODAY = resources.getString(R.string.key_release)
@@ -91,62 +91,71 @@ class SettingsActivity : AppCompatActivity() {
             alarmReceiver =
                 AlarmReceiver()
 
-            reminderPreference = findPreference<SwitchPreferenceCompat>(REMINDER) as SwitchPreferenceCompat
-            releaseTodayPreference = findPreference<SwitchPreferenceCompat>(RELEASE_TODAY) as SwitchPreferenceCompat
+            reminderPreference =
+                findPreference<SwitchPreferenceCompat>(REMINDER) as SwitchPreferenceCompat
+            releaseTodayPreference =
+                findPreference<SwitchPreferenceCompat>(RELEASE_TODAY) as SwitchPreferenceCompat
 //            changeNightMode = findPreference<SwitchPreferenceCompat>(NIGHT_MODE) as SwitchPreferenceCompat
             changeLanguagePreference = findPreference<Preference>(CHANGE_LANGUAGE) as Preference
 
-            changeLanguagePreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                val mIntent = Intent(Settings.ACTION_LOCALE_SETTINGS)
-                startActivity(mIntent)
-                true
-            }
+            changeLanguagePreference.onPreferenceClickListener =
+                Preference.OnPreferenceClickListener {
+                    val mIntent = Intent(Settings.ACTION_LOCALE_SETTINGS)
+                    startActivity(mIntent)
+                    true
+                }
 
             deleteFavoritesPreference = findPreference<Preference>(DELETE_FAVORITES) as Preference
-            deleteFavoritesPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                val dialogBuilder = AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.are_you_sure))
-                    .setMessage(getString(R.string.will_be_deleted))
-                    .setNegativeButton(getString(R.string.no)) { _, _ ->
+            deleteFavoritesPreference.onPreferenceClickListener =
+                Preference.OnPreferenceClickListener {
+                    val dialogBuilder = AlertDialog.Builder(requireContext())
+                        .setTitle(getString(R.string.are_you_sure))
+                        .setMessage(getString(R.string.will_be_deleted))
+                        .setNegativeButton(getString(R.string.no)) { _, _ ->
 
-                    }
-                    .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                        favsHelper.open()
-                        val count = favsHelper.deleteAll()
-                        favsHelper.close()
-                        Toast.makeText(context, getString(R.string.count_deleted, count.toString()), Toast.LENGTH_SHORT ).show()
-                    }
-                    .setCancelable(false)
-                    .create()
-                dialogBuilder.show()
-                true
-            }
+                        }
+                        .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                            favsHelper.open()
+                            val count = favsHelper.deleteAll()
+                            favsHelper.close()
+                            Toast.makeText(
+                                context,
+                                getString(R.string.count_deleted, count.toString()),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        .setCancelable(false)
+                        .create()
+                    dialogBuilder.show()
+                    true
+                }
 
         }
 
         override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-            when(key){
+            when (key) {
                 REMINDER -> {
                     reminderPreference.isChecked = sharedPreferences.getBoolean(REMINDER, false)
-                    if (reminderPreference.isChecked){
+                    if (reminderPreference.isChecked) {
                         alarmReceiver.setReminderAlarm(requireContext())
-                    }else{
+                    } else {
                         alarmReceiver.cancelReminderAlarm(requireContext())
                     }
                 }
                 RELEASE_TODAY -> {
-                    releaseTodayPreference.isChecked = sharedPreferences.getBoolean(RELEASE_TODAY, false)
-                    if(releaseTodayPreference.isChecked){
+                    releaseTodayPreference.isChecked =
+                        sharedPreferences.getBoolean(RELEASE_TODAY, false)
+                    if (releaseTodayPreference.isChecked) {
                         alarmReceiver.setTodayReleaseAlarm(requireContext())
-                    }else{
+                    } else {
                         alarmReceiver.cancelTodayReleaseAlarm(requireContext())
                     }
                 }
                 NIGHT_MODE -> {
                     changeNightMode.isChecked = sharedPreferences.getBoolean(NIGHT_MODE, false)
-                    if (changeNightMode.isChecked){
+                    if (changeNightMode.isChecked) {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    }else{
+                    } else {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     }
                 }
@@ -156,7 +165,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == android.R.id.home){
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
         }
         return super.onOptionsItemSelected(item)

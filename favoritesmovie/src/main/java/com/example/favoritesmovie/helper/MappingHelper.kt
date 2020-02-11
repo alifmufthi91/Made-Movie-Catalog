@@ -25,4 +25,13 @@ object MappingHelper {
         return arrayList
     }
 
+    fun isExist(cursor: Cursor): Boolean {
+        cursor.moveToFirst()
+        if(cursor.count > 0){
+            return true
+        }
+        cursor.close()
+        return false
+    }
+
 }

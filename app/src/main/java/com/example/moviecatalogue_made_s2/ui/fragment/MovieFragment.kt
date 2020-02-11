@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecatalogue_made_s2.R
-import com.example.moviecatalogue_made_s2.ui.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue_made_s2.adapter.ListShowAdapter
+import com.example.moviecatalogue_made_s2.ui.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue_made_s2.ui.viewmodel.ListViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
 
@@ -46,7 +46,7 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         showRecyclerList()
         Log.d("listCategory", SHOW_MOVIE)
-        listViewModel.setShows(SHOW_MOVIE,currentPage)
+        listViewModel.setShows(SHOW_MOVIE, currentPage)
         listViewModel.getShows(SHOW_MOVIE).observe(this, Observer { Shows ->
             if (Shows != null) {
                 listShowAdapter.setData(Shows)
@@ -65,7 +65,8 @@ class MovieFragment : Fragment() {
             CustomRecyclerViewScrollListener(
                 mLayoutManger as LinearLayoutManager
             )
-        scrollListener.setOnLoadMoreListener(object : CustomRecyclerViewScrollListener.OnLoadMoreListener{
+        scrollListener.setOnLoadMoreListener(object :
+            CustomRecyclerViewScrollListener.OnLoadMoreListener {
             override fun onLoadMore() {
                 loadMoreData()
             }

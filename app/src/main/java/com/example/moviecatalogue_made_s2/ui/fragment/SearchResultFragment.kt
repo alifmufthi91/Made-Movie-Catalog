@@ -42,15 +42,16 @@ class SearchResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        search_result_fragment.text = getString(R.string.search_result,"0")
+        search_result_fragment.text = getString(R.string.search_result, "0")
         showRecyclerList()
         searchViewModel.getShows().observe(this, Observer { Shows ->
             if (Shows != null) {
                 searchShowAdapter.setData(Shows)
-                search_result_fragment.text = getString(R.string.search_result, searchViewModel.totalResult.toString())
-                if (Shows.size < 1){
+                search_result_fragment.text =
+                    getString(R.string.search_result, searchViewModel.totalResult.toString())
+                if (Shows.size < 1) {
                     empty_result_fragment_search.visibility = View.VISIBLE
-                }else{
+                } else {
                     empty_result_fragment_search.visibility = View.GONE
                 }
             }
@@ -70,7 +71,7 @@ class SearchResultFragment : Fragment() {
         mLayoutManager = GridLayoutManager(activity, GRID_COLUMN)
         mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                when(searchShowAdapter.getItemViewType(position)){
+                when (searchShowAdapter.getItemViewType(position)) {
                     Constant.VIEW_TYPE_ITEM -> return 1
                     Constant.VIEW_TYPE_LOADING -> return GRID_COLUMN
                 }
@@ -83,7 +84,8 @@ class SearchResultFragment : Fragment() {
             CustomRecyclerViewScrollListener(
                 mLayoutManager
             )
-        scrollListener.setOnLoadMoreListener(object : CustomRecyclerViewScrollListener.OnLoadMoreListener{
+        scrollListener.setOnLoadMoreListener(object :
+            CustomRecyclerViewScrollListener.OnLoadMoreListener {
             override fun onLoadMore() {
                 loadMoreData()
             }
@@ -96,11 +98,15 @@ class SearchResultFragment : Fragment() {
         searchShowAdapter.addLoadingView()
         //disini get data//
         Handler().postDelayed({
-            searchViewModel.loadMore(searchViewModel.category, ++searchViewModel.currentPage, searchViewModel.query)
+            searchViewModel.loadMore(
+                searchViewModel.category,
+                ++searchViewModel.currentPage,
+                searchViewModel.query
+            )
             //end//
             searchShowAdapter.removeLoadingView()
             scrollListener.setLoaded()
-            if(this.isVisible){
+            if (this.isVisible) {
                 rv_search.post {
                     searchShowAdapter.notifyDataSetChanged()
                 }
@@ -108,7 +114,6 @@ class SearchResultFragment : Fragment() {
         }, 2000)
 
     }
-
 
 
 }

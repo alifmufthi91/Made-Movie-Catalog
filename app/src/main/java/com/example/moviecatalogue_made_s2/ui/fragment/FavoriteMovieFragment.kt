@@ -93,7 +93,6 @@ class FavoriteMovieFragment : Fragment() {
     }
 
 
-
     private fun loadShowsAsync() {
         GlobalScope.launch(Dispatchers.Main) {
             val deferredShows = async(Dispatchers.IO) {

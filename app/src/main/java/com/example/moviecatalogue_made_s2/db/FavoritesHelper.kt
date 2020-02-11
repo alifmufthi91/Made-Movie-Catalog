@@ -65,6 +65,7 @@ class FavoritesHelper(context: Context) {
                 show.name = cursor.getString(cursor.getColumnIndexOrThrow(NAME))
                 show.overview = cursor.getString(cursor.getColumnIndexOrThrow(DESCRIPTION))
                 show.imgPath = cursor.getString(cursor.getColumnIndexOrThrow(POSTER))
+                show.showType = cursor.getString(cursor.getColumnIndexOrThrow(SHOW_TYPE))
                 arrayList.add(show)
                 cursor.moveToNext()
             } while (!cursor.isAfterLast)
@@ -96,7 +97,8 @@ class FavoritesHelper(context: Context) {
             null,
             null,
             null,
-            null)
+            null
+        )
     }
 
     fun getDataByShowType(showType: String): ArrayList<Show> {
@@ -120,6 +122,7 @@ class FavoritesHelper(context: Context) {
                 show.name = cursor.getString(cursor.getColumnIndexOrThrow(NAME))
                 show.overview = cursor.getString(cursor.getColumnIndexOrThrow(DESCRIPTION))
                 show.imgPath = cursor.getString(cursor.getColumnIndexOrThrow(POSTER))
+                show.showType = cursor.getString(cursor.getColumnIndexOrThrow(SHOW_TYPE))
                 arrayList.add(show)
                 cursor.moveToNext()
             } while (!cursor.isAfterLast)
@@ -172,20 +175,20 @@ class FavoritesHelper(context: Context) {
 
     fun deleteAll(): Int {
         Log.d("delete all data: ", "start..")
-        return database.delete(DATABASE_TABLE,"1",null)
+        return database.delete(DATABASE_TABLE, "1", null)
     }
 
-    fun setValues(show: Show, showType: String) : ContentValues {
+    fun setValues(show: Show): ContentValues {
         val values = ContentValues()
-        values.put(NAME,show.name)
-        values.put(DESCRIPTION,show.overview)
+        values.put(NAME, show.name)
+        values.put(DESCRIPTION, show.overview)
         values.put(MOVIEDB_ID, show.movieDbId.toString())
         values.put(POSTER, show.imgPath)
-        values.put(SHOW_TYPE, showType)
+        values.put(SHOW_TYPE, show.showType)
         return values
     }
 
-    fun insertTransaction(show: Show, showType: String) {
+    fun insertTransaction(show: Show) {
         val sql =
             ("INSERT INTO $TABLE_NAME ($NAME, $DESCRIPTION, $MOVIEDB_ID, $POSTER, $SHOW_TYPE) VALUES (?, ?, ?, ?, ?)")
         val stmt = database.compileStatement(sql)
@@ -193,7 +196,7 @@ class FavoritesHelper(context: Context) {
         stmt.bindString(2, show.overview)
         stmt.bindString(3, show.movieDbId.toString())
         stmt.bindString(4, show.imgPath)
-        stmt.bindString(5, showType)
+        stmt.bindString(5, show.showType)
         stmt.execute()
         stmt.clearBindings()
     }

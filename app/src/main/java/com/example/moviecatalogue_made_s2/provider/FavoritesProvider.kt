@@ -25,16 +25,20 @@ class FavoritesProvider : ContentProvider() {
         private const val TV_ID = 4
         private val sUriMatcher = UriMatcher(UriMatcher.NO_MATCH)
         private lateinit var favsHelper: FavoritesHelper
+
         init {
             sUriMatcher.addURI(AUTHORITY, "$TABLE_NAME/$SHOW_MOVIE", FAVORITE_MOVIE)
             sUriMatcher.addURI(AUTHORITY, "$TABLE_NAME/$SHOW_TV", FAVORITE_TV)
-            sUriMatcher.addURI(AUTHORITY,
+            sUriMatcher.addURI(
+                AUTHORITY,
                 "$TABLE_NAME/$SHOW_MOVIE/#",
-                MOVIE_ID)
-            sUriMatcher.addURI(AUTHORITY,
+                MOVIE_ID
+            )
+            sUriMatcher.addURI(
+                AUTHORITY,
                 "$TABLE_NAME/$SHOW_TV/#",
                 TV_ID
-                )
+            )
         }
     }
 
@@ -98,7 +102,6 @@ class FavoritesProvider : ContentProvider() {
         favsHelper.open()
         return true
     }
-
 
 
     override fun update(

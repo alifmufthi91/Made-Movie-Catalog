@@ -23,7 +23,8 @@ data class Show(
     @SerializedName("id")
     var movieDbId: Long = 0,
     @SerializedName("genres")
-    var genreList: ArrayList<Genre>? = null
+    var genreList: ArrayList<Genre>? = null,
+    var showType: String? = null
 ) : Parcelable {
     fun getPortraitPhoto(): String = "https://image.tmdb.org/t/p/w188_and_h282_bestv2/$imgPath"
     fun getLandscapePhoto(): String = "https://image.tmdb.org/t/p/w500_and_h282_face/$imgPath"

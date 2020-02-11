@@ -1,12 +1,13 @@
 package com.example.favoritesmovie.ui.activity
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.favoritesmovie.BuildConfig
@@ -14,12 +15,16 @@ import com.example.favoritesmovie.R
 import com.example.favoritesmovie.db.DatabaseContract
 import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_MOVIE_URI
 import com.example.favoritesmovie.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_TV_URI
+import com.example.favoritesmovie.helper.MappingHelper
+import com.example.favoritesmovie.model.Genre
 import com.example.favoritesmovie.model.Show
 import com.example.favoritesmovie.ui.fragment.FavoriteMovieFragment.Companion.SHOW_MOVIE
 import com.example.favoritesmovie.utils.MovieDB
+import com.example.favoritesmovie.utils.Utility
 import kotlinx.android.synthetic.main.activity_detail_show.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,8 +34,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class DetailShowActivity : AppCompatActivity() {
 
-    private lateinit var dialogBuilder : AlertDialog
-
     private var favorited = false
     private var position: Int = 0
     private var showData = Show()
@@ -38,7 +41,6 @@ class DetailShowActivity : AppCompatActivity() {
 
     companion object {
         const val REQUEST_VIEW = 100
-        const val RESULT_REMOVED = 201
         const val DETAIL_SHOW = "detailShow"
         const val EXTRA_POSITION = "position"
         const val EXTRA_TYPE = "movie type"
@@ -49,23 +51,12 @@ class DetailShowActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail_show)
         showData = intent.getParcelableExtra<Show>(DETAIL_SHOW) as Show
         showType = intent.getStringExtra(EXTRA_TYPE) as String
-
-        dialogBuilder = AlertDialog.Builder(this)
-            .setTitle(R.string.dialog_title_failed_execute)
-            .setMessage(R.string.dialog_text)
-            .setNegativeButton("OK") { _, _ ->
-                finish()
-            }
-            .setCancelable(false)
-            .create()
-
         getShowInfo(showData.movieDbId.toInt())
         Log.d("show type", showType)
         position = intent.getIntExtra(EXTRA_POSITION, 0)
 
-        favorited = true
-
-        displayShowData(showData, favorited)
+        favorited = false
+        displayShowData(showData)
         ib_back_button.setOnClickListener {
             onBackPressed()
         }
@@ -102,25 +93,16 @@ class DetailShowActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                showWarningDialog()
             }
         }
     }
 
-    private fun displayShowData(show: Show?, favorited: Boolean) {
+    private fun displayShowData(show: Show?) {
         Glide.with(applicationContext).load(show?.getLandscapePhoto()).into(show_cover)
         tv_movie_title.text = show?.name
         tv_movie_overview.text = show?.overview
         displayShowInfo(show)
-        setFavorite(favorited)
-    }
-
-    private fun showWarningDialog(){
-        if (!dialogBuilder.isShowing){
-            this.runOnUiThread {
-                dialogBuilder.show()
-            }
-        }
+        checkIsShowFavorite(showData.movieDbId.toString())
     }
 
     private fun displayShowInfo(show: Show?) {
@@ -134,27 +116,36 @@ class DetailShowActivity : AppCompatActivity() {
             null -> View.INVISIBLE
             else -> View.VISIBLE
         }
-        tv_movie_popularity.text = show?.popularity.toString()
+        tv_movie_popularity.text = show?.popularity?.toLong()?.let { Utility.longToSuffixes(it) }
         tv_movie_popularity.visibility = when (show?.popularity) {
             null -> View.INVISIBLE
             else -> View.VISIBLE
         }
-        tv_movie_voter.text = show?.voter.toString()
+        tv_movie_voter.text = show?.voter?.toLong()?.let { Utility.longToSuffixes(it) }
         tv_movie_voter.visibility = when (show?.voter) {
             0 -> View.INVISIBLE
+            else -> View.VISIBLE
+        }
+        tv_movie_genre.text = getGenres(show?.genreList)
+        tv_movie_genre.visibility = when (show?.genreList) {
+            null -> View.INVISIBLE
             else -> View.VISIBLE
         }
     }
 
 
+
     private fun setFavorite(favorited: Boolean) {
+
         this.favorited = favorited
         if (favorited) {
-            ib_favorites.background = resources.getDrawable(R.drawable.ic_favorite, null)
+            ib_favorites.setImageDrawable(resources.getDrawable(R.drawable.ic_favorite, null))
         } else {
-            ib_favorites.background = resources.getDrawable(R.drawable.ic_favorite_border, null)
+            ib_favorites.setImageDrawable(resources.getDrawable(R.drawable.ic_favorite_border, null))
         }
     }
+
+
 
     private fun setValues(show: Show, showType: String) : ContentValues {
         val values = ContentValues()
@@ -191,5 +182,40 @@ class DetailShowActivity : AppCompatActivity() {
                 Log.d("getShowInfo : ", " Failed..")
             }
         })
+    }
+
+    private fun checkIsShowFavorite(id: String) {
+        val uri = when (showType) {
+            SHOW_MOVIE -> Uri.parse("$CONTENT_MOVIE_URI/$id")
+            else -> Uri.parse("$CONTENT_TV_URI/$id")
+        }
+        GlobalScope.launch(Dispatchers.Main) {
+            val defferedFavorited = async(Dispatchers.IO) {
+                val cursor = contentResolver?.query(
+                    uri,
+                    null,
+                    null,
+                    null,
+                    "${BaseColumns._ID} ASC"
+                ) as Cursor
+                MappingHelper.isExist(cursor)
+            }
+            val isShowFavorited = defferedFavorited.await()
+            Log.d("isFavorited?: ", isShowFavorited.toString())
+            setFavorite(isShowFavorited)
+            favorited = isShowFavorited
+        }
+    }
+
+    private fun getGenres(list: ArrayList<Genre>?): String?{
+        var genres = ""
+        list?.forEach {
+            genres += if (it != list[0]){
+                ", "+it.name
+            }else{
+                it.name
+            }
+        }
+        return genres
     }
 }

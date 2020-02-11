@@ -48,13 +48,18 @@ This application was created to meet the Module on Learning Materials to Become 
     <string name="category_reminder">Reminder</string>
     <string name="category_advanced">Advanced</string>
     <string name="delete_favorites">Delete Favorited Shows</string>
-    <string name="night_mode">Night Mode</string>
     <string name="key_change_language">KEY_CHANGE_LANGUAGE</string>
-    <string name="key_night_mode">KEY_NIGHT_MODE</string>
     <string name="key_delete_favorites">KEY_DELETE_FAVORITES</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="will_be_deleted">All favorite shows will be deleted</string>
     <string name="no">NO</string>
     <string name="yes">YES</string>
     <string name="count_deleted">"%1$s favorite show is deleted"</string>
+    <string name="appwidget_text">Favorite Shows</string>
+    <string name="widget_item_holder">Widget Item Holder</string>
+    <string name="empty_data">Empty Data</string>
+    <string name="toast_alert_set">Alert are set!</string>
+    <string name="toast_reminder_set">You will be reminded everyday!</string>
+    <string name="show_cannot_be_found">show cannot be found.</string>
+    <string name="sad_face">Sad Face</string>
 </resources>

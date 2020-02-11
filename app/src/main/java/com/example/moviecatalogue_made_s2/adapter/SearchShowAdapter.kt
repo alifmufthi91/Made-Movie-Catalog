@@ -32,7 +32,7 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
         notifyDataSetChanged()
     }
 
-    fun getData(): ArrayList<Show?>{
+    fun getData(): ArrayList<Show?> {
         return listShow
     }
 
@@ -60,13 +60,15 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType){
+        return when (viewType) {
             Constant.VIEW_TYPE_ITEM -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_show_grid, parent, false)
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_show_grid, parent, false)
                 GridViewHolder(view)
             }
-            else ->{
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_load, parent, false)
+            else -> {
+                val view =
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_load, parent, false)
                 LoadingViewHolder(view)
             }
         }
@@ -79,7 +81,7 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
     override fun getItemCount(): Int = listShow.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder.itemViewType == Constant.VIEW_TYPE_ITEM){
+        if (holder.itemViewType == Constant.VIEW_TYPE_ITEM) {
             listShow[position]?.let { (holder as GridViewHolder).bind(it) }
         }
     }
@@ -87,13 +89,13 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
     inner class GridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(show: Show) {
             with(itemView) {
-                if(show.imgPath == null){
+                if (show.imgPath == null) {
                     com.bumptech.glide.Glide.with(itemView.context)
                         .load(R.raw.image_not_available)
                         .override(200, 200)
                         .fitCenter()
                         .into(img_item_photo_grid)
-                }else{
+                } else {
                     com.bumptech.glide.Glide.with(itemView.context)
                         .load(show.getPortraitPhoto())
                         .into(img_item_photo_grid)

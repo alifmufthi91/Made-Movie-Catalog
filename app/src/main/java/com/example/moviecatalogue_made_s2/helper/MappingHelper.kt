@@ -14,10 +14,15 @@ object MappingHelper {
         if (cursor.count > 0) {
             do {
                 show = Show()
-                show.movieDbId = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.MOVIEDB_ID)).toLong()
-                show.name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.NAME))
-                show.overview = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.DESCRIPTION))
-                show.imgPath = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.POSTER))
+                show.movieDbId =
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.MOVIEDB_ID))
+                        .toLong()
+                show.name =
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.NAME))
+                show.overview =
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.DESCRIPTION))
+                show.imgPath =
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.POSTER))
                 arrayList.add(show)
                 cursor.moveToNext()
             } while (!cursor.isAfterLast)
@@ -29,11 +34,16 @@ object MappingHelper {
     fun mapCursorToObject(cursor: Cursor): Show {
         cursor.moveToFirst()
         val show = Show()
-        if(cursor.count > 0){
-            show.movieDbId = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.MOVIEDB_ID)).toLong()
-            show.name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.NAME))
-            show.overview = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.DESCRIPTION))
-            show.imgPath = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.POSTER))
+        if (cursor.count > 0) {
+            show.movieDbId =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.MOVIEDB_ID))
+                    .toLong()
+            show.name =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.NAME))
+            show.overview =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.DESCRIPTION))
+            show.imgPath =
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.FavoritesColumns.POSTER))
         }
         cursor.close()
         return show
@@ -41,7 +51,7 @@ object MappingHelper {
 
     fun isExist(cursor: Cursor): Boolean {
         cursor.moveToFirst()
-        if(cursor.count > 0){
+        if (cursor.count > 0) {
             return true
         }
         cursor.close()

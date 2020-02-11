@@ -24,15 +24,15 @@ class ListViewModel : ViewModel() {
 
     internal fun setShows(category: String?, page: Int) {
         Log.d("setShows()", this.toString())
-        val listShows= ArrayList<Show>()
-        when (category){
+        val listShows = ArrayList<Show>()
+        when (category) {
             SHOW_MOVIE -> {
-                if (movieShows.value != null){
+                if (movieShows.value != null) {
                     listShows.addAll(movieShows.value as ArrayList<Show>)
                 }
             }
             else -> {
-                if (tvShows.value != null){
+                if (tvShows.value != null) {
                     listShows.addAll(tvShows.value as ArrayList<Show>)
                 }
             }
@@ -43,7 +43,12 @@ class ListViewModel : ViewModel() {
         val retrofit = builder.build()
         val movieDBClient = retrofit.create(MovieDB::class.java)
         Log.d("setShows()", "page : $page")
-        val call = movieDBClient.showList(category?.toLowerCase(Locale.getDefault()), BuildConfig.API_KEY, page, null)
+        val call = movieDBClient.showList(
+            category?.toLowerCase(Locale.getDefault()),
+            BuildConfig.API_KEY,
+            page,
+            null
+        )
         call.enqueue(object : Callback<ShowList> {
             override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
                 val showList = response.body()

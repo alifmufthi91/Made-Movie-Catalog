@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import com.example.moviecatalogue_made_s2.R
 import com.example.moviecatalogue_made_s2.adapter.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -14,7 +13,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode())
         setContentView(R.layout.activity_main)
 
         val sectionsPagerAdapter =

@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.fragment_search_menu.*
 class SearchMenuFragment : Fragment() {
 
     private lateinit var searchViewModel: SearchViewModel
-    private lateinit var adapter  : ArrayAdapter<String>
+    private lateinit var adapter: ArrayAdapter<String>
 
     companion object {
         private const val CATEGORY_STATE = "categoryState"
@@ -51,7 +51,7 @@ class SearchMenuFragment : Fragment() {
             SearchViewModel::class.java
         )
 
-        adapter = object : ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1){
+        adapter = object : ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val customTv = super.getView(position, convertView, parent) as TextView
                 customTv.setTextColor(resources.getColor(R.color.textPrimary))
@@ -78,14 +78,16 @@ class SearchMenuFragment : Fragment() {
             if (it != null) {
                 adapter.clear()
                 for (genre in it) {
+                    lv_genre.visibility = View.GONE
                     adapter.add(genre.name)
+                    lv_genre.visibility = View.VISIBLE
                 }
                 adapter.notifyDataSetChanged()
             }
         })
         lv_genre.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
-                val intent = Intent(context,SearchByGenreActivity::class.java)
+                val intent = Intent(context, SearchByGenreActivity::class.java)
                 intent.putExtra(SELECTED_CATEGORY, searchViewModel.category)
                 intent.putExtra(SELECTED_GENRE, searchViewModel.listGenre[position])
                 startActivity(intent)

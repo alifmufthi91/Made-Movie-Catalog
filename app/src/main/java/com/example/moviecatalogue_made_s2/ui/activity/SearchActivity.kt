@@ -20,16 +20,21 @@ class SearchActivity : AppCompatActivity() {
     private val mFragmentManager = supportFragmentManager
     private val mSearchResultFragment = SearchResultFragment()
     private val mSearchMenuFragment = SearchMenuFragment()
-    private var fragment = mFragmentManager.findFragmentByTag(SearchMenuFragment::class.java.simpleName)
+    private var fragment =
+        mFragmentManager.findFragmentByTag(SearchMenuFragment::class.java.simpleName)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        if (fragment !is SearchResultFragment){
+        if (fragment !is SearchResultFragment) {
             mFragmentManager
                 .beginTransaction()
-                .add(R.id.frame_container, mSearchMenuFragment, SearchMenuFragment::class.java.simpleName)
+                .add(
+                    R.id.frame_container,
+                    mSearchMenuFragment,
+                    SearchMenuFragment::class.java.simpleName
+                )
                 .commit()
         }
 
@@ -58,35 +63,58 @@ class SearchActivity : AppCompatActivity() {
             onActionViewExpanded()
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    if(fragment !is SearchResultFragment){
-                        fragment = mFragmentManager.findFragmentByTag(SearchResultFragment::class.java.simpleName)
+                    if (fragment !is SearchResultFragment) {
+                        fragment =
+                            mFragmentManager.findFragmentByTag(SearchResultFragment::class.java.simpleName)
                         mFragmentManager
                             .beginTransaction()
-                            .replace(R.id.frame_container, mSearchResultFragment, SearchResultFragment::class.java.simpleName)
+                            .replace(
+                                R.id.frame_container,
+                                mSearchResultFragment,
+                                SearchResultFragment::class.java.simpleName
+                            )
                             .commit()
                     }
                     searchViewModel.query = query
-                    searchViewModel.setShows(searchViewModel.category, FIRST_PAGE, searchViewModel.query)
+                    searchViewModel.setShows(
+                        searchViewModel.category,
+                        FIRST_PAGE,
+                        searchViewModel.query
+                    )
                     return true
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
-                    if (newText.isNotEmpty()){
-                        if(fragment !is SearchResultFragment){
-                            fragment = mFragmentManager.findFragmentByTag(SearchResultFragment::class.java.simpleName)
+                    if (newText.isNotEmpty()) {
+                        if (fragment !is SearchResultFragment) {
+                            fragment =
+                                mFragmentManager.findFragmentByTag(SearchResultFragment::class.java.simpleName)
                             mFragmentManager
                                 .beginTransaction()
-                                .replace(R.id.frame_container, mSearchResultFragment, SearchResultFragment::class.java.simpleName)
+                                .replace(
+                                    R.id.frame_container,
+                                    mSearchResultFragment,
+                                    SearchResultFragment::class.java.simpleName
+                                )
                                 .commit()
                         }
                         searchViewModel.query = newText
-                        searchViewModel.setShows(searchViewModel.category, FIRST_PAGE, searchViewModel.query)
-                    }else{
-                        if(fragment !is SearchMenuFragment){
-                            fragment = mFragmentManager.findFragmentByTag(SearchMenuFragment::class.java.simpleName)
+                        searchViewModel.setShows(
+                            searchViewModel.category,
+                            FIRST_PAGE,
+                            searchViewModel.query
+                        )
+                    } else {
+                        if (fragment !is SearchMenuFragment) {
+                            fragment =
+                                mFragmentManager.findFragmentByTag(SearchMenuFragment::class.java.simpleName)
                             mFragmentManager
                                 .beginTransaction()
-                                .replace(R.id.frame_container, mSearchMenuFragment, SearchMenuFragment::class.java.simpleName)
+                                .replace(
+                                    R.id.frame_container,
+                                    mSearchMenuFragment,
+                                    SearchMenuFragment::class.java.simpleName
+                                )
                                 .commit()
                         }
                     }
@@ -99,7 +127,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == android.R.id.home){
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
         }
         return true

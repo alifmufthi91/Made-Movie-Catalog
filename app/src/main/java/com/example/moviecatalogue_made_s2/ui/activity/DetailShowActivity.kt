@@ -32,9 +32,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-
-
-
 class DetailShowActivity : AppCompatActivity() {
 
     private var favorited = false
@@ -66,31 +63,45 @@ class DetailShowActivity : AppCompatActivity() {
         ib_favorites.setOnClickListener {
             try {
                 if (favorited) {
-                    when (showType){
+                    when (showType) {
                         SHOW_MOVIE -> {
-                            val uriWithId = Uri.parse(CONTENT_MOVIE_URI.toString() + "/" + showData.movieDbId)
+                            val uriWithId =
+                                Uri.parse(CONTENT_MOVIE_URI.toString() + "/" + showData.movieDbId)
                             contentResolver.delete(uriWithId, null, null)
                         }
                         else -> {
-                            val uriWithId = Uri.parse(CONTENT_TV_URI.toString() + "/" + showData.movieDbId)
+                            val uriWithId =
+                                Uri.parse(CONTENT_TV_URI.toString() + "/" + showData.movieDbId)
                             contentResolver.delete(uriWithId, null, null)
                         }
                     }
                     setFavorite(false)
                     Toast.makeText(
                         applicationContext,
-                        getString(com.example.moviecatalogue_made_s2.R.string.delete_favorite, showData.name),
+                        getString(
+                            com.example.moviecatalogue_made_s2.R.string.delete_favorite,
+                            showData.name
+                        ),
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    when (showType){
-                        SHOW_MOVIE -> contentResolver.insert(CONTENT_MOVIE_URI, setValues(showData, showType))
-                        else -> contentResolver.insert(CONTENT_TV_URI, setValues(showData, showType))
+                    when (showType) {
+                        SHOW_MOVIE -> contentResolver.insert(
+                            CONTENT_MOVIE_URI,
+                            setValues(showData, showType)
+                        )
+                        else -> contentResolver.insert(
+                            CONTENT_TV_URI,
+                            setValues(showData, showType)
+                        )
                     }
                     setFavorite(true)
                     Toast.makeText(
                         applicationContext,
-                        getString(com.example.moviecatalogue_made_s2.R.string.add_favorite, showData.name),
+                        getString(
+                            com.example.moviecatalogue_made_s2.R.string.add_favorite,
+                            showData.name
+                        ),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -137,23 +148,31 @@ class DetailShowActivity : AppCompatActivity() {
     }
 
 
-
     private fun setFavorite(favorited: Boolean) {
 
         this.favorited = favorited
         if (favorited) {
-            ib_favorites.setImageDrawable(resources.getDrawable(com.example.moviecatalogue_made_s2.R.drawable.ic_favorite, null))
+            ib_favorites.setImageDrawable(
+                resources.getDrawable(
+                    com.example.moviecatalogue_made_s2.R.drawable.ic_favorite,
+                    null
+                )
+            )
         } else {
-            ib_favorites.setImageDrawable(resources.getDrawable(com.example.moviecatalogue_made_s2.R.drawable.ic_favorite_border, null))
+            ib_favorites.setImageDrawable(
+                resources.getDrawable(
+                    com.example.moviecatalogue_made_s2.R.drawable.ic_favorite_border,
+                    null
+                )
+            )
         }
     }
 
 
-
-    private fun setValues(show: Show, showType: String) : ContentValues {
+    private fun setValues(show: Show, showType: String): ContentValues {
         val values = ContentValues()
-        values.put(DatabaseContract.FavoritesColumns.NAME,show.name)
-        values.put(DatabaseContract.FavoritesColumns.DESCRIPTION,show.overview)
+        values.put(DatabaseContract.FavoritesColumns.NAME, show.name)
+        values.put(DatabaseContract.FavoritesColumns.DESCRIPTION, show.overview)
         values.put(DatabaseContract.FavoritesColumns.MOVIEDB_ID, show.movieDbId.toString())
         values.put(DatabaseContract.FavoritesColumns.POSTER, show.imgPath)
         values.put(DatabaseContract.FavoritesColumns.SHOW_TYPE, showType)
@@ -210,12 +229,12 @@ class DetailShowActivity : AppCompatActivity() {
         }
     }
 
-    private fun getGenres(list: ArrayList<Genre>?): String?{
+    private fun getGenres(list: ArrayList<Genre>?): String? {
         var genres = ""
         list?.forEach {
-            genres += if (it != list[0]){
-                ", "+it.name
-            }else{
+            genres += if (it != list[0]) {
+                ", " + it.name
+            } else {
                 it.name
             }
         }

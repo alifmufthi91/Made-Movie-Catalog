@@ -19,6 +19,8 @@
     <string name="delete_favorite"> %1$s dihapus dari Favorit</string>
     <string name="change_language">Ganti Bahasa</string>
     <string name="dialog_title_failed_retrieve">Gagal mengambil data</string>
-    <string name="dialog_title_failed_execute">Gagal mengeksekusi perintah</string>
     <string name="dialog_text">Pastikan aplikasi provider telah berjalan terlebih dahulu</string>
+    <string name="back_button">Tombol Kembali</string>
+    <string name="favorite_button">Tombol Favorit</string>
+    <string name="genre">Genre</string>
 </resources>
