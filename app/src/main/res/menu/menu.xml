@@ -2,14 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="@string/favorites"
-        android:id="@+id/action_favorites"
-        android:icon="@drawable/ic_favorite_black"
-        app:showAsAction="always"/>
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_black"
+        android:title="@string/search"
+        app:showAsAction="ifRoom" />
     <item
-        android:title="@string/change_language"
-        android:id="@+id/action_change_language"
-        android:icon="@drawable/ic_language_black"
-        app:showAsAction="always"/>
+        android:id="@+id/action_favorites"
+        android:title="@string/favorites"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/settings"
+        app:showAsAction="never" />
 
 </menu>

@@ -12,7 +12,7 @@ internal class DatabaseHelper(context: Context) :
     companion object {
         private const val DATABASE_NAME = "dbmoviecatalog"
         private const val DATABASE_VERSION = 1
-        private val SQL_CREATE_TABLE_NOTE = "CREATE TABLE $TABLE_NAME" +
+        private const val SQL_CREATE_TABLE_NOTE = "CREATE TABLE $TABLE_NAME" +
                 " (${DatabaseContract.FavoritesColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
                 " ${DatabaseContract.FavoritesColumns.NAME} TEXT NOT NULL," +
                 " ${DatabaseContract.FavoritesColumns.DESCRIPTION} TEXT NOT NULL," +
