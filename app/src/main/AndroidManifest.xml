@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.moviecatalogue_made_s2">
+    package="com.example.moviecatalogue">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -8,10 +8,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <permission
-        android:name="com.example.moviecatalogue_made_s2.READ_DATABASE"
+        android:name="com.example.moviecatalogue.READ_DATABASE"
         android:protectionLevel="normal" />
     <permission
-        android:name="com.example.moviecatalogue_made_s2.WRITE_DATABASE"
+        android:name="com.example.moviecatalogue.WRITE_DATABASE"
         android:protectionLevel="normal" />
 
     <application
@@ -22,7 +22,7 @@
         android:roundIcon="@mipmap/ic_movie_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".provider.StackWidget">
+        <receiver android:name="com.example.moviecatalogue.provider.StackWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -32,7 +32,7 @@
                 android:resource="@xml/stack_widget_info" />
         </receiver>
         <receiver
-            android:name=".service.AlarmReceiver"
+            android:name="com.example.moviecatalogue.service.AlarmReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -40,9 +40,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.activity.SettingsActivity" />
-        <activity android:name=".ui.activity.SearchByGenreActivity" />
-        <activity android:name=".ui.activity.SearchActivity">
+        <activity android:name="com.example.moviecatalogue.settings.SettingsActivity" />
+        <activity android:name="com.example.moviecatalogue.search.SearchByGenreActivity" />
+        <activity android:name="com.example.moviecatalogue.search.SearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -53,22 +53,22 @@
         </activity>
 
         <provider
-            android:name=".provider.FavoritesProvider"
-            android:authorities="com.example.moviecatalogue_made_s2"
+            android:name="com.example.moviecatalogue.provider.FavouriteProvider"
+            android:authorities="com.example.moviecatalogue"
             android:enabled="true"
             android:exported="true"
             android:readPermission="com.example.moviecatalogue_made_s2.READ_DATABASE"
             android:writePermission="com.example.moviecatalogue_made_s2.WRITE_DATABASE" />
 
-        <activity android:name=".ui.activity.FavoritesActivity" />
+        <activity android:name="com.example.moviecatalogue.favourite.FavouriteActivity" />
         <activity
-            android:name=".ui.activity.DetailShowActivity"
+            android:name="com.example.moviecatalogue.detail.DetailShowActivity"
             android:theme="@style/DetailTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.MainActivity">
+        <activity android:name="com.example.moviecatalogue.home.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -77,7 +77,7 @@
         </activity>
 
         <service
-            android:name=".service.StackWidgetService"
+            android:name="com.example.moviecatalogue.service.StackWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
