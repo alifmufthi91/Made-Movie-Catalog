@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MovieCatalogue-MADE</string>
+    <string name="app_name">MovieCatalogueX</string>
 
     <string name="tab_text_1">Film</string>
     <string name="tab_text_2">Serial TV</string>
@@ -8,7 +8,7 @@
     <string name="view_detail">Lihat Detail</string>
     <string name="about_me">Tentang saya</string>
     <string name="profile_photo">Foto Profile</string>
-    <string name="about_text">Aplikasi ini dibuat untuk memenuhi nilai Modul pada Materi Belajar Menjadi Android Developer Expert \n\nAPI yang digunakan sebagai data pada aplikasi ini adalah \nhttps://api.themoviedb.org/</string>
+    <string name="about_text">Aplikasi ini dibuat untuk memenuhi nilai Modul pada Materi Belajar Android Jetpack Pro \n\nAPI yang digunakan sebagai data pada aplikasi ini adalah \nhttps://api.themoviedb.org/</string>
     <string name="about_email">alif.stinky@gmail.com</string>
     <string name="about_name">Alif Mufthi</string>
     <string name="change_language">Ganti Bahasa</string>
@@ -27,7 +27,6 @@
     <string name="delete_favorite"> %1$s dihapus dari Favorit</string>
     <string name="search">pencarian</string>
 
-    <string name="back_button">Tombol balik</string>
     <string name="favorite_button">Tombol favorit</string>
     <string name="query_hint">Cari film, acara tv</string>
     <string name="genre">Genre</string>
@@ -63,4 +62,5 @@
     <string name="toast_reminder_set">Anda akan diingatkan tiaphari!</string>
     <string name="show_cannot_be_found">acara tidak dapat ditemukan.</string>
     <string name="sad_face">Wajah Sedih</string>
+    <string name="share_text">%s, Dibagikan melalui MovieCatalogueX</string>
 </resources>

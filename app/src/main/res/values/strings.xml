@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MovieCatalogue-MADE</string>
+    <string name="app_name">MovieCatalogueX</string>
 
     <string name="tab_text_1">Movie</string>
     <string name="tab_text_2">TV Show</string>
@@ -8,7 +8,7 @@
     <string name="about_me">About me</string>
     <string name="profile_photo">Profile Photo</string>
     <string name="about_text">
-This application was created to meet the Module on Learning Materials to Become an Android Developer Expert \n \nAPI used as data source in this application is \nhttps://api.themoviedb.org/</string>
+This application was created to meet the Module on Learning Android Jetpack Pro \n \nAPI used as data source in this application is \nhttps://api.themoviedb.org/</string>
     <string name="about_email">alif.stinky@gmail.com</string>
     <string name="about_name">Alif Mufthi</string>
     <string name="change_language">Change Language</string>
@@ -26,7 +26,6 @@ This application was created to meet the Module on Learning Materials to Become 
     <string name="add_favorite"> %1$s is added to Favorites</string>
     <string name="delete_favorite"> %1$s is removed from Favorites</string>
     <string name="search">search</string>
-    <string name="back_button">Back Button</string>
     <string name="favorite_button">Favorite Button</string>
     <string name="query_hint">Search show, tv show</string>
     <string name="search_result">Search result (%1$s):</string>
@@ -62,4 +61,5 @@ This application was created to meet the Module on Learning Materials to Become 
     <string name="toast_reminder_set">You will be reminded everyday!</string>
     <string name="show_cannot_be_found">show cannot be found.</string>
     <string name="sad_face">Sad Face</string>
+    <string name="share_text">%s, Shared using MovieCatalogueX</string>
 </resources>
