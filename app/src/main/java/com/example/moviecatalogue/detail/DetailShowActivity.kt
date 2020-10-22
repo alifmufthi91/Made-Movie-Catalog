@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -59,7 +60,7 @@ class DetailShowActivity : AppCompatActivity() {
             ShareCompat.IntentBuilder.from(this).apply {
                 setType(mimeType)
                 setChooserTitle("Bagikan aplikasi ini sekarang.")
-                setText(resources.getString(R.string.share_text,viewModel.show.name))
+                setText(resources.getString(R.string.share_text,viewModel.show?.name))
                 startChooser()
             }
         }
@@ -94,7 +95,7 @@ class DetailShowActivity : AppCompatActivity() {
                             viewModel.showLiveData.value?.let { it ->
                                 viewModel.setValues(
                                     it,
-                                    viewModel.type
+                                    viewModel.type as String
                                 )
                             }
                         )
@@ -103,7 +104,7 @@ class DetailShowActivity : AppCompatActivity() {
                             viewModel.showLiveData.value?.let { it ->
                                 viewModel.setValues(
                                     it,
-                                    viewModel.type
+                                    viewModel.type as String
                                 )
                             }
                         )
@@ -167,16 +168,16 @@ class DetailShowActivity : AppCompatActivity() {
     private fun updateFavoriteIcon(isFavorite: Boolean){
         if (isFavorite) {
             iv_favorites.setImageDrawable(
-                resources.getDrawable(
-                    R.drawable.ic_favorite,
-                    null
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_favorite
                 )
             )
         } else {
             iv_favorites.setImageDrawable(
-                resources.getDrawable(
-                    R.drawable.ic_favorite_border,
-                    null
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_favorite_border
                 )
             )
         }

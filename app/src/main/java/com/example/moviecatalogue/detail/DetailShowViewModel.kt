@@ -25,10 +25,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class DetailShowViewModel(
-    private val context: Context,
-    internal val show: Show,
-    internal val type: String,
-    internal val position: Int
+    private val context: Context?,
+    internal val show: Show?,
+    internal val type: String?,
+    internal val position: Int?
 ) : ViewModel() {
 
     internal var showLiveData = MutableLiveData<Show>(show)
@@ -80,19 +80,18 @@ class DetailShowViewModel(
         }
         GlobalScope.launch(Dispatchers.Main) {
             val differedFavorite = async(Dispatchers.IO) {
-
-                val cursor = context.contentResolver?.query(
+                val cursor = context?.contentResolver?.query(
                     uri,
                     null,
                     null,
                     null,
                     "${BaseColumns._ID} ASC"
-                ) as Cursor
-                MappingHelper.isExist(cursor)
+                )
+                cursor?.let { MappingHelper.isExist(it) }
             }
             val isShowFavorited = differedFavorite.await()
             Log.d("isFavorited?: ", isShowFavorited.toString())
-            setFavorite(isShowFavorited)
+            isShowFavorited?.let { setFavorite(it) }
         }
     }
 

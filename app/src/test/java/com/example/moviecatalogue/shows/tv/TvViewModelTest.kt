@@ -28,5 +28,6 @@ class TvViewModelTest {
         val fakeTvShows = LocalMain().getTvShows()
         viewModel.tvShows.postValue(fakeTvShows)
         assertNotNull(viewModel.getShows().value)
+        assertEquals(viewModel.getShows().value?.size,fakeTvShows.size)
     }
 }

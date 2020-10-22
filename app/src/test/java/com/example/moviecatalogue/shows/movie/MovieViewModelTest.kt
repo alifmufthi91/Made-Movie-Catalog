@@ -28,5 +28,6 @@ class MovieViewModelTest {
         val fakeMovies = LocalMain().getMovies()
         viewModel.movieShows.postValue(fakeMovies)
         assertNotNull(viewModel.getShows().value)
+        assertEquals(viewModel.getShows().value?.size,fakeMovies.size)
     }
 }
