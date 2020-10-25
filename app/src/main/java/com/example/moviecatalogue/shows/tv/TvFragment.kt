@@ -2,6 +2,7 @@ package com.example.moviecatalogue.shows.tv
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.shows.ListShowAdapter
+import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_tv_list.*
 
 
@@ -43,14 +45,13 @@ class TvFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         showRecyclerList()
         Log.d("listCategory", SHOW_TV)
-        listViewModel.setShows(currentPage)
+        listViewModel.setShows()
         listViewModel.getShows().observe(viewLifecycleOwner, Observer { Shows ->
             if (Shows != null) {
                 listShowAdapter.setData(Shows)
             }
         })
     }
-
 
 
     private fun showRecyclerList() {
@@ -67,22 +68,23 @@ class TvFragment : Fragment() {
         })
         rv_tv.addOnScrollListener(scrollListener)
         rv_tv.adapter = listShowAdapter
+        val factory = ViewModelFactory.getInstance()
         listViewModel = ViewModelProvider(
             this,
-            ViewModelProvider.NewInstanceFactory()
+            factory
         )[TvViewModel::class.java]
     }
 
     private fun loadMoreData() {
         listShowAdapter.addLoadingView()
-        //disini get data//
-        listViewModel.setShows(++currentPage)
-        //end//
-        listShowAdapter.removeLoadingView()
-        scrollListener.setLoaded()
-        rv_tv.post {
-            listShowAdapter.notifyDataSetChanged()
-        }
+        Handler().postDelayed({
+            listViewModel.loadMore()
+            listShowAdapter.removeLoadingView()
+            scrollListener.setLoaded()
+            rv_tv.post {
+                listShowAdapter.notifyDataSetChanged()
+            }
+        }, 100)
     }
 
 

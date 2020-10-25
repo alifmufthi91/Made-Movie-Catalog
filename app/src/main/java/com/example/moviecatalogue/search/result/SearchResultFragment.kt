@@ -42,17 +42,12 @@ class SearchResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        search_result_fragment.text = getString(R.string.search_result, "0")
+        search_result_fragment.text = getString(R.string.search_result)
         showRecyclerList()
-        searchViewModel.getShows().observe(viewLifecycleOwner, Observer { Shows ->
-            if (Shows != null) {
-                searchShowAdapter.setData(Shows)
-                search_result_fragment.text = if(searchViewModel.totalResult > 9999){
-                    getString(R.string.search_result, "9999+")
-                }else{
-                    getString(R.string.search_result, searchViewModel.totalResult.toString())
-                }
-                if (Shows.size < 1) {
+        searchViewModel.getShows().observe(viewLifecycleOwner, Observer { shows ->
+            if (shows != null) {
+                searchShowAdapter.setData(shows)
+                if (shows.size < 1) {
                     empty_result_fragment_search.visibility = View.VISIBLE
                 } else {
                     empty_result_fragment_search.visibility = View.GONE
@@ -69,7 +64,7 @@ class SearchResultFragment : Fragment() {
         ).get(
             SearchViewModel::class.java
         )
-        searchShowAdapter = SearchShowAdapter(activity as Activity, searchViewModel.category)
+        searchShowAdapter = SearchShowAdapter(activity as Activity, searchViewModel.getCategory())
         searchShowAdapter.notifyDataSetChanged()
         mLayoutManager = GridLayoutManager(activity, GRID_COLUMN)
         mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -99,14 +94,8 @@ class SearchResultFragment : Fragment() {
 
     private fun loadMoreData() {
         searchShowAdapter.addLoadingView()
-        //disini get data//
         Handler().postDelayed({
-            searchViewModel.loadMore(
-                searchViewModel.category,
-                ++searchViewModel.currentPage,
-                searchViewModel.query
-            )
-            //end//
+            searchViewModel.loadMore()
             searchShowAdapter.removeLoadingView()
             scrollListener.setLoaded()
             if (this.isVisible) {
@@ -114,8 +103,7 @@ class SearchResultFragment : Fragment() {
                     searchShowAdapter.notifyDataSetChanged()
                 }
             }
-        }, 2000)
-
+        }, 100)
     }
 
 

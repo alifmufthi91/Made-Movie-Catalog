@@ -1,12 +1,12 @@
-package com.example.moviecatalogue.factory
+package com.example.moviecatalogue.remoteviews
 
 import android.content.Context
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.bumptech.glide.Glide
 import com.example.moviecatalogue.R
+import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.db.FavouriteHelper
-import com.example.moviecatalogue.model.Show
 
 internal class StackRemoteViewsFactory(private val mContext: Context) :
     RemoteViewsService.RemoteViewsFactory {

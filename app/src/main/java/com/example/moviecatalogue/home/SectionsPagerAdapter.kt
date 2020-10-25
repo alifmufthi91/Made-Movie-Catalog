@@ -15,7 +15,8 @@ class SectionsPagerAdapter(private val mContext: Context, fm: FragmentManager) :
     FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     companion object {
         @StringRes
-        private val TAB_TITLES = intArrayOf(R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3)
+        private val TAB_TITLES =
+            intArrayOf(R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3)
     }
 
     override fun getItem(position: Int): Fragment =
@@ -27,7 +28,8 @@ class SectionsPagerAdapter(private val mContext: Context, fm: FragmentManager) :
 
 
     @Nullable
-    override fun getPageTitle(position: Int): CharSequence? = mContext.resources.getString(TAB_TITLES[position])
+    override fun getPageTitle(position: Int): CharSequence? =
+        mContext.resources.getString(TAB_TITLES[position])
 
     override fun getCount(): Int = 3
 

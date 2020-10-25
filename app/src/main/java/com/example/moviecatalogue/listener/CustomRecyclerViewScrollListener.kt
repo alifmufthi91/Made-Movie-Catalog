@@ -45,12 +45,13 @@ class CustomRecyclerViewScrollListener : RecyclerView.OnScrollListener {
             lastVisibleItem = (mLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
         }
 
-        if (!isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
-            Log.d("loadMore: ", "loading..")
-            mOnLoadMoreListener.onLoadMore()
-            isLoading = true
+        synchronized(this) {
+            if (!isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
+                Log.d("loadMore: ", "loading..")
+                mOnLoadMoreListener.onLoadMore()
+                isLoading = true
+            }
         }
-
     }
 
     interface OnLoadMoreListener {

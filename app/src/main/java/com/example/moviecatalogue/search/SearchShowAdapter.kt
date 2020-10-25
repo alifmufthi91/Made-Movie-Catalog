@@ -8,13 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
+import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.detail.DetailShowActivity
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.DETAIL_SHOW
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_POSITION
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_TYPE
 import com.example.moviecatalogue.listener.CustomOnItemClickListener
-import com.example.moviecatalogue.model.Show
 import com.example.moviecatalogue.utils.Constant
 import kotlinx.android.synthetic.main.item_show_grid.view.*
 
@@ -81,17 +82,13 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
     inner class GridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(show: Show) {
             with(itemView) {
-                if (show.imgPath == null) {
-                    com.bumptech.glide.Glide.with(itemView.context)
-                        .load(R.raw.image_not_available)
-                        .override(200, 200)
-                        .fitCenter()
-                        .into(img_item_photo_grid)
-                } else {
-                    com.bumptech.glide.Glide.with(itemView.context)
-                        .load(show.getPortraitPhoto())
-                        .into(img_item_photo_grid)
-                }
+                com.bumptech.glide.Glide.with(itemView.context)
+                    .load(show.getPortraitPhoto())
+                    .apply(
+                        RequestOptions.placeholderOf(R.drawable.ic_image_black)
+                            .error(R.drawable.ic_image_error_black)
+                    )
+                    .into(img_item_photo_grid)
                 show.name?.let {
                     tv_item_name_grid.text = show.name?.substring(0, it.length.coerceAtMost(50))
                 }

@@ -7,13 +7,13 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
+import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.DESCRIPTION
 import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.MOVIEDB_ID
 import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.NAME
 import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.POSTER
 import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.SHOW_TYPE
 import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.TABLE_NAME
-import com.example.moviecatalogue.model.Show
 import java.sql.SQLException
 
 class FavouriteHelper(context: Context) {

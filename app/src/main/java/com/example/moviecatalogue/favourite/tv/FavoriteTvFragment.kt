@@ -14,9 +14,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviecatalogue.R
+import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_TV_URI
 import com.example.moviecatalogue.helper.MappingHelper
-import com.example.moviecatalogue.model.Show
 import com.example.moviecatalogue.shows.ListShowAdapter
 import com.example.moviecatalogue.shows.tv.TvFragment.Companion.SHOW_TV
 import kotlinx.android.synthetic.main.fragment_favourite_tv_list.*

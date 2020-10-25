@@ -2,7 +2,7 @@ package com.example.moviecatalogue.shows.movie
 
 
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecatalogue.R
+import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.shows.ListShowAdapter
+import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 
 
@@ -26,7 +28,6 @@ class MovieFragment : Fragment() {
     private lateinit var listViewModel: MovieViewModel
     private lateinit var mLayoutManger: RecyclerView.LayoutManager
     private lateinit var scrollListener: CustomRecyclerViewScrollListener
-    private var currentPage = 1
 
     companion object {
         const val SHOW_MOVIE = "Movie"
@@ -43,11 +44,10 @@ class MovieFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         showRecyclerList()
-        Log.d("listCategory", SHOW_MOVIE)
-        listViewModel.setShows(currentPage)
+        listViewModel.setShows()
         listViewModel.getShows().observe(viewLifecycleOwner, Observer { Shows ->
             if (Shows != null) {
-                listShowAdapter.setData(Shows)
+                listShowAdapter.setData(Shows as ArrayList<Show>)
             }
         })
     }
@@ -69,22 +69,23 @@ class MovieFragment : Fragment() {
         })
         rv_movie.addOnScrollListener(scrollListener)
         rv_movie.adapter = listShowAdapter
+        val factory = ViewModelFactory.getInstance()
         listViewModel = ViewModelProvider(
             this,
-            ViewModelProvider.NewInstanceFactory()
+            factory
         )[MovieViewModel::class.java]
     }
 
     private fun loadMoreData() {
         listShowAdapter.addLoadingView()
-        //disini get data//
-        listViewModel.setShows(++currentPage)
-        //end//
-        listShowAdapter.removeLoadingView()
-        scrollListener.setLoaded()
-        rv_movie.post {
-            listShowAdapter.notifyDataSetChanged()
-        }
+        Handler().postDelayed({
+            listViewModel.loadMore()
+            listShowAdapter.removeLoadingView()
+            scrollListener.setLoaded()
+            rv_movie.post {
+                listShowAdapter.notifyDataSetChanged()
+            }
+        }, 100)
     }
 
 

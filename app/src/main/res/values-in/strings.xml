@@ -28,9 +28,9 @@
     <string name="search">pencarian</string>
 
     <string name="favorite_button">Tombol favorit</string>
-    <string name="query_hint">Cari film, acara tv</string>
+    <string name="query_hint">Cari acara berdasarkan kategori..</string>
     <string name="genre">Genre</string>
-    <string name="search_result">Hasil Pencarian (%1$s):</string>
+    <string name="search_result">Hasil Pencarian:</string>
     <string name="category">Kategori</string>
     <string name="movie">Film</string>
     <string name="tv_show">Acara TV</string>

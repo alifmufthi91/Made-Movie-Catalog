@@ -1,8 +1,8 @@
 package com.example.moviecatalogue.helper
 
 import android.database.Cursor
+import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.db.DatabaseContract
-import com.example.moviecatalogue.model.Show
 
 
 object MappingHelper {
