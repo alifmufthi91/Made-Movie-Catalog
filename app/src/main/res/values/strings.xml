@@ -27,8 +27,8 @@ This application was created to meet the Module on Learning Android Jetpack Pro 
     <string name="delete_favorite"> %1$s is removed from Favorites</string>
     <string name="search">search</string>
     <string name="favorite_button">Favorite Button</string>
-    <string name="query_hint">Search show, tv show</string>
-    <string name="search_result">Search result (%1$s):</string>
+    <string name="query_hint">Search any show within category..</string>
+    <string name="search_result">Search results:</string>
     <string name="genre">Genre</string>
     <string name="category">Category</string>
     <string name="movie">Movie</string>

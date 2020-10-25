@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.search.SearchViewModel.Companion.FIRST_PAGE
 import com.example.moviecatalogue.search.menu.SearchMenuFragment
 import com.example.moviecatalogue.search.result.SearchResultFragment
+import com.example.moviecatalogue.viewmodel.ViewModelFactory
 
 class SearchActivity : AppCompatActivity() {
 
@@ -39,13 +39,11 @@ class SearchActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-
+        val factory = ViewModelFactory.getInstance()
         searchViewModel = ViewModelProvider(
             viewModelStore,
-            ViewModelProvider.NewInstanceFactory()
-        ).get(
-            SearchViewModel::class.java
-        )
+            factory
+        )[SearchViewModel::class.java]
 
     }
 
@@ -74,11 +72,10 @@ class SearchActivity : AppCompatActivity() {
                             )
                             .commit()
                     }
-                    searchViewModel.query = query
+                    searchViewModel.setQuery(query)
                     searchViewModel.setShows(
-                        searchViewModel.category,
-                        FIRST_PAGE,
-                        searchViewModel.query
+                        searchViewModel.getCategory(),
+                        searchViewModel.getQuery()
                     )
                     return true
                 }
@@ -97,11 +94,10 @@ class SearchActivity : AppCompatActivity() {
                                 )
                                 .commit()
                         }
-                        searchViewModel.query = newText
+                        searchViewModel.setQuery(newText)
                         searchViewModel.setShows(
-                            searchViewModel.category,
-                            FIRST_PAGE,
-                            searchViewModel.query
+                            searchViewModel.getCategory(),
+                            searchViewModel.getQuery()
                         )
                     } else {
                         if (fragment !is SearchMenuFragment) {

@@ -8,11 +8,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviecatalogue.R
+import com.example.moviecatalogue.data.model.Genre
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
-import com.example.moviecatalogue.model.Genre
-import com.example.moviecatalogue.search.SearchByGenreViewModel.Companion.FIRST_PAGE
 import com.example.moviecatalogue.search.result.SearchResultFragment
 import com.example.moviecatalogue.utils.Constant
+import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_search_by_genre.*
 
 class SearchByGenreActivity : AppCompatActivity() {
@@ -32,22 +32,21 @@ class SearchByGenreActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_by_genre)
 
-        search_result.text = getString(R.string.search_result, "0")
+        search_result.text = getString(R.string.search_result)
 
         val category = intent.getStringExtra(SELECTED_CATEGORY)
         val genre = intent.getParcelableExtra<Genre>(SELECTED_GENRE)
 
         supportActionBar?.title = genre?.name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        val factory = ViewModelFactory.getInstance()
         viewModel = ViewModelProvider(
             viewModelStore,
-            ViewModelProvider.NewInstanceFactory()
-        ).get(
-            SearchByGenreViewModel::class.java
-        )
+            factory
+        )[SearchByGenreViewModel::class.java]
 
-        searchShowAdapter = SearchShowAdapter(this, viewModel.category)
+        viewModel.setCategory(category as String)
+        searchShowAdapter = SearchShowAdapter(this, viewModel.getCategory())
         searchShowAdapter.notifyDataSetChanged()
         mLayoutManager = GridLayoutManager(this, SearchResultFragment.GRID_COLUMN)
         mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -70,36 +69,34 @@ class SearchByGenreActivity : AppCompatActivity() {
         scrollListener.setOnLoadMoreListener(object :
             CustomRecyclerViewScrollListener.OnLoadMoreListener {
             override fun onLoadMore() {
-                loadMoreData(genre?.id.toString())
+                loadMoreData()
             }
         })
         rv_search_genre.addOnScrollListener(scrollListener)
         rv_search_genre.adapter = searchShowAdapter
 
-
-        viewModel.setShows(category, FIRST_PAGE, genre?.id.toString())
+        viewModel.setGenre(genre?.id.toString())
+        viewModel.setShows(category)
         viewModel.getShows().observe(this, Observer {
             if (it != null) {
                 searchShowAdapter.setData(it)
-                search_result.text =
-                    getString(R.string.search_result, viewModel.totalResults.toString())
             }
         })
     }
 
 
-    private fun loadMoreData(genre: String) {
+    private fun loadMoreData() {
         searchShowAdapter.addLoadingView()
         //disini get data//
         Handler().postDelayed({
-            viewModel.loadMore(viewModel.category, ++viewModel.currentPage, genre)
+            viewModel.loadMore()
             //end//
             searchShowAdapter.removeLoadingView()
             scrollListener.setLoaded()
             rv_search_genre.post {
                 searchShowAdapter.notifyDataSetChanged()
             }
-        }, 2000)
+        }, 100)
 
     }
 

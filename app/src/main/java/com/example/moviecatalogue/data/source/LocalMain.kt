@@ -1,8 +1,8 @@
-package com.example.moviecatalogue.data
+package com.example.moviecatalogue.data.source
 
 
-import com.example.moviecatalogue.model.Show
-import com.example.moviecatalogue.model.ShowList
+import com.example.moviecatalogue.data.model.Show
+import com.example.moviecatalogue.data.model.ShowList
 import com.example.moviecatalogue.utils.DummyShowData
 import com.google.gson.Gson
 

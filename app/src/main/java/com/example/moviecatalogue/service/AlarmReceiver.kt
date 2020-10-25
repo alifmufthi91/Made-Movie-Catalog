@@ -16,9 +16,9 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.example.moviecatalogue.BuildConfig
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.model.ShowList
+import com.example.moviecatalogue.data.model.ShowList
+import com.example.moviecatalogue.data.source.remote.ApiService
 import com.example.moviecatalogue.shows.movie.MovieFragment
-import com.example.moviecatalogue.utils.MovieDB
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -59,7 +59,7 @@ class AlarmReceiver : BroadcastReceiver() {
                         .baseUrl("https://api.themoviedb.org")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build()
-                    val movieDBClient = retrofit.create(MovieDB::class.java)
+                    val movieDBClient = retrofit.create(ApiService::class.java)
                     val date = Calendar.getInstance().time
                     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     val currentDate = formatter.format(date)

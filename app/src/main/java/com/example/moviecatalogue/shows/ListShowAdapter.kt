@@ -9,13 +9,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
+import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.detail.DetailShowActivity
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.DETAIL_SHOW
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_POSITION
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_TYPE
 import com.example.moviecatalogue.listener.CustomOnItemClickListener
-import com.example.moviecatalogue.model.Show
 import com.example.moviecatalogue.utils.Constant
 import kotlinx.android.synthetic.main.item_show.view.*
 
@@ -87,6 +88,10 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
             with(itemView) {
                 Glide.with(itemView.context)
                     .load(show.getPortraitPhoto())
+                    .apply(
+                        RequestOptions.placeholderOf(R.drawable.ic_image_black)
+                            .error(R.drawable.ic_image_error_black)
+                    )
                     .into(img_item_photo)
                 show.name?.let {
                     tv_item_name.text = show.name?.substring(0, it.length.coerceAtMost(50))

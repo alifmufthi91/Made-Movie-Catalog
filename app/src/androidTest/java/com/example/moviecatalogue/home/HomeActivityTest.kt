@@ -2,52 +2,56 @@ package com.example.moviecatalogue.home
 
 
 import android.view.View
-import androidx.appcompat.view.menu.ExpandedMenuView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.ActivityTestRule
 import com.example.moviecatalogue.R
+import com.example.moviecatalogue.utils.EspressoIdlingResource
 import com.google.android.material.tabs.TabLayout
 import org.hamcrest.core.AllOf.allOf
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class HomeActivityTest{
+class HomeActivityTest {
 
     @get:Rule
-    var activityRule = ActivityTestRule(HomeActivity::class.java)
+    var activityRule = ActivityScenarioRule(HomeActivity::class.java)
 
-    @Test
-    fun loadDetailMovie() {
-        Thread.sleep(2000)
-        onView(withId(R.id.rv_movie)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-        onView(withId(R.id.show_cover)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_movie_title)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_movie_overview)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_movie_release)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_movie_genre)).check(matches(isDisplayed()))
+    @Before
+    fun setUp() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getEspressoIdlingResource())
+    }
+
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getEspressoIdlingResource())
     }
 
     @Test
-    fun loadDetailTv() {
-        onView(withId(R.id.tabs)).perform(selectTabAtPosition(1))
-        Thread.sleep(2000)
-        onView(withId(R.id.rv_tv)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+    fun loadDetailMovie() {
+        onView(withId(R.id.rv_movie)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+        onView(withId(R.id.tv_show_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_show_overview)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_show_release)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_show_genre)).check(matches(isDisplayed()))
         onView(withId(R.id.show_cover)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_movie_title)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_movie_overview)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_movie_release)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_movie_genre)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -71,7 +75,8 @@ class HomeActivityTest{
         return object : ViewAction {
             override fun getDescription() = "with tab at index $tabIndex"
 
-            override fun getConstraints() = allOf(isDisplayed(), isAssignableFrom(TabLayout::class.java))
+            override fun getConstraints() =
+                allOf(isDisplayed(), isAssignableFrom(TabLayout::class.java))
 
             override fun perform(uiController: UiController, view: View) {
                 val tabLayout = view as TabLayout

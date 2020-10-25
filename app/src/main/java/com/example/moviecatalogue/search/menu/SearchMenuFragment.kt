@@ -21,6 +21,7 @@ import com.example.moviecatalogue.search.SearchByGenreActivity.Companion.SELECTE
 import com.example.moviecatalogue.search.SearchViewModel
 import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
 import com.example.moviecatalogue.shows.tv.TvFragment.Companion.SHOW_TV
+import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_search_menu.*
 
 /**
@@ -43,37 +44,37 @@ class SearchMenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val factory = ViewModelFactory.getInstance()
         searchViewModel = ViewModelProvider(
             requireActivity().viewModelStore,
-            ViewModelProvider.NewInstanceFactory()
-        ).get(
-            SearchViewModel::class.java
-        )
+            factory
+        )[SearchViewModel::class.java]
 
-        adapter = object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val customTv = super.getView(position, convertView, parent) as TextView
-                customTv.setTextColor(ContextCompat.getColor(context,R.color.textPrimary))
-                return customTv
+        adapter =
+            object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1) {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val customTv = super.getView(position, convertView, parent) as TextView
+                    customTv.setTextColor(ContextCompat.getColor(context, R.color.textPrimary))
+                    return customTv
+                }
             }
-        }
         lv_genre.adapter = adapter
         rg_category.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.radio_movie -> {
-                    searchViewModel.category = SHOW_MOVIE
-                    searchViewModel.setGenres(searchViewModel.category)
+                    searchViewModel.setCategory(SHOW_MOVIE)
+                    searchViewModel.getGenres()
                     Log.d("radio", "movie")
                 }
                 R.id.radio_tv -> {
-                    searchViewModel.category = SHOW_TV
-                    searchViewModel.setGenres(searchViewModel.category)
+                    searchViewModel.setCategory(SHOW_TV)
+                    searchViewModel.getGenres()
                     Log.d("radio", "tv")
                 }
             }
         }
-        searchViewModel.setGenres(searchViewModel.category)
-        searchViewModel.getGenre().observe(viewLifecycleOwner, Observer {
+        searchViewModel.setGenres()
+        searchViewModel.getGenres().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 adapter.clear()
                 for (genre in it) {
@@ -87,8 +88,8 @@ class SearchMenuFragment : Fragment() {
         lv_genre.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
                 val intent = Intent(context, SearchByGenreActivity::class.java)
-                intent.putExtra(SELECTED_CATEGORY, searchViewModel.category)
-                intent.putExtra(SELECTED_GENRE, searchViewModel.listGenre[position])
+                intent.putExtra(SELECTED_CATEGORY, searchViewModel.getCategory())
+                intent.putExtra(SELECTED_GENRE, searchViewModel.getGenres().value?.get(position))
                 startActivity(intent)
             }
 

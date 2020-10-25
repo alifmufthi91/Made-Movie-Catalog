@@ -2,64 +2,54 @@ package com.example.moviecatalogue.detail
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.provider.BaseColumns
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.moviecatalogue.BuildConfig
+import com.example.moviecatalogue.data.model.Show
+import com.example.moviecatalogue.data.source.MovieCatalogueXRepository
 import com.example.moviecatalogue.db.DatabaseContract
 import com.example.moviecatalogue.helper.MappingHelper
-import com.example.moviecatalogue.model.Show
 import com.example.moviecatalogue.shows.movie.MovieFragment
-import com.example.moviecatalogue.utils.MovieDB
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class DetailShowViewModel(
-    private val context: Context?,
-    internal val show: Show?,
-    internal val type: String?,
-    internal val position: Int?
+    private val movieCatalogueXRepository: MovieCatalogueXRepository
+
 ) : ViewModel() {
 
-    internal var showLiveData = MutableLiveData<Show>(show)
+    private lateinit var context: Context
+    private lateinit var show: Show
+    private lateinit var type: String
+    private var position: Int = 0
     internal var isFavourite = MutableLiveData<Boolean>(false)
 
-    internal fun getShowInfo() {
-        Log.d("getShowInfo()", this.toString())
-        val builder = Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org")
-            .addConverterFactory(GsonConverterFactory.create())
-        val retrofit = builder.build()
-        val movieDBClient = retrofit.create(MovieDB::class.java)
-        val showId = showLiveData.value?.movieDbId?.toInt()
-        val call = when (type) {
-            MovieFragment.SHOW_MOVIE -> showId?.let { movieDBClient.movie(it, BuildConfig.API_KEY) }
-            else -> showId?.let { movieDBClient.tv(it, BuildConfig.API_KEY) }
-        }
-        call?.enqueue(object : Callback<Show> {
-            override fun onResponse(call: Call<Show>, response: Response<Show>?) {
-                showLiveData.postValue(response?.body())
-                Log.d("getShowInfo : ", "Success.. ${showLiveData.value?.vote_average}")
-            }
-
-            override fun onFailure(call: Call<Show>, t: Throwable) {
-                Log.d("getShowInfo : ", " Failed..")
-            }
-        })
-
+    internal fun setShow(show: Show) {
+        this.show = show
     }
 
-    fun setFavorite(favouriteStatus: Boolean){
+    internal fun setType(type: String) {
+        this.type = type
+    }
+
+    internal fun getShowInfo(): LiveData<Show> {
+        val showId = show.movieDbId.toInt()
+        return movieCatalogueXRepository.getShowDetail(type, showId)
+    }
+
+    fun setDetailData(context: Context, show: Show, type: String, position: Int) {
+        this.context = context
+        this.show = show
+        this.type = type
+        this.position = position
+    }
+
+    fun setFavorite(favouriteStatus: Boolean) {
         isFavourite.postValue(favouriteStatus)
     }
 
@@ -75,12 +65,12 @@ class DetailShowViewModel(
 
     internal fun getFavouriteStatus() {
         val uri = when (type) {
-            MovieFragment.SHOW_MOVIE -> Uri.parse("${DatabaseContract.FavoritesColumns.CONTENT_MOVIE_URI}/${showLiveData.value?.movieDbId.toString()}")
-            else -> Uri.parse("${DatabaseContract.FavoritesColumns.CONTENT_TV_URI}/${showLiveData.value?.movieDbId.toString()}")
+            MovieFragment.SHOW_MOVIE -> Uri.parse("${DatabaseContract.FavoritesColumns.CONTENT_MOVIE_URI}/${show.movieDbId}")
+            else -> Uri.parse("${DatabaseContract.FavoritesColumns.CONTENT_TV_URI}/${show.movieDbId}")
         }
         GlobalScope.launch(Dispatchers.Main) {
             val differedFavorite = async(Dispatchers.IO) {
-                val cursor = context?.contentResolver?.query(
+                val cursor = context.contentResolver?.query(
                     uri,
                     null,
                     null,
@@ -95,5 +85,6 @@ class DetailShowViewModel(
         }
     }
 
-
+    fun getShow() = show
+    fun getType() = type
 }

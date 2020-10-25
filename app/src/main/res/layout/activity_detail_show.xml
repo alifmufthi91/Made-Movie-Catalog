@@ -26,12 +26,12 @@
             android:id="@+id/iv_rate_placeholder"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:contentDescription="@string/rate_placeholder"
-            app:tint="@color/colorPrimary"
-            app:layout_constraintTop_toBottomOf="@id/show_cover" />
+            app:layout_constraintTop_toBottomOf="@id/show_cover"
+            app:tint="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/tv_movie_rating"
@@ -105,10 +105,9 @@
             android:contentDescription="@string/favorite_button"
             android:padding="8dp"
             android:src="@drawable/ic_favorite_border"
-            app:layout_constraintTop_toBottomOf="@id/iv_rate_placeholder"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/iv_share"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_rate_placeholder" />
 
         <ImageView
             android:id="@+id/iv_share"
@@ -119,13 +118,12 @@
             android:contentDescription="@string/favorite_button"
             android:padding="8dp"
             android:src="@drawable/ic_share"
-            app:layout_constraintTop_toBottomOf="@id/iv_rate_placeholder"
-            app:layout_constraintStart_toEndOf="@id/iv_favorites"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintStart_toEndOf="@id/iv_favorites"
+            app:layout_constraintTop_toBottomOf="@id/iv_rate_placeholder" />
 
         <TextView
-            android:id="@+id/tv_movie_title"
+            android:id="@+id/tv_show_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -146,10 +144,10 @@
             android:textColor="@color/textPrimary"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_show_title" />
 
         <TextView
-            android:id="@+id/tv_movie_overview"
+            android:id="@+id/tv_show_overview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -169,10 +167,10 @@
             android:textColor="@color/textPrimary"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_overview" />
+            app:layout_constraintTop_toBottomOf="@id/tv_show_overview" />
 
         <TextView
-            android:id="@+id/tv_movie_release"
+            android:id="@+id/tv_show_release"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -192,10 +190,10 @@
             android:textColor="@color/textPrimary"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_release" />
+            app:layout_constraintTop_toBottomOf="@id/tv_show_release" />
 
         <TextView
-            android:id="@+id/tv_movie_genre"
+            android:id="@+id/tv_show_genre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
