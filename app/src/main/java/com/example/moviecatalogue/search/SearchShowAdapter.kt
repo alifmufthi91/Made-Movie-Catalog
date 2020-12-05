@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.data.model.Show
+import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.detail.DetailShowActivity
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.DETAIL_SHOW
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_POSITION
@@ -24,10 +24,10 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
 
     private val showsType = showType
 
-    private var listShow = ArrayList<Show?>()
+    private var listShow = ArrayList<ShowEntity?>()
 
 
-    fun setData(items: ArrayList<Show>) {
+    fun setData(items: List<ShowEntity>) {
         listShow.clear()
         listShow.addAll(items)
         notifyDataSetChanged()
@@ -80,7 +80,7 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
     }
 
     inner class GridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(show: Show) {
+        fun bind(show: ShowEntity) {
             with(itemView) {
                 com.bumptech.glide.Glide.with(itemView.context)
                     .load(show.getPortraitPhoto())

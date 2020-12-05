@@ -1,9 +1,13 @@
 package com.example.moviecatalogue.shows.tv
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.moviecatalogue.data.source.MovieCatalogueXRepository
+import androidx.paging.PagedList
+import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.source.local.entity.ShowEntity
+import com.example.moviecatalogue.vo.Resource
 
-class TvViewModel(private val movieCatalogueXRepository: MovieCatalogueXRepository) : ViewModel() {
+class TvViewModel(val movieCatalogueXRepository: MovieCatalogueXRepository) : ViewModel() {
     private var currentPage = 1
 
     private fun setPage(page: Int) {
@@ -19,6 +23,7 @@ class TvViewModel(private val movieCatalogueXRepository: MovieCatalogueXReposito
         movieCatalogueXRepository.setTvShows(currentPage)
     }
 
-    internal fun getShows() = movieCatalogueXRepository.getTvShows()
+    internal fun getShows(): LiveData<Resource<PagedList<ShowEntity>>> =
+        movieCatalogueXRepository.getTvShows()
 
 }

@@ -6,17 +6,22 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.data.model.Genre
+import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.search.result.SearchResultFragment
 import com.example.moviecatalogue.utils.Constant
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
+import com.example.moviecatalogue.vo.Status
 import kotlinx.android.synthetic.main.activity_search_by_genre.*
+import javax.inject.Inject
 
 class SearchByGenreActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var searchShowAdapter: SearchShowAdapter
     private lateinit var mLayoutManager: GridLayoutManager
     private lateinit var scrollListener: CustomRecyclerViewScrollListener
@@ -35,15 +40,11 @@ class SearchByGenreActivity : AppCompatActivity() {
         search_result.text = getString(R.string.search_result)
 
         val category = intent.getStringExtra(SELECTED_CATEGORY)
-        val genre = intent.getParcelableExtra<Genre>(SELECTED_GENRE)
+        val genre = intent.getParcelableExtra<GenreEntity>(SELECTED_GENRE)
 
         supportActionBar?.title = genre?.name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val factory = ViewModelFactory.getInstance()
-        viewModel = ViewModelProvider(
-            viewModelStore,
-            factory
-        )[SearchByGenreViewModel::class.java]
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[SearchByGenreViewModel::class.java]
 
         viewModel.setCategory(category as String)
         searchShowAdapter = SearchShowAdapter(this, viewModel.getCategory())

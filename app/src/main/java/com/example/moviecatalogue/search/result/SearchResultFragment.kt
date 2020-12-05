@@ -10,19 +10,25 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.search.SearchShowAdapter
 import com.example.moviecatalogue.search.SearchViewModel
 import com.example.moviecatalogue.utils.Constant
+import com.example.moviecatalogue.viewmodel.ViewModelFactory
+import com.example.moviecatalogue.vo.Status
 import kotlinx.android.synthetic.main.fragment_search_result.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
 class SearchResultFragment : Fragment() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var searchShowAdapter: SearchShowAdapter
     private lateinit var mLayoutManager: GridLayoutManager
@@ -47,23 +53,13 @@ class SearchResultFragment : Fragment() {
         searchViewModel.getShows().observe(viewLifecycleOwner, Observer { shows ->
             if (shows != null) {
                 searchShowAdapter.setData(shows)
-                if (shows.size < 1) {
-                    empty_result_fragment_search.visibility = View.VISIBLE
-                } else {
-                    empty_result_fragment_search.visibility = View.GONE
-                }
             }
         })
     }
 
 
     private fun showRecyclerList() {
-        searchViewModel = ViewModelProvider(
-            requireActivity().viewModelStore,
-            ViewModelProvider.NewInstanceFactory()
-        ).get(
-            SearchViewModel::class.java
-        )
+        searchViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchViewModel::class.java]
         searchShowAdapter = SearchShowAdapter(activity as Activity, searchViewModel.getCategory())
         searchShowAdapter.notifyDataSetChanged()
         mLayoutManager = GridLayoutManager(activity, GRID_COLUMN)

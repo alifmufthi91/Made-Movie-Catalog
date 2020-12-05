@@ -2,16 +2,19 @@ package com.example.moviecatalogue.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.moviecatalogue.data.model.Genre
-import com.example.moviecatalogue.data.model.Show
-import com.example.moviecatalogue.data.source.MovieCatalogueXRepository
+import androidx.paging.PagedList
+import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.source.local.entity.GenreEntity
+import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
+import com.example.moviecatalogue.vo.Resource
 
-class SearchViewModel(private val movieCatalogueXRepository: MovieCatalogueXRepository) :
+class SearchViewModel(val movieCatalogueXRepository: MovieCatalogueXRepository) :
     ViewModel() {
     private var category = SHOW_MOVIE
     private var currentPage = 1
     private var query = ""
+
 
     internal fun setShows(category: String, query: String) {
         movieCatalogueXRepository.setSearchedShowsByQuery(category, currentPage, query)
@@ -25,10 +28,6 @@ class SearchViewModel(private val movieCatalogueXRepository: MovieCatalogueXRepo
         this.query = query
     }
 
-    internal fun setGenres() {
-        movieCatalogueXRepository.setGenres(category)
-    }
-
     fun loadMore() {
         setPage(++currentPage)
         movieCatalogueXRepository.loadMoreSearchedShowsByQuery(category, currentPage, query)
@@ -38,10 +37,14 @@ class SearchViewModel(private val movieCatalogueXRepository: MovieCatalogueXRepo
         currentPage = page
     }
 
-    internal fun getShows(): LiveData<ArrayList<Show>> =
+    internal fun setGenres(){
+        movieCatalogueXRepository.setGenres(getCategory())
+    }
+
+    internal fun getShows(): LiveData<List<ShowEntity>> =
         movieCatalogueXRepository.getSearchedShows()
 
-    internal fun getGenres(): LiveData<ArrayList<Genre>> = movieCatalogueXRepository.getGenres()
+    internal fun getGenres(): LiveData<List<GenreEntity>> = movieCatalogueXRepository.getGenres()
 
     internal fun getCategory() = category
 

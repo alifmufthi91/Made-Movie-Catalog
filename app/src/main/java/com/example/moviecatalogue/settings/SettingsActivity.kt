@@ -13,8 +13,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.db.FavouriteHelper
-import com.example.moviecatalogue.service.AlarmReceiver
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -49,7 +47,7 @@ class SettingsActivity : AppCompatActivity() {
         private lateinit var CHANGE_LANGUAGE: String
         private lateinit var DELETE_FAVORITES: String
 
-        private lateinit var alarmReceiver: AlarmReceiver
+//        private lateinit var alarmReceiver: AlarmReceiver
 
         private lateinit var reminderPreference: SwitchPreferenceCompat
         private lateinit var releaseTodayPreference: SwitchPreferenceCompat
@@ -57,7 +55,7 @@ class SettingsActivity : AppCompatActivity() {
         private lateinit var deleteFavoritesPreference: Preference
         private lateinit var changeNightMode: SwitchPreferenceCompat
 
-        private lateinit var favsHelper: FavouriteHelper
+//        private lateinit var favsHelper: FavouriteHelper
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.settings, rootKey)
@@ -82,14 +80,14 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         private fun init() {
-            favsHelper = FavouriteHelper(requireContext())
+//            favsHelper = FavouriteHelper(requireContext())
             REMINDER = resources.getString(R.string.key_reminder)
             RELEASE_TODAY = resources.getString(R.string.key_release)
             CHANGE_LANGUAGE = resources.getString(R.string.key_change_language)
             DELETE_FAVORITES = resources.getString(R.string.key_delete_favorites)
 //            NIGHT_MODE = resources.getString(R.string.key_night_mode)
-            alarmReceiver =
-                AlarmReceiver()
+//            alarmReceiver =
+//                AlarmReceiver()
 
             reminderPreference =
                 findPreference<SwitchPreferenceCompat>(REMINDER) as SwitchPreferenceCompat
@@ -106,29 +104,29 @@ class SettingsActivity : AppCompatActivity() {
                 }
 
             deleteFavoritesPreference = findPreference<Preference>(DELETE_FAVORITES) as Preference
-            deleteFavoritesPreference.onPreferenceClickListener =
-                Preference.OnPreferenceClickListener {
-                    val dialogBuilder = AlertDialog.Builder(requireContext())
-                        .setTitle(getString(R.string.are_you_sure))
-                        .setMessage(getString(R.string.will_be_deleted))
-                        .setNegativeButton(getString(R.string.no)) { _, _ ->
-
-                        }
-                        .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                            favsHelper.open()
-                            val count = favsHelper.deleteAll()
-                            favsHelper.close()
-                            Toast.makeText(
-                                context,
-                                getString(R.string.count_deleted, count.toString()),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        .setCancelable(false)
-                        .create()
-                    dialogBuilder.show()
-                    true
-                }
+//            deleteFavoritesPreference.onPreferenceClickListener =
+//                Preference.OnPreferenceClickListener {
+//                    val dialogBuilder = AlertDialog.Builder(requireContext())
+//                        .setTitle(getString(R.string.are_you_sure))
+//                        .setMessage(getString(R.string.will_be_deleted))
+//                        .setNegativeButton(getString(R.string.no)) { _, _ ->
+//
+//                        }
+//                        .setPositiveButton(getString(R.string.yes)) { _, _ ->
+//                            favsHelper.open()
+//                            val count = favsHelper.deleteAll()
+//                            favsHelper.close()
+//                            Toast.makeText(
+//                                context,
+//                                getString(R.string.count_deleted, count.toString()),
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
+//                        .setCancelable(false)
+//                        .create()
+//                    dialogBuilder.show()
+//                    true
+//                }
 
         }
 
@@ -136,20 +134,20 @@ class SettingsActivity : AppCompatActivity() {
             when (key) {
                 REMINDER -> {
                     reminderPreference.isChecked = sharedPreferences.getBoolean(REMINDER, false)
-                    if (reminderPreference.isChecked) {
-                        alarmReceiver.setReminderAlarm(requireContext())
-                    } else {
-                        alarmReceiver.cancelReminderAlarm(requireContext())
-                    }
+//                    if (reminderPreference.isChecked) {
+//                        alarmReceiver.setReminderAlarm(requireContext())
+//                    } else {
+//                        alarmReceiver.cancelReminderAlarm(requireContext())
+//                    }
                 }
                 RELEASE_TODAY -> {
                     releaseTodayPreference.isChecked =
                         sharedPreferences.getBoolean(RELEASE_TODAY, false)
-                    if (releaseTodayPreference.isChecked) {
-                        alarmReceiver.setTodayReleaseAlarm(requireContext())
-                    } else {
-                        alarmReceiver.cancelTodayReleaseAlarm(requireContext())
-                    }
+//                    if (releaseTodayPreference.isChecked) {
+//                        alarmReceiver.setTodayReleaseAlarm(requireContext())
+//                    } else {
+//                        alarmReceiver.cancelTodayReleaseAlarm(requireContext())
+//                    }
                 }
                 NIGHT_MODE -> {
                     changeNightMode.isChecked = sharedPreferences.getBoolean(NIGHT_MODE, false)

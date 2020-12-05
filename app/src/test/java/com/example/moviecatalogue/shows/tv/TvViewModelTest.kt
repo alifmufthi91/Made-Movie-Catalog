@@ -3,9 +3,8 @@ package com.example.moviecatalogue.shows.tv
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.data.source.LocalMain
-import com.example.moviecatalogue.data.source.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.MovieCatalogueXRepository
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

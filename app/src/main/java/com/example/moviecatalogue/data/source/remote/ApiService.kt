@@ -1,8 +1,8 @@
 package com.example.moviecatalogue.data.source.remote
 
-import com.example.moviecatalogue.data.model.GenreList
-import com.example.moviecatalogue.data.model.Show
-import com.example.moviecatalogue.data.model.ShowList
+import com.example.moviecatalogue.data.source.remote.response.GenreListResponse
+import com.example.moviecatalogue.data.source.remote.response.ShowListResponse
+import com.example.moviecatalogue.data.source.remote.response.ShowResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -17,13 +17,13 @@ interface ApiService {
         @Query(
             "with_genres"
         ) genre: String?
-    ): Call<ShowList>
+    ): Call<ShowListResponse>
 
     @GET("3/movie/{movie_id}")
-    fun movie(@Path("movie_id") movieId: Int, @Query("api_key") apiKey: String?): Call<Show>
+    fun movie(@Path("movie_id") movieId: Int, @Query("api_key") apiKey: String?): Call<ShowResponse>
 
     @GET("3/tv/{tv_id}")
-    fun tv(@Path("tv_id") movieId: Int, @Query("api_key") apiKey: String?): Call<Show>
+    fun tv(@Path("tv_id") tvId: Int, @Query("api_key") apiKey: String?): Call<ShowResponse>
 
     @GET("3/search/{category}")
     fun search(
@@ -33,18 +33,18 @@ interface ApiService {
         @Query(
             "query"
         ) query: String
-    ): Call<ShowList>
+    ): Call<ShowListResponse>
 
     @GET("3/genre/{category}/list")
     fun getGenreList(
         @Path("category") category: String?,
         @Query("api_key") apiKey: String?
-    ): Call<GenreList>
+    ): Call<GenreListResponse>
 
     @GET("3/discover/{category}")
     fun getTodayReleases(
         @Path("category") category: String?, @Query("api_key") apiKey: String?, @Query(
             "primary_release_date.gte"
         ) gteReleaseDate: String, @Query("primary_release_date.lte") lteReleaseDate: String
-    ): Call<ShowList>
+    ): Call<ShowListResponse>
 }

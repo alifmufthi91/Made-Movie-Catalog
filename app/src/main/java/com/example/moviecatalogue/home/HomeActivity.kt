@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.example.moviecatalogue.MainApplication
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.favourite.FavouriteActivity
 import com.example.moviecatalogue.search.SearchActivity
 import com.example.moviecatalogue.settings.SettingsActivity
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -16,7 +18,6 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
         val sectionsPagerAdapter =
             SectionsPagerAdapter(
                 this,

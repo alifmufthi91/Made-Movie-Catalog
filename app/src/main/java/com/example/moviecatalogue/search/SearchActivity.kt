@@ -8,13 +8,17 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.search.menu.SearchMenuFragment
 import com.example.moviecatalogue.search.result.SearchResultFragment
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
+import javax.inject.Inject
 
 class SearchActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var searchViewModel: SearchViewModel
     private val mFragmentManager = supportFragmentManager
     private val mSearchResultFragment = SearchResultFragment()
@@ -39,11 +43,7 @@ class SearchActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        val factory = ViewModelFactory.getInstance()
-        searchViewModel = ViewModelProvider(
-            viewModelStore,
-            factory
-        )[SearchViewModel::class.java]
+        searchViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchViewModel::class.java]
 
     }
 

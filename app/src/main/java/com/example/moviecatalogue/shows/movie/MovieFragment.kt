@@ -9,14 +9,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.shows.ListShowAdapter
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
+import com.example.moviecatalogue.vo.Status
 import kotlinx.android.synthetic.main.fragment_movie_list.*
+import javax.inject.Inject
 
 
 /**
@@ -24,6 +26,8 @@ import kotlinx.android.synthetic.main.fragment_movie_list.*
  */
 class MovieFragment : Fragment() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var listShowAdapter: ListShowAdapter
     private lateinit var listViewModel: MovieViewModel
     private lateinit var mLayoutManger: RecyclerView.LayoutManager
@@ -45,9 +49,15 @@ class MovieFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         showRecyclerList()
         listViewModel.setShows()
-        listViewModel.getShows().observe(viewLifecycleOwner, Observer { Shows ->
-            if (Shows != null) {
-                listShowAdapter.setData(Shows as ArrayList<Show>)
+        listViewModel.getShows().observe(viewLifecycleOwner, Observer { shows ->
+            if (shows != null) {
+                when (shows.status) {
+                    Status.SUCCESS -> {
+                        listShowAdapter.submitList(shows.data)
+                        listShowAdapter.notifyDataSetChanged()
+                    }
+                    else -> {}
+                }
             }
         })
     }
@@ -69,18 +79,12 @@ class MovieFragment : Fragment() {
         })
         rv_movie.addOnScrollListener(scrollListener)
         rv_movie.adapter = listShowAdapter
-        val factory = ViewModelFactory.getInstance()
-        listViewModel = ViewModelProvider(
-            this,
-            factory
-        )[MovieViewModel::class.java]
+        listViewModel = ViewModelProviders.of(this, viewModelFactory)[MovieViewModel::class.java]
     }
 
     private fun loadMoreData() {
-        listShowAdapter.addLoadingView()
         Handler().postDelayed({
             listViewModel.loadMore()
-            listShowAdapter.removeLoadingView()
             scrollListener.setLoaded()
             rv_movie.post {
                 listShowAdapter.notifyDataSetChanged()

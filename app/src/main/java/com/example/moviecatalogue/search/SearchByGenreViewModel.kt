@@ -2,11 +2,12 @@ package com.example.moviecatalogue.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.moviecatalogue.data.model.Show
-import com.example.moviecatalogue.data.source.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
+import com.example.moviecatalogue.vo.Resource
 
-class SearchByGenreViewModel(private val movieCatalogueXRepository: MovieCatalogueXRepository) :
+class SearchByGenreViewModel(val movieCatalogueXRepository: MovieCatalogueXRepository) :
     ViewModel() {
     private var category = SHOW_MOVIE
     private var currentPage = 1
@@ -34,7 +35,7 @@ class SearchByGenreViewModel(private val movieCatalogueXRepository: MovieCatalog
         this.category = category
     }
 
-    internal fun getShows(): LiveData<ArrayList<Show>> =
+    internal fun getShows(): LiveData<List<ShowEntity>> =
         movieCatalogueXRepository.getSearchedShows()
 
     internal fun getGenre() = selectedGenre
