@@ -20,12 +20,13 @@ import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
 import com.example.moviecatalogue.utils.Utility
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import com.example.moviecatalogue.vo.Status
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_detail_show.*
 import javax.inject.Inject
 
 
 @Suppress("NAME_SHADOWING")
-class DetailShowActivity : AppCompatActivity() {
+class DetailShowActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -41,7 +42,7 @@ class DetailShowActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_show)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[DetailShowViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[DetailShowViewModel::class.java]
         viewModel.apply {
             setDetailData(
                 this@DetailShowActivity,

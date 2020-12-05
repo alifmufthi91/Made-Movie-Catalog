@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moviecatalogue.R
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_favourite.*
 
-class FavouriteActivity : AppCompatActivity() {
+class FavouriteActivity : DaggerAppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

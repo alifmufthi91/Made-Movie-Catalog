@@ -15,10 +15,11 @@ import com.example.moviecatalogue.search.result.SearchResultFragment
 import com.example.moviecatalogue.utils.Constant
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import com.example.moviecatalogue.vo.Status
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_search_by_genre.*
 import javax.inject.Inject
 
-class SearchByGenreActivity : AppCompatActivity() {
+class SearchByGenreActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -44,7 +45,7 @@ class SearchByGenreActivity : AppCompatActivity() {
 
         supportActionBar?.title = genre?.name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[SearchByGenreViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[SearchByGenreViewModel::class.java]
 
         viewModel.setCategory(category as String)
         searchShowAdapter = SearchShowAdapter(this, viewModel.getCategory())

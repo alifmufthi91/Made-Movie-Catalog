@@ -11,26 +11,11 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class FragmentProviderModule {
-    @ContributesAndroidInjector
-    abstract fun bindMovieFragment(): MovieFragment
-
-    @ContributesAndroidInjector
-    abstract fun bindTvShowFragment(): TvFragment
-
+abstract class SearchFragmentProviderModule {
     @ContributesAndroidInjector
     abstract fun bindSearchMenuFragment(): SearchMenuFragment
 
     @ContributesAndroidInjector
     abstract fun bindSearchResultFragment(): SearchResultFragment
-
-    @ContributesAndroidInjector
-    abstract fun bindFavouriteMovieFragment(): FavoriteMovieFragment
-
-    @ContributesAndroidInjector
-    abstract fun bindFavouriteTvFragment(): FavoriteTvFragment
-
-    @ContributesAndroidInjector
-    abstract fun bindAboutFragment(): AboutFragment
 
 }

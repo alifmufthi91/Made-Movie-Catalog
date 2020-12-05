@@ -11,9 +11,10 @@ import com.example.moviecatalogue.favourite.FavouriteActivity
 import com.example.moviecatalogue.search.SearchActivity
 import com.example.moviecatalogue.settings.SettingsActivity
 import dagger.android.AndroidInjection
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_home.*
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

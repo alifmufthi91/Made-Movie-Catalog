@@ -15,6 +15,7 @@ import com.example.moviecatalogue.R
 //import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_MOVIE_URI
 import com.example.moviecatalogue.shows.ListShowAdapter
 import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_favourite_movie_list.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 /**
  * A simple [Fragment] subclass.
  */
-class FavoriteMovieFragment : Fragment() {
+class FavoriteMovieFragment : DaggerFragment() {
 
     private lateinit var listShowAdapter: ListShowAdapter
     private lateinit var contentObserver: ContentObserver

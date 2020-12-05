@@ -19,13 +19,14 @@ import com.example.moviecatalogue.search.SearchViewModel
 import com.example.moviecatalogue.utils.Constant
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import com.example.moviecatalogue.vo.Status
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_search_result.*
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
-class SearchResultFragment : Fragment() {
+class SearchResultFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -59,7 +60,7 @@ class SearchResultFragment : Fragment() {
 
 
     private fun showRecyclerList() {
-        searchViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchViewModel::class.java]
+        searchViewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
         searchShowAdapter = SearchShowAdapter(activity as Activity, searchViewModel.getCategory())
         searchShowAdapter.notifyDataSetChanged()
         mLayoutManager = GridLayoutManager(activity, GRID_COLUMN)

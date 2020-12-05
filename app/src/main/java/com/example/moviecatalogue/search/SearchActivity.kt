@@ -13,9 +13,10 @@ import com.example.moviecatalogue.R
 import com.example.moviecatalogue.search.menu.SearchMenuFragment
 import com.example.moviecatalogue.search.result.SearchResultFragment
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
+import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -43,7 +44,7 @@ class SearchActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        searchViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchViewModel::class.java]
+        searchViewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
 
     }
 

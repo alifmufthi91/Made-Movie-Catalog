@@ -9,12 +9,13 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.moviecatalogue.BuildConfig
 import com.example.moviecatalogue.R
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_about.*
 
 /**
  * A simple [Fragment] subclass.
  */
-class AboutFragment : Fragment() {
+class AboutFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

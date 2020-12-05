@@ -18,6 +18,7 @@ import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.shows.ListShowAdapter
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import com.example.moviecatalogue.vo.Status
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_tv_list.*
 import javax.inject.Inject
 
@@ -25,7 +26,7 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class TvFragment : Fragment() {
+class TvFragment : DaggerFragment() {
 
 
     @Inject
@@ -80,7 +81,7 @@ class TvFragment : Fragment() {
         })
         rv_tv.addOnScrollListener(scrollListener)
         rv_tv.adapter = listShowAdapter
-        listViewModel = ViewModelProviders.of(this, viewModelFactory)[TvViewModel::class.java]
+        listViewModel = ViewModelProvider(this, viewModelFactory)[TvViewModel::class.java]
     }
 
     private fun loadMoreData() {

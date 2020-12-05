@@ -13,8 +13,9 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.example.moviecatalogue.R
+import dagger.android.support.DaggerAppCompatActivity
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

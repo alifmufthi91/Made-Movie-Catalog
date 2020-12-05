@@ -25,13 +25,14 @@ import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
 import com.example.moviecatalogue.shows.tv.TvFragment.Companion.SHOW_TV
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import com.example.moviecatalogue.vo.Status
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_search_menu.*
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
-class SearchMenuFragment : Fragment() {
+class SearchMenuFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -51,7 +52,7 @@ class SearchMenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        searchViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchViewModel::class.java]
+        searchViewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
 
         adapter =
             object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1) {
