@@ -3,18 +3,13 @@ package com.example.moviecatalogue.search
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.search.result.SearchResultFragment
 import com.example.moviecatalogue.utils.Constant
-import com.example.moviecatalogue.viewmodel.ViewModelFactory
-import com.example.moviecatalogue.vo.Status
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_search_by_genre.*
 import javax.inject.Inject
@@ -22,11 +17,10 @@ import javax.inject.Inject
 class SearchByGenreActivity : DaggerAppCompatActivity() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModel: SearchByGenreViewModel
     private lateinit var searchShowAdapter: SearchShowAdapter
     private lateinit var mLayoutManager: GridLayoutManager
     private lateinit var scrollListener: CustomRecyclerViewScrollListener
-    private lateinit var viewModel: SearchByGenreViewModel
 
 
     companion object {
@@ -45,7 +39,6 @@ class SearchByGenreActivity : DaggerAppCompatActivity() {
 
         supportActionBar?.title = genre?.name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        viewModel = ViewModelProvider(this, viewModelFactory)[SearchByGenreViewModel::class.java]
 
         viewModel.setCategory(category as String)
         searchShowAdapter = SearchShowAdapter(this, viewModel.getCategory())

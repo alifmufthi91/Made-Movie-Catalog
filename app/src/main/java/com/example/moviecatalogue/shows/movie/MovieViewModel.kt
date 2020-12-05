@@ -6,8 +6,9 @@ import androidx.paging.PagedList
 import com.example.moviecatalogue.data.MovieCatalogueXRepository
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.vo.Resource
+import javax.inject.Inject
 
-class MovieViewModel(val movieCatalogueXRepository: MovieCatalogueXRepository) :
+class MovieViewModel @Inject constructor(val movieCatalogueXRepository: MovieCatalogueXRepository) :
     ViewModel() {
 
     private var currentPage = 1

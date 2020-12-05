@@ -1,13 +1,5 @@
 package com.example.moviecatalogue.di
 
-import android.content.Context
-import com.example.moviecatalogue.data.MovieCatalogueXRepository
-import com.example.moviecatalogue.data.source.local.LocalDataSource
-import com.example.moviecatalogue.data.source.local.room.MovieCatalogueXDatabase
-import com.example.moviecatalogue.data.source.remote.RemoteDataSource
-import com.example.moviecatalogue.utils.AppExecutors
-import javax.inject.Inject
-
 //object Injection {
 //    fun provideRepository(context: Context): MovieCatalogueXRepository {
 //

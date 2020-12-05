@@ -5,9 +5,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.Settings
 import android.view.MenuItem
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat

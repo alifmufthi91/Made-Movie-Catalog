@@ -1,24 +1,16 @@
 package com.example.moviecatalogue.detail
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.moviecatalogue.MainApplication
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
-import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
 import com.example.moviecatalogue.utils.Utility
-import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import com.example.moviecatalogue.vo.Status
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_detail_show.*
@@ -29,7 +21,6 @@ import javax.inject.Inject
 class DetailShowActivity : DaggerAppCompatActivity() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var viewModel: DetailShowViewModel
 
     companion object {
@@ -42,7 +33,6 @@ class DetailShowActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_show)
-        viewModel = ViewModelProvider(this, viewModelFactory)[DetailShowViewModel::class.java]
         viewModel.apply {
             setDetailData(
                 this@DetailShowActivity,

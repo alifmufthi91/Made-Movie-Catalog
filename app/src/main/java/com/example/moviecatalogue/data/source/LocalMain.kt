@@ -1,9 +1,6 @@
 package com.example.moviecatalogue.data.source
 
 
-import com.example.moviecatalogue.utils.DummyShowData
-import com.google.gson.Gson
-
 //class LocalMain {
 //    fun getMovies(): ArrayList<Show> {
 //        val gson = Gson()

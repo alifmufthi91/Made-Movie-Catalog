@@ -1,10 +1,7 @@
 package com.example.moviecatalogue.utils
 
-import android.app.Application
 import com.example.moviecatalogue.MainApplication
 import com.example.moviecatalogue.di.*
-import com.example.moviecatalogue.home.HomeActivity
-import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
@@ -17,7 +14,7 @@ import javax.inject.Singleton
     modules = [
         AppModule::class,
         RepositoryModule::class,
-        ViewModelModule::class,
+//        ViewModelModule::class,
         DatabaseModule::class,
         NetworkModule::class,
         ActivitiesModule::class,

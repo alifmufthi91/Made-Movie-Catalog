@@ -9,16 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.search.SearchShowAdapter
 import com.example.moviecatalogue.search.SearchViewModel
 import com.example.moviecatalogue.utils.Constant
-import com.example.moviecatalogue.viewmodel.ViewModelFactory
-import com.example.moviecatalogue.vo.Status
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_search_result.*
 import javax.inject.Inject
@@ -29,8 +25,7 @@ import javax.inject.Inject
 class SearchResultFragment : DaggerFragment() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var searchViewModel: SearchViewModel
+    lateinit var searchViewModel: SearchViewModel
     private lateinit var searchShowAdapter: SearchShowAdapter
     private lateinit var mLayoutManager: GridLayoutManager
     private lateinit var scrollListener: CustomRecyclerViewScrollListener
@@ -60,7 +55,6 @@ class SearchResultFragment : DaggerFragment() {
 
 
     private fun showRecyclerList() {
-        searchViewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
         searchShowAdapter = SearchShowAdapter(activity as Activity, searchViewModel.getCategory())
         searchShowAdapter.notifyDataSetChanged()
         mLayoutManager = GridLayoutManager(activity, GRID_COLUMN)

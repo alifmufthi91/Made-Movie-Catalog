@@ -8,14 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.shows.ListShowAdapter
-import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import com.example.moviecatalogue.vo.Status
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_movie_list.*
@@ -28,9 +25,8 @@ import javax.inject.Inject
 class MovieFragment : DaggerFragment() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var listViewModel: MovieViewModel
     private lateinit var listShowAdapter: ListShowAdapter
-    private lateinit var listViewModel: MovieViewModel
     private lateinit var mLayoutManger: RecyclerView.LayoutManager
     private lateinit var scrollListener: CustomRecyclerViewScrollListener
 
@@ -80,7 +76,6 @@ class MovieFragment : DaggerFragment() {
         })
         rv_movie.addOnScrollListener(scrollListener)
         rv_movie.adapter = listShowAdapter
-        listViewModel = ViewModelProvider(this, viewModelFactory)[MovieViewModel::class.java]
     }
 
     private fun loadMoreData() {

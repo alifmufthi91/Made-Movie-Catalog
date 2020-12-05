@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.example.moviecatalogue.data.MovieCatalogueXRepository
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
-import com.example.moviecatalogue.vo.Resource
+import javax.inject.Inject
 
-class SearchByGenreViewModel(val movieCatalogueXRepository: MovieCatalogueXRepository) :
+class SearchByGenreViewModel @Inject constructor(val movieCatalogueXRepository: MovieCatalogueXRepository) :
     ViewModel() {
     private var category = SHOW_MOVIE
     private var currentPage = 1

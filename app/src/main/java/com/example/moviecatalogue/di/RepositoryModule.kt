@@ -1,6 +1,5 @@
 package com.example.moviecatalogue.di
 
-import com.example.moviecatalogue.data.source.local.room.MovieCatalogueXDatabase
 import com.example.moviecatalogue.utils.DiskIOThreadExecutor
 import com.example.moviecatalogue.utils.MainThreadExecutor
 import com.example.moviecatalogue.utils.NetworkIOThreadExecutor

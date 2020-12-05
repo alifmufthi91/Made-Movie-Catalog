@@ -18,7 +18,6 @@ import com.example.moviecatalogue.detail.DetailShowActivity.Companion.DETAIL_SHO
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_POSITION
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_TYPE
 import com.example.moviecatalogue.listener.CustomOnItemClickListener
-import com.example.moviecatalogue.utils.Constant
 import kotlinx.android.synthetic.main.item_show.view.*
 
 class ListShowAdapter(private val fragment: Fragment, showType: String) :

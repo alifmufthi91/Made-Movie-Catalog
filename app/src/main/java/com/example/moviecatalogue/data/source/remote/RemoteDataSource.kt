@@ -3,7 +3,6 @@ package com.example.moviecatalogue.data.source.remote
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.moviecatalogue.BuildConfig
-import com.example.moviecatalogue.MainApplication
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.data.source.remote.response.GenreListResponse

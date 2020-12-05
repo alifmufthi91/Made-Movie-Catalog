@@ -1,6 +1,5 @@
 package com.example.moviecatalogue
 
-import com.example.moviecatalogue.utils.AppComponent
 import com.example.moviecatalogue.utils.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication

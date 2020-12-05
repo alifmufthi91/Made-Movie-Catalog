@@ -2,14 +2,13 @@ package com.example.moviecatalogue.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagedList
 import com.example.moviecatalogue.data.MovieCatalogueXRepository
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
-import com.example.moviecatalogue.vo.Resource
+import javax.inject.Inject
 
-class SearchViewModel(val movieCatalogueXRepository: MovieCatalogueXRepository) :
+class SearchViewModel @Inject constructor(val movieCatalogueXRepository: MovieCatalogueXRepository) :
     ViewModel() {
     private var category = SHOW_MOVIE
     private var currentPage = 1

@@ -8,8 +8,9 @@ import androidx.lifecycle.ViewModel
 import com.example.moviecatalogue.data.MovieCatalogueXRepository
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.vo.Resource
+import javax.inject.Inject
 
-class DetailShowViewModel(
+class DetailShowViewModel @Inject constructor(
     val movieCatalogueXRepository: MovieCatalogueXRepository
 
 ) : ViewModel() {

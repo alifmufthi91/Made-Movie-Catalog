@@ -13,8 +13,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.search.SearchByGenreActivity
@@ -23,8 +21,6 @@ import com.example.moviecatalogue.search.SearchByGenreActivity.Companion.SELECTE
 import com.example.moviecatalogue.search.SearchViewModel
 import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
 import com.example.moviecatalogue.shows.tv.TvFragment.Companion.SHOW_TV
-import com.example.moviecatalogue.viewmodel.ViewModelFactory
-import com.example.moviecatalogue.vo.Status
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_search_menu.*
 import javax.inject.Inject
@@ -35,8 +31,7 @@ import javax.inject.Inject
 class SearchMenuFragment : DaggerFragment() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var searchViewModel: SearchViewModel
+    lateinit var searchViewModel: SearchViewModel
     private lateinit var adapter: ArrayAdapter<String>
 
     companion object;
@@ -52,8 +47,6 @@ class SearchMenuFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        searchViewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
-
         adapter =
             object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1) {
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
