@@ -1,6 +1,7 @@
 package com.example.moviecatalogue.data.source.remote
 
 import com.example.moviecatalogue.BuildConfig
+import com.example.moviecatalogue.data.model.Genre
 import com.example.moviecatalogue.data.model.GenreList
 import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.data.model.ShowList
@@ -8,10 +9,13 @@ import com.example.moviecatalogue.shows.movie.MovieFragment
 import com.example.moviecatalogue.utils.EspressoIdlingResource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RemoteDataSource {
 
@@ -41,7 +45,7 @@ class RemoteDataSource {
             }
     }
 
-    fun getMovies(page: Int, callback: LoadMoviesCallback) {
+    fun getMovies(page: Int, callback: CustomCallback<ArrayList<Show>>) {
         EspressoIdlingResource.increment()
         val call = apiClient.showList(
             SHOW_MOVIE.toLowerCase(Locale.getDefault()),
@@ -49,10 +53,22 @@ class RemoteDataSource {
             page,
             null
         )
-        call.enqueue(callback)
+        call.enqueue(object : Callback<ShowList> {
+            override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
+                response.body()?.let {
+                    callback.onResponse(it.list)
+                }
+                EspressoIdlingResource.decrement()
+            }
+
+            override fun onFailure(call: Call<ShowList>, t: Throwable) {
+                callback.onError(t)
+                EspressoIdlingResource.decrement()
+            }
+        })
     }
 
-    fun getTvShows(page: Int, callback: LoadTvShowsCallback) {
+    fun getTvShows(page: Int, callback: CustomCallback<ArrayList<Show>>) {
         EspressoIdlingResource.increment()
         val call = apiClient.showList(
             SHOW_TV.toLowerCase(Locale.getDefault()),
@@ -60,14 +76,26 @@ class RemoteDataSource {
             page,
             null
         )
-        call.enqueue(callback)
+        call.enqueue(object : Callback<ShowList>{
+            override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
+                response.body()?.let {
+                    callback.onResponse(it.list)
+                }
+                EspressoIdlingResource.decrement()
+            }
+
+            override fun onFailure(call: Call<ShowList>, t: Throwable) {
+                callback.onError(t)
+                EspressoIdlingResource.decrement()
+            }
+        })
     }
 
     fun getSearchedShowByQuery(
         category: String,
         page: Int,
         query: String,
-        callback: LoadSearchedShowCallback
+        callback: CustomCallback<ArrayList<Show>>
     ) {
         EspressoIdlingResource.increment()
         val call = apiClient.search(
@@ -76,14 +104,26 @@ class RemoteDataSource {
             page,
             query
         )
-        call.enqueue(callback)
+        call.enqueue(object : Callback<ShowList> {
+            override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
+                response.body()?.let {
+                    callback.onResponse(it.list)
+                }
+                EspressoIdlingResource.decrement()
+            }
+
+            override fun onFailure(call: Call<ShowList>, t: Throwable) {
+                callback.onError(t)
+                EspressoIdlingResource.decrement()
+            }
+        })
     }
 
     fun getSearchedShowByGenre(
         category: String,
         page: Int,
         genre: String,
-        callback: LoadSearchedShowCallback
+        callback: CustomCallback<ArrayList<Show>>
     ) {
         EspressoIdlingResource.increment()
         val call = apiClient.showList(
@@ -92,25 +132,61 @@ class RemoteDataSource {
             page,
             genre
         )
-        call.enqueue(callback)
+        call.enqueue(object : Callback<ShowList> {
+            override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
+                response.body()?.let {
+                    callback.onResponse(it.list)
+                }
+                EspressoIdlingResource.decrement()
+            }
+
+            override fun onFailure(call: Call<ShowList>, t: Throwable) {
+                callback.onError(t)
+                EspressoIdlingResource.decrement()
+            }
+        })
     }
 
-    fun getShowDetail(type: String, showId: Int, callback: LoadShowDetailCallback) {
+    fun getShowDetail(type: String, showId: Int, callback: CustomCallback<Show>) {
         EspressoIdlingResource.increment()
         val call = when (type) {
             MovieFragment.SHOW_MOVIE -> showId.let { apiClient.movie(it, BuildConfig.API_KEY) }
             else -> showId.let { apiClient.tv(it, BuildConfig.API_KEY) }
         }
-        call.enqueue(callback)
+        call.enqueue(object : Callback<Show> {
+            override fun onResponse(call: Call<Show>, response: Response<Show>) {
+                response.body()?.let {
+                    callback.onResponse(it)
+                }
+                EspressoIdlingResource.decrement()
+            }
+
+            override fun onFailure(call: Call<Show>, t: Throwable) {
+                callback.onError(t)
+                EspressoIdlingResource.decrement()
+            }
+        })
     }
 
-    fun getGenres(category: String, callback: LoadGenresCallback) {
+    fun getGenres(category: String, callback: CustomCallback<ArrayList<Genre>>) {
         EspressoIdlingResource.increment()
         val call = apiClient.getGenreList(
             category.toLowerCase(Locale.getDefault()),
             BuildConfig.API_KEY
         )
-        call.enqueue(callback)
+        call.enqueue(object : Callback<GenreList> {
+            override fun onResponse(call: Call<GenreList>, response: Response<GenreList>) {
+                response.body()?.let{
+                    callback.onResponse(it.list)
+                }
+                EspressoIdlingResource.decrement()
+            }
+
+            override fun onFailure(call: Call<GenreList>, t: Throwable) {
+                callback.onError(t)
+                EspressoIdlingResource.decrement()
+            }
+        })
     }
 
     interface LoadMoviesCallback : Callback<ShowList>
@@ -118,5 +194,10 @@ class RemoteDataSource {
     interface LoadShowDetailCallback : Callback<Show>
     interface LoadSearchedShowCallback : Callback<ShowList>
     interface LoadGenresCallback : Callback<GenreList>
+
+    interface CustomCallback<T> {
+        fun onResponse(data: T)
+        fun onError(t: Throwable)
+    }
 
 }

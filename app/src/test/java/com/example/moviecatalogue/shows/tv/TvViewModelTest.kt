@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import com.example.moviecatalogue.data.model.Show
 import com.example.moviecatalogue.data.source.LocalMain
 import com.example.moviecatalogue.data.source.MovieCatalogueXRepository
-import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
@@ -16,6 +15,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.verify
 
 @RunWith(MockitoJUnitRunner::class)
 class TvViewModelTest {

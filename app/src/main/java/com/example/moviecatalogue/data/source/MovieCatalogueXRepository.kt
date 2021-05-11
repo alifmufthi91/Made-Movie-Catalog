@@ -29,83 +29,55 @@ class MovieCatalogueXRepository private constructor(private val remoteDataSource
     }
 
     override fun setMovies(page: Int) {
-        remoteDataSource.getMovies(page, object : RemoteDataSource.LoadMoviesCallback {
-            override fun onResponse(
-                call: Call<ShowList>,
-                response: Response<ShowList>
-            ) {
-                val result = response.body()
-                if (result != null) {
-                    moviesLiveData.postValue(result.list)
-                }
-                EspressoIdlingResource.decrement()
+        remoteDataSource.getMovies(page, object : RemoteDataSource.CustomCallback<ArrayList<Show>> {
+            override fun onResponse(data: ArrayList<Show>) {
+                moviesLiveData.postValue(data)
             }
 
-            override fun onFailure(call: Call<ShowList>, t: Throwable) {
-                EspressoIdlingResource.decrement()
+            override fun onError(t: Throwable) {
             }
         })
     }
 
     override fun loadMoreMovies(page: Int) {
-        remoteDataSource.getMovies(page, object : RemoteDataSource.LoadMoviesCallback {
-            override fun onResponse(
-                call: Call<ShowList>,
-                response: Response<ShowList>
-            ) {
-                val result = response.body()
-                if (result != null) {
-                    val newList = getMovies().value
-                    newList?.addAll(result.list)
-                    moviesLiveData.value = newList
-                }
-                EspressoIdlingResource.decrement()
+        remoteDataSource.getMovies(page, object : RemoteDataSource.CustomCallback<ArrayList<Show>> {
+            override fun onResponse(data: ArrayList<Show>) {
+                val newList = getMovies().value
+                newList?.addAll(data)
+                moviesLiveData.value = newList
             }
 
-            override fun onFailure(call: Call<ShowList>, t: Throwable) {
-                EspressoIdlingResource.decrement()
+            override fun onError(t: Throwable) {
             }
         })
     }
 
     override fun setTvShows(page: Int) {
-        remoteDataSource.getTvShows(page, object : RemoteDataSource.LoadTvShowsCallback {
-            override fun onResponse(
-                call: Call<ShowList>,
-                response: Response<ShowList>
-            ) {
-                val result = response.body()
-                if (result != null) {
-                    tvShowsLiveData.postValue(result.list)
+        remoteDataSource.getTvShows(
+            page,
+            object : RemoteDataSource.CustomCallback<ArrayList<Show>> {
+                override fun onResponse(data: ArrayList<Show>) {
+                    tvShowsLiveData.postValue(data)
                 }
-                EspressoIdlingResource.decrement()
-            }
 
-            override fun onFailure(call: Call<ShowList>, t: Throwable) {
-                EspressoIdlingResource.decrement()
-            }
-        })
+                override fun onError(t: Throwable) {
+                }
+            })
     }
 
     override fun loadMoreTvShows(page: Int) {
-        remoteDataSource.getTvShows(page, object : RemoteDataSource.LoadTvShowsCallback {
-            override fun onResponse(
-                call: Call<ShowList>,
-                response: Response<ShowList>
-            ) {
-                val result = response.body()
-                if (result != null) {
+        remoteDataSource.getTvShows(
+            page,
+            object : RemoteDataSource.CustomCallback<ArrayList<Show>> {
+                override fun onResponse(data: ArrayList<Show>) {
                     val newList = getTvShows().value
-                    newList?.addAll(result.list)
+                    newList?.addAll(data)
                     tvShowsLiveData.value = newList
                 }
-                EspressoIdlingResource.decrement()
-            }
 
-            override fun onFailure(call: Call<ShowList>, t: Throwable) {
-                EspressoIdlingResource.decrement()
-            }
-        })
+                override fun onError(t: Throwable) {
+                }
+            })
     }
 
     override fun setSearchedShowsByQuery(
@@ -117,20 +89,12 @@ class MovieCatalogueXRepository private constructor(private val remoteDataSource
             category,
             page,
             query,
-            object : RemoteDataSource.LoadSearchedShowCallback {
-                override fun onResponse(
-                    call: Call<ShowList>,
-                    response: Response<ShowList>
-                ) {
-                    val result = response.body()
-                    if (result != null) {
-                        searchedShowsLiveData.postValue(result.list)
-                    }
-                    EspressoIdlingResource.decrement()
+            object : RemoteDataSource.CustomCallback<ArrayList<Show>> {
+                override fun onResponse(data: ArrayList<Show>) {
+                    searchedShowsLiveData.postValue(data)
                 }
 
-                override fun onFailure(call: Call<ShowList>, t: Throwable) {
-                    EspressoIdlingResource.decrement()
+                override fun onError(t: Throwable) {
                 }
             })
     }
@@ -144,20 +108,12 @@ class MovieCatalogueXRepository private constructor(private val remoteDataSource
             category,
             page,
             genre,
-            object : RemoteDataSource.LoadSearchedShowCallback {
-                override fun onResponse(
-                    call: Call<ShowList>,
-                    response: Response<ShowList>
-                ) {
-                    val result = response.body()
-                    if (result != null) {
-                        searchedShowsLiveData.postValue(result.list)
-                    }
-                    EspressoIdlingResource.decrement()
+            object : RemoteDataSource.CustomCallback<ArrayList<Show>> {
+                override fun onResponse(data: ArrayList<Show>) {
+                    searchedShowsLiveData.postValue(data)
                 }
 
-                override fun onFailure(call: Call<ShowList>, t: Throwable) {
-                    EspressoIdlingResource.decrement()
+                override fun onError(t: Throwable) {
                 }
             })
     }
@@ -167,22 +123,14 @@ class MovieCatalogueXRepository private constructor(private val remoteDataSource
             category,
             page,
             query,
-            object : RemoteDataSource.LoadSearchedShowCallback {
-                override fun onResponse(
-                    call: Call<ShowList>,
-                    response: Response<ShowList>
-                ) {
-                    val result = response.body()
-                    if (result != null) {
-                        val newList = getSearchedShows().value
-                        newList?.addAll(result.list)
-                        searchedShowsLiveData.value = newList
-                    }
-                    EspressoIdlingResource.decrement()
+            object : RemoteDataSource.CustomCallback<ArrayList<Show>> {
+                override fun onResponse(data: ArrayList<Show>) {
+                    val newList = getSearchedShows().value
+                    newList?.addAll(data)
+                    searchedShowsLiveData.value = newList
                 }
 
-                override fun onFailure(call: Call<ShowList>, t: Throwable) {
-                    EspressoIdlingResource.decrement()
+                override fun onError(t: Throwable) {
                 }
             })
     }
@@ -192,41 +140,25 @@ class MovieCatalogueXRepository private constructor(private val remoteDataSource
             category,
             page,
             genre,
-            object : RemoteDataSource.LoadSearchedShowCallback {
-                override fun onResponse(
-                    call: Call<ShowList>,
-                    response: Response<ShowList>
-                ) {
-                    val result = response.body()
-                    if (result != null) {
-                        val newList = getSearchedShows().value
-                        newList?.addAll(result.list)
-                        searchedShowsLiveData.value = newList
-                    }
-                    EspressoIdlingResource.decrement()
+            object : RemoteDataSource.CustomCallback<ArrayList<Show>> {
+                override fun onResponse(data: ArrayList<Show>) {
+                    val newList = getSearchedShows().value
+                    newList?.addAll(data)
+                    searchedShowsLiveData.value = newList
                 }
 
-                override fun onFailure(call: Call<ShowList>, t: Throwable) {
-                    EspressoIdlingResource.decrement()
+                override fun onError(t: Throwable) {
                 }
             })
     }
 
     override fun setGenres(category: String) {
-        remoteDataSource.getGenres(category, object : RemoteDataSource.LoadGenresCallback {
-            override fun onResponse(
-                call: Call<GenreList>,
-                response: Response<GenreList>
-            ) {
-                val results = response.body()
-                if (results != null) {
-                    genresLiveData.postValue(results.list)
-                }
-                EspressoIdlingResource.decrement()
+        remoteDataSource.getGenres(category, object : RemoteDataSource.CustomCallback<ArrayList<Genre>> {
+            override fun onResponse(data: ArrayList<Genre>) {
+                genresLiveData.postValue(data)
             }
 
-            override fun onFailure(call: Call<GenreList>, t: Throwable) {
-                EspressoIdlingResource.decrement()
+            override fun onError(t: Throwable) {
             }
         })
     }
@@ -240,32 +172,24 @@ class MovieCatalogueXRepository private constructor(private val remoteDataSource
         remoteDataSource.getShowDetail(
             type,
             showId,
-            object : RemoteDataSource.LoadShowDetailCallback {
-                override fun onResponse(
-                    call: Call<Show>,
-                    response: Response<Show>
-                ) {
-                    val result = response.body()
-                    if (result != null) {
-                        val showData = Show(
-                            result.name,
-                            result.vote_average,
-                            result.aired_date,
-                            result.imgPath,
-                            result.overview,
-                            result.popularity,
-                            result.voter,
-                            result.movieDbId,
-                            result.genreList,
-                            result.showType
-                        )
-                        showResult.postValue(showData)
-                    }
-                    EspressoIdlingResource.decrement()
+            object : RemoteDataSource.CustomCallback<Show> {
+                override fun onResponse(result: Show) {
+                    val showData = Show(
+                        result.name,
+                        result.vote_average,
+                        result.aired_date,
+                        result.imgPath,
+                        result.overview,
+                        result.popularity,
+                        result.voter,
+                        result.movieDbId,
+                        result.genreList,
+                        result.showType
+                    )
+                    showResult.postValue(showData)
                 }
 
-                override fun onFailure(call: Call<Show>, t: Throwable) {
-                    EspressoIdlingResource.decrement()
+                override fun onError(t: Throwable) {
                 }
             })
         return showResult
