@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.moviecatalogue.data.source.LocalMain
+import com.example.moviecatalogue.data.source.MovieCatalogueXRepository
 import com.example.moviecatalogue.data.MovieCatalogueXRepository
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.verify
 
 @RunWith(MockitoJUnitRunner::class)
 class TvViewModelTest {

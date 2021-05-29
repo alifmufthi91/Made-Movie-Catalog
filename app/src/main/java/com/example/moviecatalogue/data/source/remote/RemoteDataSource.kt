@@ -1,8 +1,10 @@
 package com.example.moviecatalogue.data.source.remote
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.moviecatalogue.BuildConfig
+import com.example.moviecatalogue.data.model.Genre
+import com.example.moviecatalogue.data.model.GenreList
+import com.example.moviecatalogue.data.model.Show
+import com.example.moviecatalogue.data.model.ShowList
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.data.source.remote.response.GenreListResponse
@@ -10,10 +12,17 @@ import com.example.moviecatalogue.data.source.remote.response.ShowListResponse
 import com.example.moviecatalogue.data.source.remote.response.ShowResponse
 import com.example.moviecatalogue.shows.movie.MovieFragment
 import com.example.moviecatalogue.utils.EspressoIdlingResource
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -38,66 +47,56 @@ class RemoteDataSource @Inject constructor(
 //            }
     }
 
-    fun getMovies(page: Int): LiveData<ApiResponse<List<ShowResponse>>> {
+    fun getMovies(page: Int, callback: CustomCallback<ArrayList<Show>>) {
         EspressoIdlingResource.increment()
-        val resultShows = MutableLiveData<ApiResponse<List<ShowResponse>>>()
         apiService.showList(
             SHOW_MOVIE.toLowerCase(Locale.getDefault()),
             BuildConfig.API_KEY,
             page,
             null
         ).enqueue(object : Callback<ShowListResponse> {
-            override fun onResponse(
-                call: Call<ShowListResponse>,
-                response: Response<ShowListResponse>
-            ) {
-                val result = response.body()
-                if (result != null) {
-                    resultShows.postValue(ApiResponse.success(result.list))
+            override fun onResponse(call: Call<ShowListResponse>, response: Response<ShowListResponse>) {
+                response.body()?.let {
+                    callback.onResponse(ApiResponse.success(it.list))
                 }
                 EspressoIdlingResource.decrement()
             }
 
-            override fun onFailure(call: Call<ShowListResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ShowList>, t: Throwable) {
+                callback.onError(t)
                 EspressoIdlingResource.decrement()
             }
         })
-        return resultShows
     }
 
-    fun getTvShows(page: Int): LiveData<ApiResponse<List<ShowResponse>>> {
-        val resultShows = MutableLiveData<ApiResponse<List<ShowResponse>>>()
+    fun getTvShows(page: Int, callback: CustomCallback<ArrayList<Show>>) {
         EspressoIdlingResource.increment()
         apiService.showList(
             SHOW_TV.toLowerCase(Locale.getDefault()),
             BuildConfig.API_KEY,
             page,
             null
-        ).enqueue(object : Callback<ShowListResponse> {
-            override fun onResponse(
-                call: Call<ShowListResponse>,
-                response: Response<ShowListResponse>
-            ) {
-                val result = response.body()
-                if (result != null) {
-                    resultShows.postValue(ApiResponse.success(result.list))
+        ).enqueue(object : Callback<ShowListResponse>{
+            override fun onResponse(call: Call<ShowListResponse>, response: Response<ShowListResponse>) {
+                response.body()?.let {
+                    callback.onResponse(ApiResponse.success(it.list))
                 }
                 EspressoIdlingResource.decrement()
             }
 
-            override fun onFailure(call: Call<ShowListResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ShowList>, t: Throwable) {
+                callback.onError(t)
                 EspressoIdlingResource.decrement()
             }
         })
-        return resultShows
     }
 
     fun getSearchedShowByQuery(
         category: String,
         page: Int,
-        query: String
-    ): MutableLiveData<List<ShowEntity>>{
-        val resultShows = MutableLiveData<List<ShowEntity>>()
+        query: String,
+        callback: CustomCallback<ArrayList<Show>>
+    ) {
         EspressoIdlingResource.increment()
         apiService.search(
             category.toLowerCase(Locale.getDefault()),
@@ -105,136 +104,91 @@ class RemoteDataSource @Inject constructor(
             page,
             query
         ).enqueue(object : Callback<ShowListResponse> {
-            override fun onResponse(
-                call: Call<ShowListResponse>,
-                response: Response<ShowListResponse>
-            ) {
-                val result = response.body()
-                val arrList = ArrayList<ShowEntity>()
-                if (result != null) {
-                    result.list.forEach {
-                        val showEntity = newShowEntity(it, category)
-                        arrList.add(showEntity)
-                    }
-                    resultShows.postValue(arrList)
+            override fun onResponse(call: Call<ShowListResponse>, response: Response<ShowListResponse>) {
+                response.body()?.let {
+                    callback.onResponse(it.list)
                 }
                 EspressoIdlingResource.decrement()
             }
 
-            override fun onFailure(call: Call<ShowListResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ShowList>, t: Throwable) {
+                callback.onError(t)
                 EspressoIdlingResource.decrement()
             }
         })
-        return resultShows
     }
 
     fun getSearchedShowByGenre(
         category: String,
         page: Int,
-        genre: String
-    ): MutableLiveData<List<ShowEntity>> {
-        val resultShows = MutableLiveData<List<ShowEntity>>()
+        genre: String,
+        callback: CustomCallback<ArrayList<Show>>
+    ) {
         EspressoIdlingResource.increment()
         apiService.showList(
             category.toLowerCase(Locale.getDefault()),
             BuildConfig.API_KEY,
             page,
             genre
-        ).enqueue(object : Callback<ShowListResponse> {
-            override fun onResponse(
-                call: Call<ShowListResponse>,
-                response: Response<ShowListResponse>
-            ) {
-                val result = response.body()
-                val arrList = ArrayList<ShowEntity>()
-                if (result != null) {
-                    result.list.forEach {
-                        val showEntity = newShowEntity(it, category)
-                        arrList.add(showEntity)
-                    }
-                    resultShows.postValue(arrList)
+        ).enqueue(object : Callback<ShowList> {
+            override fun onResponse(call: Call<ShowList>, response: Response<ShowList>) {
+                response.body()?.let {
+                    callback.onResponse(it.list)
                 }
                 EspressoIdlingResource.decrement()
             }
 
-            override fun onFailure(call: Call<ShowListResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ShowList>, t: Throwable) {
+                callback.onError(t)
                 EspressoIdlingResource.decrement()
             }
         })
-        return resultShows
     }
 
-    fun getShowDetail(type: String, showId: Int): MutableLiveData<ApiResponse<ShowResponse>> {
+    fun getShowDetail(type: String, showId: Int, callback: CustomCallback<Show>) {
         EspressoIdlingResource.increment()
-        val resultShow = MutableLiveData<ApiResponse<ShowResponse>>()
-        when (type) {
-            MovieFragment.SHOW_MOVIE -> showId.let {
-                apiService.movie(it, BuildConfig.API_KEY)
-                    .enqueue(object : Callback<ShowResponse>{
-                        override fun onResponse(
-                            call: Call<ShowResponse>,
-                            response: Response<ShowResponse>
-                        ) {
-                            val result = response.body()
-                            if (result != null) {
-                                resultShow.postValue(ApiResponse.success(result))
-                            }
-                            EspressoIdlingResource.decrement()
-                        }
-
-                        override fun onFailure(call: Call<ShowResponse>, t: Throwable) {
-                            EspressoIdlingResource.decrement()
-                        }
-                    })
-            }
-            else -> showId.let {
-                apiService.tv(it, BuildConfig.API_KEY)
-                .enqueue(object : Callback<ShowResponse>{
-                    override fun onResponse(
-                        call: Call<ShowResponse>,
-                        response: Response<ShowResponse>
-                    ) {
-                        val result = response.body()
-                        if (result != null) {
-                            resultShow.postValue(ApiResponse.success(result))
-                        }
-                        EspressoIdlingResource.decrement()
-                    }
-
-                    override fun onFailure(call: Call<ShowResponse>, t: Throwable) {
-                        EspressoIdlingResource.decrement()
-                    }
-                })
-            }
+        val call = when (type) {
+            MovieFragment.SHOW_MOVIE -> showId.let { apiService.movie(it, BuildConfig.API_KEY) }
+            else -> showId.let { apiService.tv(it, BuildConfig.API_KEY) }
         }
-        return resultShow
+        call.enqueue(object : Callback<Show> {
+            override fun onResponse(call: Call<Show>, response: Response<Show>) {
+                response.body()?.let {
+                    callback.onResponse(it)
+                }
+                EspressoIdlingResource.decrement()
+            }
+
+            override fun onFailure(call: Call<Show>, t: Throwable) {
+                callback.onError(t)
+                EspressoIdlingResource.decrement()
+            }
+        })
     }
 
-    fun getGenres(category: String): MutableLiveData<List<GenreEntity>>{
+    fun getGenres(category: String, callback: CustomCallback<ArrayList<Genre>>) {
         EspressoIdlingResource.increment()
-        val resultGenres = MutableLiveData<List<GenreEntity>>()
         apiService.getGenreList(
             category.toLowerCase(Locale.getDefault()),
             BuildConfig.API_KEY
-        ).enqueue(object : Callback<GenreListResponse>{
-            override fun onResponse(call: Call<GenreListResponse>, response: Response<GenreListResponse>) {
-                val results = response.body()
-                if (results != null) {
-                    val genreList = ArrayList<GenreEntity>()
-                    results.list.forEach {
-                        val genre = GenreEntity(it.id, it.name, category)
-                        genreList.add(genre)
-                    }
-                    resultGenres.postValue(genreList)
+        ).enqueue(object : Callback<GenreList> {
+            override fun onResponse(call: Call<GenreList>, response: Response<GenreList>) {
+                response.body()?.let{
+                    callback.onResponse(it.list)
                 }
                 EspressoIdlingResource.decrement()
             }
 
-            override fun onFailure(call: Call<GenreListResponse>, t: Throwable) {
+            override fun onFailure(call: Call<GenreList>, t: Throwable) {
+                callback.onError(t)
                 EspressoIdlingResource.decrement()
             }
         })
-        return resultGenres
+    }
+
+    interface CustomCallback<T> {
+        fun onResponse(data: T)
+        fun onError(t: Throwable)
     }
 
     fun newShowEntity(showResponse: ShowResponse, type: String): ShowEntity {
