@@ -20,10 +20,10 @@ interface ApiService {
     ): Call<ShowListResponse>
 
     @GET("3/movie/{movie_id}")
-    fun movie(@Path("movie_id") movieId: Int, @Query("api_key") apiKey: String?): Call<ShowResponse>
+    fun movie(@Path("movie_id") movieId: Long, @Query("api_key") apiKey: String?): Call<ShowResponse>
 
     @GET("3/tv/{tv_id}")
-    fun tv(@Path("tv_id") tvId: Int, @Query("api_key") apiKey: String?): Call<ShowResponse>
+    fun tv(@Path("tv_id") tvId: Long, @Query("api_key") apiKey: String?): Call<ShowResponse>
 
     @GET("3/search/{category}")
     fun search(

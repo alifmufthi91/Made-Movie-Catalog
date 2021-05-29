@@ -53,7 +53,7 @@ class TvFragment : DaggerFragment() {
                 when (shows.status) {
                     Status.SUCCESS -> {
                         listShowAdapter.submitList(shows.data)
-                        listShowAdapter.notifyDataSetChanged()
+//                        listShowAdapter.notifyDataSetChanged()
                     }
                     else -> {}
                 }
@@ -64,7 +64,7 @@ class TvFragment : DaggerFragment() {
 
     private fun showRecyclerList() {
         listShowAdapter = ListShowAdapter(this, SHOW_TV)
-        listShowAdapter.notifyDataSetChanged()
+//        listShowAdapter.notifyDataSetChanged()
         mLayoutManger = LinearLayoutManager(context)
         rv_tv.layoutManager = mLayoutManger
         scrollListener = CustomRecyclerViewScrollListener(mLayoutManger as LinearLayoutManager)
@@ -82,9 +82,9 @@ class TvFragment : DaggerFragment() {
         Handler().postDelayed({
             listViewModel.loadMore()
             scrollListener.setLoaded()
-            rv_tv.post {
-                listShowAdapter.notifyDataSetChanged()
-            }
+//            rv_tv.post {
+//                listShowAdapter.notifyDataSetChanged()
+//            }
         }, 100)
     }
 

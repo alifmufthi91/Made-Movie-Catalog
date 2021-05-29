@@ -17,6 +17,7 @@ import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_POSI
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_TYPE
 import com.example.moviecatalogue.listener.CustomOnItemClickListener
 import com.example.moviecatalogue.utils.Constant
+import com.example.moviecatalogue.utils.GlideApp
 import kotlinx.android.synthetic.main.item_show_grid.view.*
 
 class SearchShowAdapter(private val activity: Activity, showType: String) :
@@ -82,12 +83,14 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
     inner class GridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(show: ShowEntity) {
             with(itemView) {
-                com.bumptech.glide.Glide.with(itemView.context)
+                GlideApp.with(itemView.context)
                     .load(show.getPortraitPhoto())
-                    .apply(
-                        RequestOptions.placeholderOf(R.drawable.ic_image_black)
-                            .error(R.drawable.ic_image_error_black)
-                    )
+                    .placeholder(R.drawable.ic_image_black)
+                    .error(R.drawable.ic_image_error_black)
+//                    .apply(
+//                        RequestOptions.placeholderOf(R.drawable.ic_image_black)
+//                            .error(R.drawable.ic_image_error_black)
+//                    )
                     .into(img_item_photo_grid)
                 show.name?.let {
                     tv_item_name_grid.text = show.name?.substring(0, it.length.coerceAtMost(50))

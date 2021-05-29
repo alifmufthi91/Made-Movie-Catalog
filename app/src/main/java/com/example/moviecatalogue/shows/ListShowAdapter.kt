@@ -1,5 +1,6 @@
 package com.example.moviecatalogue.shows
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
@@ -18,6 +18,8 @@ import com.example.moviecatalogue.detail.DetailShowActivity.Companion.DETAIL_SHO
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_POSITION
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_TYPE
 import com.example.moviecatalogue.listener.CustomOnItemClickListener
+import com.example.moviecatalogue.utils.GlideApp
+import com.example.moviecatalogue.utils.MovieGlideApp
 import kotlinx.android.synthetic.main.item_show.view.*
 
 class ListShowAdapter(private val fragment: Fragment, showType: String) :
@@ -31,6 +33,7 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
                 return oldItem.movieDbId == newItem.movieDbId
             }
 
+            @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: ShowEntity, newItem: ShowEntity): Boolean {
                 return oldItem == newItem
             }
@@ -46,12 +49,10 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(show: ShowEntity) {
             with(itemView) {
-                Glide.with(itemView.context)
+                GlideApp.with(itemView.context)
                     .load(show.getPortraitPhoto())
-                    .apply(
-                        RequestOptions.placeholderOf(R.drawable.ic_image_black)
-                            .error(R.drawable.ic_image_error_black)
-                    )
+                    .placeholder(R.drawable.ic_image_black)
+                    .error(R.drawable.ic_image_error_black)
                     .into(img_item_photo)
                 show.name?.let {
                     tv_item_name.text = show.name?.substring(0, it.length.coerceAtMost(50))
@@ -72,7 +73,7 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
                                 val detailIntent =
                                     Intent(fragment.context, DetailShowActivity::class.java)
                                 Log.d("show type", type)
-                                detailIntent.putExtra(DETAIL_SHOW, show)
+                                detailIntent.putExtra(DETAIL_SHOW, show.movieDbId)
                                 detailIntent.putExtra(EXTRA_TYPE, type)
                                 detailIntent.putExtra(EXTRA_POSITION, position)
                                 fragment.startActivityForResult(

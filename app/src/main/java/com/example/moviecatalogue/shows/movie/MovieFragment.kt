@@ -46,12 +46,12 @@ class MovieFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
         showRecyclerList()
         listViewModel.setShows()
-        listViewModel.getShows().observe(viewLifecycleOwner, Observer { shows ->
-            if (shows != null) {
-                when (shows.status) {
+        listViewModel.getShows().observe(viewLifecycleOwner, Observer { response ->
+            if (response != null) {
+                when (response.status) {
                     Status.SUCCESS -> {
-                        listShowAdapter.submitList(shows.data)
-                        listShowAdapter.notifyDataSetChanged()
+                        listShowAdapter.submitList(response.data)
+//                        listShowAdapter.notifyDataSetChanged()
                     }
                     else -> {}
                 }
@@ -61,7 +61,7 @@ class MovieFragment : DaggerFragment() {
 
     private fun showRecyclerList() {
         listShowAdapter = ListShowAdapter(this, SHOW_MOVIE)
-        listShowAdapter.notifyDataSetChanged()
+//        listShowAdapter.notifyDataSetChanged()
         mLayoutManger = LinearLayoutManager(context)
         rv_movie.layoutManager = mLayoutManger
         scrollListener =
@@ -82,9 +82,9 @@ class MovieFragment : DaggerFragment() {
         Handler().postDelayed({
             listViewModel.loadMore()
             scrollListener.setLoaded()
-            rv_movie.post {
-                listShowAdapter.notifyDataSetChanged()
-            }
+//            rv_movie.post {
+//                listShowAdapter.notifyDataSetChanged()
+//            }
         }, 100)
     }
 

@@ -4,11 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.moviecatalogue.data.model.Genre
 import com.example.moviecatalogue.data.model.Show
-import com.example.moviecatalogue.data.model.ShowList
 import com.example.moviecatalogue.data.source.remote.RemoteDataSource
-import com.example.moviecatalogue.utils.EspressoIdlingResource
-import retrofit2.Call
-import retrofit2.Response
 
 class FakeMovieCatalogueXRepository (private val remoteDataSource: RemoteDataSource) :
     FakeDataSource {

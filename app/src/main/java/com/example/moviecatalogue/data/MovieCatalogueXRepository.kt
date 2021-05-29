@@ -1,5 +1,6 @@
 package com.example.moviecatalogue.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
@@ -9,9 +10,11 @@ import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.data.source.remote.ApiResponse
 import com.example.moviecatalogue.data.source.remote.RemoteDataSource
+import com.example.moviecatalogue.data.source.remote.response.GenreResponse
 import com.example.moviecatalogue.data.source.remote.response.ShowResponse
 import com.example.moviecatalogue.utils.AppExecutors
 import com.example.moviecatalogue.vo.Resource
+import com.example.moviecatalogue.vo.Status
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -58,13 +61,23 @@ class MovieCatalogueXRepository @Inject constructor(
                 override fun shouldFetch(data: PagedList<ShowEntity>?): Boolean =
                     data == null || data.isEmpty()
 
-                public override fun createCall(): LiveData<ApiResponse<List<ShowResponse>>> =
-                    remoteDataSource.getMovies(page)
+                public override fun createCall(): LiveData<ApiResponse<List<ShowResponse>>> {
+                    val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
+                    remoteDataSource.getMovies(page, object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
+                        override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                            results.postValue(data)
+                        }
 
-                public override fun saveCallResult(showResponses: List<ShowResponse>) {
+                        override fun onError(t: Throwable) {
+                        }
+                    })
+                    return results
+                }
+
+                public override fun saveCallResult(data: List<ShowResponse>) {
                     val showList = ArrayList<ShowEntity>()
-                    for (response in showResponses) {
-                        val show = newShowEntity(
+                    for (response in data) {
+                        val show = ShowEntity(
                             response, SHOW_MOVIE
                                 .toLowerCase(Locale.getDefault())
                         )
@@ -77,8 +90,18 @@ class MovieCatalogueXRepository @Inject constructor(
     }
 
     //
-    override fun loadMoreMovies(page: Int) {
-        remoteDataSource.getMovies(page)
+    override fun loadMoreMovies(page: Int): LiveData<ApiResponse<List<ShowResponse>>> {
+        val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
+        remoteDataSource.getMovies(page, object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
+            override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                results.postValue(data)
+            }
+
+            override fun onError(t: Throwable) {
+                TODO("Not yet implemented")
+            }
+        })
+        return results
     }
 
     override fun setTvShows(page: Int) {
@@ -96,13 +119,24 @@ class MovieCatalogueXRepository @Inject constructor(
                 override fun shouldFetch(data: PagedList<ShowEntity>?): Boolean =
                     data == null || data.isEmpty()
 
-                public override fun createCall(): LiveData<ApiResponse<List<ShowResponse>>> =
-                    remoteDataSource.getTvShows(page)
+                public override fun createCall(): LiveData<ApiResponse<List<ShowResponse>>> {
+                    val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
+                    remoteDataSource.getTvShows(
+                        page,
+                        object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
+                            override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                                results.postValue(data)
+                            }
 
-                public override fun saveCallResult(showResponses: List<ShowResponse>) {
+                            override fun onError(t: Throwable) {
+                            }
+                        })
+                    return results
+                }
+                public override fun saveCallResult(data: List<ShowResponse>) {
                     val showList = ArrayList<ShowEntity>()
-                    for (response in showResponses) {
-                        val show = newShowEntity(response, SHOW_TV.toLowerCase(Locale.getDefault()))
+                    for (response in data) {
+                        val show = ShowEntity(response, SHOW_TV.toLowerCase(Locale.getDefault()))
                         showList.add(show)
                     }
                     localDataSource.insertShows(showList)
@@ -112,8 +146,18 @@ class MovieCatalogueXRepository @Inject constructor(
     }
 
     //
-    override fun loadMoreTvShows(page: Int) {
-        remoteDataSource.getTvShows(page)
+    override fun loadMoreTvShows(page: Int) : LiveData<ApiResponse<List<ShowResponse>>>{
+        val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
+        remoteDataSource.getTvShows(page, object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
+            override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                results.postValue(data)
+            }
+
+            override fun onError(t: Throwable) {
+                TODO("Not yet implemented")
+            }
+        })
+        return results
     }
 
     override fun setSearchedShowsByQuery(
@@ -121,8 +165,22 @@ class MovieCatalogueXRepository @Inject constructor(
         page: Int,
         query: String
     ) {
+        val resultLiveData = MutableLiveData<List<ShowEntity>>()
+        remoteDataSource.getSearchedShowByQuery(category, page, query, object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>>{
+            override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                val showList = ArrayList<ShowEntity>()
+                for (response in data.body) {
+                    val show = ShowEntity(response, category.toLowerCase(Locale.getDefault()))
+                    showList.add(show)
+                }
+                resultLiveData.postValue(showList)
+            }
 
-        searchedShowsLiveData = remoteDataSource.getSearchedShowByQuery(category, page, query)
+            override fun onError(t: Throwable) {
+                TODO("Not yet implemented")
+            }
+        })
+        searchedShowsLiveData = resultLiveData
     }
 
     override fun setSearchedShowsByGenre(
@@ -130,55 +188,108 @@ class MovieCatalogueXRepository @Inject constructor(
         page: Int,
         genre: String
     ) {
-        searchedShowsLiveData = remoteDataSource.getSearchedShowByGenre(
-            category,
-            page,
-            genre
-        )
-    }
-
-
-    //
-    override fun loadMoreSearchedShowsByQuery(category: String, page: Int, query: String) {
-        remoteDataSource.getSearchedShowByQuery(
-            category,
-            page,
-            query
-        )
-    }
-
-    //
-    override fun loadMoreSearchedShowsByGenre(category: String, page: Int, genre: String) {
+        val resultLiveData = MutableLiveData<List<ShowEntity>>()
         remoteDataSource.getSearchedShowByGenre(
             category,
             page,
-            genre
-        )
+            genre,
+            object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>>{
+                override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                    val showList = ArrayList<ShowEntity>()
+                    for (response in data.body) {
+                        val show = ShowEntity(response, category.toLowerCase(Locale.getDefault()))
+                        showList.add(show)
+                    }
+                    resultLiveData.postValue(showList)
+                }
+
+                override fun onError(t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+        searchedShowsLiveData = resultLiveData
     }
 
-    override fun setShowFavorited(show: ShowEntity, state: Boolean) =
-        appExecutors.diskIO.execute { localDataSource.setFavouriteShow(show, state) }
+
+    //
+    override fun loadMoreSearchedShowsByQuery(category: String, page: Int, query: String): LiveData<ApiResponse<List<ShowResponse>>> {
+        val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
+        remoteDataSource.getSearchedShowByQuery(
+            category,
+            page,
+            query,
+            object: RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>>{
+                override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                    results.postValue(data)
+                }
+
+                override fun onError(t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        )
+        return results
+    }
+
+    //
+    override fun loadMoreSearchedShowsByGenre(category: String, page: Int, genre: String): LiveData<ApiResponse<List<ShowResponse>>> {
+        val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
+        remoteDataSource.getSearchedShowByGenre(
+            category,
+            page,
+            genre,
+            object: RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>>{
+                override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                    results.postValue(data)
+                }
+
+                override fun onError(t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        )
+        return results
+    }
+
+    override fun updateShow(show: ShowEntity) =
+        appExecutors.diskIO.execute { localDataSource.updateShow(show) }
 
     override fun getMovies(): LiveData<Resource<PagedList<ShowEntity>>> = moviesLiveData
 
     override fun getTvShows(): LiveData<Resource<PagedList<ShowEntity>>> = tvShowsLiveData
 
-    override fun getShowDetail(type: String, showId: Int): LiveData<Resource<ShowEntity>> {
+    override fun getShowDetail(type: String, showId: Long): LiveData<Resource<ShowEntity>> {
         return object : NetworkBoundResource<ShowEntity, ShowResponse>(appExecutors) {
             override fun loadFromDB(): LiveData<ShowEntity> =
                 localDataSource.getShow(type, showId)
 
-            override fun shouldFetch(show: ShowEntity?): Boolean =
+            override fun shouldFetch(data: ShowEntity?): Boolean =
                 true
 
-            override fun createCall(): LiveData<ApiResponse<ShowResponse>> =
+            override fun createCall(): LiveData<ApiResponse<ShowResponse>> {
+                val showLiveData = MutableLiveData<ApiResponse<ShowResponse>>()
                 remoteDataSource.getShowDetail(
                     type,
-                    showId
-                )
+                    showId,
+                    object : RemoteDataSource.CustomCallback<ApiResponse<ShowResponse>> {
+                        override fun onResponse(data: ApiResponse<ShowResponse>) {
+                            showLiveData.postValue(data)
+                        }
 
-            override fun saveCallResult(showResponse: ShowResponse) {
-                val show = newShowEntity(showResponse, type)
+                        override fun onError(t: Throwable) {
+                            TODO("Not yet implemented")
+                        }
+
+                    }
+                )
+                return showLiveData
+            }
+
+            override fun saveCallResult(data: ShowResponse) {
+                val show = ShowEntity(data, type)
                 localDataSource.insertShow(show)
             }
         }.asLiveData()
@@ -187,32 +298,47 @@ class MovieCatalogueXRepository @Inject constructor(
     override fun getSearchedShows(): LiveData<List<ShowEntity>> = searchedShowsLiveData
 
     override fun setGenres(category: String) {
-        genresLiveData = remoteDataSource.getGenres(category)
+        val resultLiveData = MutableLiveData<List<GenreEntity>>()
+        val arrGenres = ArrayList<GenreEntity>()
+        remoteDataSource.getGenres(category, object: RemoteDataSource.CustomCallback<ApiResponse<List<GenreResponse>>>{
+            override fun onResponse(data: ApiResponse<List<GenreResponse>>) {
+                data.body.forEach {
+                    arrGenres.add(GenreEntity(it.id, it.name, category.toLowerCase(Locale.getDefault())))
+                }
+                resultLiveData.postValue(arrGenres)
+            }
+
+            override fun onError(t: Throwable) {
+                TODO("Not yet implemented")
+            }
+        })
+        genresLiveData = resultLiveData
     }
 
     override fun getGenres(): LiveData<List<GenreEntity>> =
         genresLiveData
 
-    fun newShowEntity(showResponse: ShowResponse, type: String): ShowEntity {
-        var genres = ""
-        showResponse.genreList?.forEachIndexed { index, genreResponse ->
-            genres += if (index != 0) {
-                ", " + genreResponse.name
-            } else {
-                genreResponse.name
-            }
-        }
-        return ShowEntity(
-            showResponse.movieDbId,
-            showResponse.name,
-            showResponse.vote_average,
-            showResponse.aired_date,
-            showResponse.imgPath,
-            showResponse.overview,
-            showResponse.popularity,
-            showResponse.voter,
-            genres,
-            type
+    override fun getFavoriteMovies(): LiveData<PagedList<ShowEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(100)
+            .build()
+        return LivePagedListBuilder(localDataSource.getFavouriteShowsByType(SHOW_MOVIE.toLowerCase(
+            Locale.getDefault()
         )
+        ), config
+        ).build()
+    }
+
+    override fun getFavoriteTvShows(): LiveData<PagedList<ShowEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(100)
+            .build()
+        return LivePagedListBuilder(localDataSource.getFavouriteShowsByType(SHOW_TV.toLowerCase(
+            Locale.getDefault()
+        )
+        ), config
+        ).build()
     }
 }

@@ -19,7 +19,7 @@ interface MovieCatalogueXDao {
     fun getFavouriteShowsByType(showType: String): DataSource.Factory<Int, ShowEntity>
 
     @Query("SELECT * FROM showentities WHERE movieDbId = :showId AND showType = :showType")
-    fun getShow(showType: String, showId: Int): LiveData<ShowEntity>
+    fun getShow(showType: String, showId: Long): LiveData<ShowEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertShows(shows: List<ShowEntity>)
@@ -27,8 +27,8 @@ interface MovieCatalogueXDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertShow(show: ShowEntity)
 
-    @Query("SELECT * FROM genreentities WHERE category = :category")
-    fun getGenresByType(category: String): LiveData<List<GenreEntity>>
+//    @Query("SELECT * FROM genreentities WHERE category = :category")
+//    fun getGenresByType(category: String): LiveData<List<GenreEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGenres(genres: List<GenreEntity>)

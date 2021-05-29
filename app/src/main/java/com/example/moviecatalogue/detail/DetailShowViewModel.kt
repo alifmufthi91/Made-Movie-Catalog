@@ -15,39 +15,36 @@ class DetailShowViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private lateinit var context: Context
-    private val show = MutableLiveData<ShowEntity>()
+    val showId = MutableLiveData<Long>()
     private lateinit var type: String
     private var position: Int = 0
     lateinit var showEntity: ShowEntity
 
-    internal fun setShow() {
-        this.show.postValue(showEntity)
+    internal fun setShow(showId: Long) {
+        this.showId.value = showId
     }
 
     internal fun setType(type: String) {
         this.type = type
     }
 
-    var showInfo :LiveData<Resource<ShowEntity>> = Transformations.switchMap(show){ show: ShowEntity ->
-        val showId = show.movieDbId.toInt()
+    var showInfo :LiveData<Resource<ShowEntity>> = Transformations.switchMap(showId){ showId ->
         movieCatalogueXRepository.getShowDetail(type, showId)
     }
 
 
-    fun setDetailData(context: Context, show: ShowEntity, type: String, position: Int) {
-        this.context = context
-        this.showEntity = show
+    fun setDetailData(showId: Long, type: String, position: Int) {
+//        this.context = context
         this.type = type
         this.position = position
+        setShow(showId)
     }
 
-    fun setFavorite(){
-        val show = showEntity
-        val newState= !show.isFavorited
-        movieCatalogueXRepository.setShowFavorited(show, newState)
+    fun updateShow(){
+        movieCatalogueXRepository.updateShow(showEntity)
     }
 
-    fun getShow() = show
+
+    fun getShow() = showEntity
     fun getType() = type
 }

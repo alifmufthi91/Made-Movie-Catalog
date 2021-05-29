@@ -30,7 +30,7 @@ class LocalDataSource @Inject constructor(private val mMovieCatalogueXDao: Movie
     fun getTvShows(): DataSource.Factory<Int, ShowEntity> =
         mMovieCatalogueXDao.getShowsByType(SHOW_TV.toLowerCase(Locale.getDefault()))
 
-    fun getShow(showType: String, showId: Int): LiveData<ShowEntity> =
+    fun getShow(showType: String, showId: Long): LiveData<ShowEntity> =
         mMovieCatalogueXDao.getShow(showType, showId)
 
     fun getGenres(category: String): LiveData<List<GenreEntity>> =
