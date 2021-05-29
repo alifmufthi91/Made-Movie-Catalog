@@ -189,12 +189,6 @@ class RemoteDataSource {
         })
     }
 
-    interface LoadMoviesCallback : Callback<ShowList>
-    interface LoadTvShowsCallback : Callback<ShowList>
-    interface LoadShowDetailCallback : Callback<Show>
-    interface LoadSearchedShowCallback : Callback<ShowList>
-    interface LoadGenresCallback : Callback<GenreList>
-
     interface CustomCallback<T> {
         fun onResponse(data: T)
         fun onError(t: Throwable)
