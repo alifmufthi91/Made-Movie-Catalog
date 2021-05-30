@@ -57,6 +57,16 @@ data class ShowEntity(
         }
         this.genreList = genres
     }
+    fun updateDataFromEntity(show: ShowEntity){
+        this.name = show.name
+        this.genreList = show.genreList
+        this.aired_date = show.aired_date
+        this.overview = show.overview
+        this.voter = show.voter
+        this.vote_average = show.vote_average
+        this.imgPath = show.imgPath
+        this.popularity = show.popularity
+    }
     fun getPortraitPhoto(): String = "https://image.tmdb.org/t/p/w188_and_h282_bestv2/$imgPath"
     fun getLandscapePhoto(): String = "https://image.tmdb.org/t/p/w500_and_h282_face/$imgPath"
 }

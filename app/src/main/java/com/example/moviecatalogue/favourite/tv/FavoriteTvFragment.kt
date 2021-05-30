@@ -16,7 +16,7 @@ import com.example.moviecatalogue.R
 import com.example.moviecatalogue.favourite.movie.FavoriteMovieViewModel
 //import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_TV_URI
 import com.example.moviecatalogue.shows.ListShowAdapter
-import com.example.moviecatalogue.shows.tv.TvFragment.Companion.SHOW_TV
+import com.example.moviecatalogue.utils.Constant.SHOW_TV
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_favourite_tv_list.*
 import javax.inject.Inject

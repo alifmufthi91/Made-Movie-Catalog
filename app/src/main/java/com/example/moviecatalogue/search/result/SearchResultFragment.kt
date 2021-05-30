@@ -4,17 +4,21 @@ package com.example.moviecatalogue.search.result
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.X
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.search.SearchShowAdapter
 import com.example.moviecatalogue.search.SearchViewModel
 import com.example.moviecatalogue.utils.Constant
+import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_search_result.*
 import javax.inject.Inject
@@ -23,9 +27,10 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  */
 class SearchResultFragment : DaggerFragment() {
-
-    @Inject
-    lateinit var searchViewModel: SearchViewModel
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val searchViewModel: SearchViewModel by lazy {
+        ViewModelProvider(requireActivity(), viewModelFactory).get(SearchViewModel::class.java)
+    }
     private lateinit var searchShowAdapter: SearchShowAdapter
     private lateinit var mLayoutManager: GridLayoutManager
     private lateinit var scrollListener: CustomRecyclerViewScrollListener
@@ -46,11 +51,14 @@ class SearchResultFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         search_result_fragment.text = getString(R.string.search_result)
         showRecyclerList()
-        searchViewModel.getShows().observe(viewLifecycleOwner, Observer { shows ->
-            if (shows != null) {
-                searchShowAdapter.setData(shows)
-            }
-        })
+        searchViewModel.apply {
+            getShows().observe(viewLifecycleOwner, Observer { shows ->
+                Log.d("shows :", shows.toString())
+                if (shows != null) {
+                    searchShowAdapter.setData(shows)
+                }
+            })
+        }
     }
 
 

@@ -13,14 +13,16 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.search.SearchByGenreActivity
 import com.example.moviecatalogue.search.SearchByGenreActivity.Companion.SELECTED_CATEGORY
 import com.example.moviecatalogue.search.SearchByGenreActivity.Companion.SELECTED_GENRE
 import com.example.moviecatalogue.search.SearchViewModel
-import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
-import com.example.moviecatalogue.shows.tv.TvFragment.Companion.SHOW_TV
+import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
+import com.example.moviecatalogue.utils.Constant.SHOW_TV
+import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_search_menu.*
 import javax.inject.Inject
@@ -30,8 +32,10 @@ import javax.inject.Inject
  */
 class SearchMenuFragment : DaggerFragment() {
 
-    @Inject
-    lateinit var searchViewModel: SearchViewModel
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val searchViewModel: SearchViewModel by lazy {
+        ViewModelProvider(requireActivity(), viewModelFactory).get(SearchViewModel::class.java)
+    }
     private lateinit var adapter: ArrayAdapter<String>
 
     companion object;

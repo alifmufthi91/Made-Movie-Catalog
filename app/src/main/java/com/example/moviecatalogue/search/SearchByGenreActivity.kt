@@ -40,7 +40,21 @@ class SearchByGenreActivity : DaggerAppCompatActivity() {
         supportActionBar?.title = genre?.name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        viewModel.setCategory(category as String)
+        showRecyclerList()
+
+        viewModel.apply {
+            setCategory(category as String)
+            setGenre(genre?.id.toString())
+            setShows(category)
+        }
+        viewModel.getShows().observe(this, Observer {
+            if (it != null) {
+                searchShowAdapter.setData(it)
+            }
+        })
+    }
+
+    private fun showRecyclerList() {
         searchShowAdapter = SearchShowAdapter(this, viewModel.getCategory())
         searchShowAdapter.notifyDataSetChanged()
         mLayoutManager = GridLayoutManager(this, SearchResultFragment.GRID_COLUMN)
@@ -54,8 +68,6 @@ class SearchByGenreActivity : DaggerAppCompatActivity() {
             }
 
         }
-
-
         rv_search_genre.layoutManager = mLayoutManager
         scrollListener =
             CustomRecyclerViewScrollListener(
@@ -69,14 +81,6 @@ class SearchByGenreActivity : DaggerAppCompatActivity() {
         })
         rv_search_genre.addOnScrollListener(scrollListener)
         rv_search_genre.adapter = searchShowAdapter
-
-        viewModel.setGenre(genre?.id.toString())
-        viewModel.setShows(category)
-        viewModel.getShows().observe(this, Observer {
-            if (it != null) {
-                searchShowAdapter.setData(it)
-            }
-        })
     }
 
 

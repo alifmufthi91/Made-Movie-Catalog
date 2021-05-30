@@ -104,13 +104,10 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
                                 val detailIntent =
                                     Intent(context, DetailShowActivity::class.java)
                                 Log.d("show type", showsType)
-                                detailIntent.putExtra(DETAIL_SHOW, show)
+                                detailIntent.putExtra(DETAIL_SHOW, show.movieDbId)
                                 detailIntent.putExtra(EXTRA_TYPE, showsType)
                                 detailIntent.putExtra(EXTRA_POSITION, position)
-                                activity.startActivityForResult(
-                                    detailIntent,
-                                    DetailShowActivity.REQUEST_VIEW
-                                )
+                                activity.startActivity(detailIntent)
                             }
                         })
                 )

@@ -14,7 +14,7 @@ import javax.inject.Singleton
     modules = [
         AppModule::class,
         RepositoryModule::class,
-//        ViewModelModule::class,
+        ViewModelModule::class,
         DatabaseModule::class,
         NetworkModule::class,
         ActivitiesModule::class,

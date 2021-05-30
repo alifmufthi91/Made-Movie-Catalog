@@ -32,7 +32,6 @@ class DetailShowViewModel @Inject constructor(
         movieCatalogueXRepository.getShowDetail(type, showId)
     }
 
-
     fun setDetailData(showId: Long, type: String, position: Int) {
 //        this.context = context
         this.type = type
@@ -40,7 +39,18 @@ class DetailShowViewModel @Inject constructor(
         setShow(showId)
     }
 
-    fun updateShow(){
+    fun updateShow(show: ShowEntity){
+        showEntity.genreList = show.genreList
+        showEntity.voter = show.voter
+        showEntity.popularity = show.popularity
+        showEntity.overview = show.overview
+        showEntity.vote_average = show.vote_average
+        showEntity.imgPath = show.imgPath
+        showEntity.name = show.name
+    }
+
+    fun setFavorite(status: Boolean) {
+        showEntity.isFavorited = status
         movieCatalogueXRepository.updateShow(showEntity)
     }
 

@@ -3,9 +3,12 @@ package com.example.moviecatalogue.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.source.local.LocalDataSource
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
-import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
+import com.example.moviecatalogue.data.source.remote.RemoteDataSource
+import com.example.moviecatalogue.utils.AppExecutors
+import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(val movieCatalogueXRepository: MovieCatalogueXRepository) :
@@ -13,7 +16,6 @@ class SearchViewModel @Inject constructor(val movieCatalogueXRepository: MovieCa
     private var category = SHOW_MOVIE
     private var currentPage = 1
     private var query = ""
-
 
     internal fun setShows(category: String, query: String) {
         movieCatalogueXRepository.setSearchedShowsByQuery(category, currentPage, query)

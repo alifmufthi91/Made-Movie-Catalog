@@ -76,10 +76,7 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
                                 detailIntent.putExtra(DETAIL_SHOW, show.movieDbId)
                                 detailIntent.putExtra(EXTRA_TYPE, type)
                                 detailIntent.putExtra(EXTRA_POSITION, position)
-                                fragment.startActivityForResult(
-                                    detailIntent,
-                                    DetailShowActivity.REQUEST_VIEW
-                                )
+                                fragment.startActivity(detailIntent)
                             }
                         })
                 )

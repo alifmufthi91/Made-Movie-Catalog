@@ -8,6 +8,8 @@ import com.example.moviecatalogue.data.source.remote.response.GenreResponse
 import com.example.moviecatalogue.data.source.remote.response.ShowListResponse
 import com.example.moviecatalogue.data.source.remote.response.ShowResponse
 import com.example.moviecatalogue.shows.movie.MovieFragment
+import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
+import com.example.moviecatalogue.utils.Constant.SHOW_TV
 import com.example.moviecatalogue.utils.EspressoIdlingResource
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,8 +29,6 @@ class RemoteDataSource @Inject constructor(
         @Volatile
         private var instance: RemoteDataSource? = null
 
-        const val SHOW_MOVIE = "Movie"
-        const val SHOW_TV = "Tv"
 
 //        fun getInstance(): RemoteDataSource =
 //            instance ?: synchronized(this) {
@@ -39,7 +39,7 @@ class RemoteDataSource @Inject constructor(
     fun getMovies(page: Int, callback: CustomCallback<ApiResponse<List<ShowResponse>>>) {
         EspressoIdlingResource.increment()
         apiService.showList(
-            SHOW_MOVIE.toLowerCase(Locale.getDefault()),
+            SHOW_MOVIE,
             BuildConfig.API_KEY,
             page,
             null
@@ -137,8 +137,9 @@ class RemoteDataSource @Inject constructor(
     fun getShowDetail(type: String, showId: Long, callback: CustomCallback<ApiResponse<ShowResponse>>) {
         EspressoIdlingResource.increment()
         val call = when (type) {
-            MovieFragment.SHOW_MOVIE -> showId.let { apiService.movie(it, BuildConfig.API_KEY) }
-            else -> showId.let { apiService.tv(it, BuildConfig.API_KEY) }
+            SHOW_MOVIE -> showId.let { apiService.movie(it, BuildConfig.API_KEY) }
+            SHOW_TV -> showId.let { apiService.tv(it, BuildConfig.API_KEY) }
+            else -> { return }
         }
         call.enqueue(object : Callback<ShowResponse> {
             override fun onResponse(call: Call<ShowResponse>, response: Response<ShowResponse>) {

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.shows.ListShowAdapter
+import com.example.moviecatalogue.utils.Constant.SHOW_TV
 import com.example.moviecatalogue.vo.Status
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_tv_list.*
@@ -31,10 +32,6 @@ class TvFragment : DaggerFragment() {
     private lateinit var mLayoutManger: RecyclerView.LayoutManager
     private lateinit var scrollListener: CustomRecyclerViewScrollListener
     private var currentPage = 1
-
-    companion object {
-        const val SHOW_TV = "Tv"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

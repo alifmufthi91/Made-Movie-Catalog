@@ -13,8 +13,9 @@ import com.example.moviecatalogue.data.source.remote.RemoteDataSource
 import com.example.moviecatalogue.data.source.remote.response.GenreResponse
 import com.example.moviecatalogue.data.source.remote.response.ShowResponse
 import com.example.moviecatalogue.utils.AppExecutors
+import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
+import com.example.moviecatalogue.utils.Constant.SHOW_TV
 import com.example.moviecatalogue.vo.Resource
-import com.example.moviecatalogue.vo.Status
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -31,8 +32,6 @@ class MovieCatalogueXRepository @Inject constructor(
     private lateinit var genresLiveData: MutableLiveData<List<GenreEntity>>
 
     companion object {
-        const val SHOW_MOVIE = "Movie"
-        const val SHOW_TV = "Tv"
 
         @Volatile
         private var instance: MovieCatalogueXRepository? = null
@@ -79,7 +78,6 @@ class MovieCatalogueXRepository @Inject constructor(
                     for (response in data) {
                         val show = ShowEntity(
                             response, SHOW_MOVIE
-                                .toLowerCase(Locale.getDefault())
                         )
                         showList.add(show)
                     }
@@ -136,7 +134,7 @@ class MovieCatalogueXRepository @Inject constructor(
                 public override fun saveCallResult(data: List<ShowResponse>) {
                     val showList = ArrayList<ShowEntity>()
                     for (response in data) {
-                        val show = ShowEntity(response, SHOW_TV.toLowerCase(Locale.getDefault()))
+                        val show = ShowEntity(response, SHOW_TV)
                         showList.add(show)
                     }
                     localDataSource.insertShows(showList)
@@ -170,7 +168,7 @@ class MovieCatalogueXRepository @Inject constructor(
             override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
                 val showList = ArrayList<ShowEntity>()
                 for (response in data.body) {
-                    val show = ShowEntity(response, category.toLowerCase(Locale.getDefault()))
+                    val show = ShowEntity(response, category)
                     showList.add(show)
                 }
                 resultLiveData.postValue(showList)
@@ -197,7 +195,7 @@ class MovieCatalogueXRepository @Inject constructor(
                 override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
                     val showList = ArrayList<ShowEntity>()
                     for (response in data.body) {
-                        val show = ShowEntity(response, category.toLowerCase(Locale.getDefault()))
+                        val show = ShowEntity(response, category)
                         showList.add(show)
                     }
                     resultLiveData.postValue(showList)
@@ -289,8 +287,16 @@ class MovieCatalogueXRepository @Inject constructor(
             }
 
             override fun saveCallResult(data: ShowResponse) {
-                val show = ShowEntity(data, type)
-                localDataSource.insertShow(show)
+                val localShow = localDataSource.getShowEntityById(data.movieDbId)
+                val showResponse = ShowEntity(data, type)
+                if(localShow != null){
+                    Log.d("localshow:",localShow.toString())
+                    localShow.updateDataFromEntity(showResponse)
+                    localDataSource.updateShow(localShow)
+                }else{
+                    Log.d("resshow:",showResponse.toString())
+                    localDataSource.insertShow(showResponse)
+                }
             }
         }.asLiveData()
     }
@@ -303,7 +309,7 @@ class MovieCatalogueXRepository @Inject constructor(
         remoteDataSource.getGenres(category, object: RemoteDataSource.CustomCallback<ApiResponse<List<GenreResponse>>>{
             override fun onResponse(data: ApiResponse<List<GenreResponse>>) {
                 data.body.forEach {
-                    arrGenres.add(GenreEntity(it.id, it.name, category.toLowerCase(Locale.getDefault())))
+                    arrGenres.add(GenreEntity(it.id, it.name, category))
                 }
                 resultLiveData.postValue(arrGenres)
             }
@@ -323,9 +329,7 @@ class MovieCatalogueXRepository @Inject constructor(
             .setEnablePlaceholders(false)
             .setPageSize(100)
             .build()
-        return LivePagedListBuilder(localDataSource.getFavouriteShowsByType(SHOW_MOVIE.toLowerCase(
-            Locale.getDefault()
-        )
+        return LivePagedListBuilder(localDataSource.getFavouriteShowsByType(SHOW_MOVIE
         ), config
         ).build()
     }
@@ -335,9 +339,7 @@ class MovieCatalogueXRepository @Inject constructor(
             .setEnablePlaceholders(false)
             .setPageSize(100)
             .build()
-        return LivePagedListBuilder(localDataSource.getFavouriteShowsByType(SHOW_TV.toLowerCase(
-            Locale.getDefault()
-        )
+        return LivePagedListBuilder(localDataSource.getFavouriteShowsByType(SHOW_TV
         ), config
         ).build()
     }

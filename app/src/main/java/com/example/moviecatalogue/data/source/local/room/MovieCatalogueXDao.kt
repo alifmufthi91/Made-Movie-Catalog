@@ -21,6 +21,9 @@ interface MovieCatalogueXDao {
     @Query("SELECT * FROM showentities WHERE movieDbId = :showId AND showType = :showType")
     fun getShow(showType: String, showId: Long): LiveData<ShowEntity>
 
+    @Query("SELECT * FROM showentities WHERE movieDbId = :showId")
+    fun getShowEntityById(showId: Long): ShowEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertShows(shows: List<ShowEntity>)
 
@@ -30,8 +33,8 @@ interface MovieCatalogueXDao {
 //    @Query("SELECT * FROM genreentities WHERE category = :category")
 //    fun getGenresByType(category: String): LiveData<List<GenreEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertGenres(genres: List<GenreEntity>)
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    fun insertGenres(genres: List<GenreEntity>)
 
     @Update
     fun updateShow(show: ShowEntity)

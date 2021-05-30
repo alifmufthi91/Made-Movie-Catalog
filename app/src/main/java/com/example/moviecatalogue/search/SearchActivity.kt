@@ -6,16 +6,20 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.search.menu.SearchMenuFragment
 import com.example.moviecatalogue.search.result.SearchResultFragment
+import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
 class SearchActivity : DaggerAppCompatActivity() {
 
-    @Inject
-    lateinit var searchViewModel: SearchViewModel
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val searchViewModel: SearchViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(SearchViewModel::class.java)
+    }
     private val mFragmentManager = supportFragmentManager
     private val mSearchResultFragment = SearchResultFragment()
     private val mSearchMenuFragment = SearchMenuFragment()

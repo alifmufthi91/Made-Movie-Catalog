@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.shows.ListShowAdapter
+import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import com.example.moviecatalogue.vo.Status
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_movie_list.*
@@ -30,9 +31,6 @@ class MovieFragment : DaggerFragment() {
     private lateinit var mLayoutManger: RecyclerView.LayoutManager
     private lateinit var scrollListener: CustomRecyclerViewScrollListener
 
-    companion object {
-        const val SHOW_MOVIE = "Movie"
-    }
 
 
     override fun onCreateView(

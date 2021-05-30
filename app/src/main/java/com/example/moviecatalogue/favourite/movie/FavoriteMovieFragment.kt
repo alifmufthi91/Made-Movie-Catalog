@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviecatalogue.R
 //import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_MOVIE_URI
 import com.example.moviecatalogue.shows.ListShowAdapter
-import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
 import com.example.moviecatalogue.shows.movie.MovieViewModel
+import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_favourite_movie_list.*
 import kotlinx.coroutines.Dispatchers

@@ -48,8 +48,8 @@ class DetailShowActivity : DaggerAppCompatActivity() {
                         Status.SUCCESS -> {
                             response.data?.let { show ->
                                 showEntity = show
+//                                updateShow(show)
                                 displayShowInfo(showEntity)
-//                                updateShow()
                             }
                         }
                         else -> {
@@ -69,8 +69,7 @@ class DetailShowActivity : DaggerAppCompatActivity() {
         }
         iv_favorites.setOnClickListener {
             viewModel.apply {
-                showEntity.isFavorited = !showEntity.isFavorited
-                updateShow()
+                setFavorite(!showEntity.isFavorited)
                 if(!showEntity.isFavorited){
                     updateFavoriteIcon(false)
                     Toast.makeText(

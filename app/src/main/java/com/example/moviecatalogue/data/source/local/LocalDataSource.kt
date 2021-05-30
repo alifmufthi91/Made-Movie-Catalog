@@ -1,10 +1,13 @@
 package com.example.moviecatalogue.data.source.local
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.data.source.local.room.MovieCatalogueXDao
+import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
+import com.example.moviecatalogue.utils.Constant.SHOW_TV
 import java.util.*
 import javax.inject.Inject
 
@@ -12,9 +15,6 @@ class LocalDataSource @Inject constructor(private val mMovieCatalogueXDao: Movie
 
     companion object {
         private var INSTANCE: LocalDataSource? = null
-
-        const val SHOW_MOVIE = "Movie"
-        const val SHOW_TV = "Tv"
 
         fun getInstance(movieCatalogueXDao: MovieCatalogueXDao): LocalDataSource =
             INSTANCE ?: LocalDataSource(movieCatalogueXDao)
@@ -24,17 +24,20 @@ class LocalDataSource @Inject constructor(private val mMovieCatalogueXDao: Movie
 //    }
 
     fun getMovies(): DataSource.Factory<Int, ShowEntity> =
-        mMovieCatalogueXDao.getShowsByType(SHOW_MOVIE.toLowerCase(Locale.getDefault()))
+        mMovieCatalogueXDao.getShowsByType(SHOW_MOVIE)
 
 
     fun getTvShows(): DataSource.Factory<Int, ShowEntity> =
-        mMovieCatalogueXDao.getShowsByType(SHOW_TV.toLowerCase(Locale.getDefault()))
+        mMovieCatalogueXDao.getShowsByType(SHOW_TV)
 
     fun getShow(showType: String, showId: Long): LiveData<ShowEntity> =
         mMovieCatalogueXDao.getShow(showType, showId)
 
-    fun getGenres(category: String): LiveData<List<GenreEntity>> =
-        mMovieCatalogueXDao.getGenresByType(category)
+    fun getShowEntityById(showId: Long): ShowEntity? =
+        mMovieCatalogueXDao.getShowEntityById(showId)
+
+//    fun getGenres(category: String): LiveData<List<GenreEntity>> =
+//        mMovieCatalogueXDao.getGenresByType(category)
 
     fun getFavouriteShowsByType(showType: String): DataSource.Factory<Int, ShowEntity> =
         mMovieCatalogueXDao.getFavouriteShowsByType(showType)
@@ -43,7 +46,7 @@ class LocalDataSource @Inject constructor(private val mMovieCatalogueXDao: Movie
 
     fun insertShow(show: ShowEntity) = mMovieCatalogueXDao.insertShow(show)
 
-    fun insertGenres(genres: List<GenreEntity>) = mMovieCatalogueXDao.insertGenres(genres)
+//    fun insertGenres(genres: List<GenreEntity>) = mMovieCatalogueXDao.insertGenres(genres)
 
     fun setFavouriteShow(show: ShowEntity, state: Boolean) {
         show.isFavorited = state

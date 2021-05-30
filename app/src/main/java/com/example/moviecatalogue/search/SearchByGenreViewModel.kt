@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.moviecatalogue.data.MovieCatalogueXRepository
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
-import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
+import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import javax.inject.Inject
 
 class SearchByGenreViewModel @Inject constructor(val movieCatalogueXRepository: MovieCatalogueXRepository) :
