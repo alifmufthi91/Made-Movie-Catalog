@@ -16,7 +16,8 @@ import javax.inject.Inject
 
 class SearchActivity : DaggerAppCompatActivity() {
 
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
     private val searchViewModel: SearchViewModel by lazy {
         ViewModelProvider(this, viewModelFactory).get(SearchViewModel::class.java)
     }
@@ -31,14 +32,7 @@ class SearchActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_search)
 
         if (fragment !is SearchResultFragment) {
-            mFragmentManager
-                .beginTransaction()
-                .add(
-                    R.id.frame_container,
-                    mSearchMenuFragment,
-                    SearchMenuFragment::class.java.simpleName
-                )
-                .commit()
+            displaySearchMenu()
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -60,64 +54,51 @@ class SearchActivity : DaggerAppCompatActivity() {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     if (fragment !is SearchResultFragment) {
-                        fragment =
-                            mFragmentManager.findFragmentByTag(SearchResultFragment::class.java.simpleName)
-                        mFragmentManager
-                            .beginTransaction()
-                            .replace(
-                                R.id.frame_container,
-                                mSearchResultFragment,
-                                SearchResultFragment::class.java.simpleName
-                            )
-                            .commit()
+                        displaySearchResult(query)
                     }
-                    searchViewModel.setQuery(query)
-                    searchViewModel.setShows(
-                        searchViewModel.getCategory(),
-                        searchViewModel.getQuery()
-                    )
                     return true
                 }
 
-                override fun onQueryTextChange(newText: String): Boolean {
-                    if (newText.isNotEmpty()) {
-                        if (fragment !is SearchResultFragment) {
-                            fragment =
-                                mFragmentManager.findFragmentByTag(SearchResultFragment::class.java.simpleName)
-                            mFragmentManager
-                                .beginTransaction()
-                                .replace(
-                                    R.id.frame_container,
-                                    mSearchResultFragment,
-                                    SearchResultFragment::class.java.simpleName
-                                )
-                                .commit()
-                        }
-                        searchViewModel.setQuery(newText)
-                        searchViewModel.setShows(
-                            searchViewModel.getCategory(),
-                            searchViewModel.getQuery()
-                        )
+                override fun onQueryTextChange(query: String): Boolean {
+                    if (query.isNotEmpty()) {
+                        searchViewModel.setQuery(query)
                     } else {
                         if (fragment !is SearchMenuFragment) {
-                            fragment =
-                                mFragmentManager.findFragmentByTag(SearchMenuFragment::class.java.simpleName)
-                            mFragmentManager
-                                .beginTransaction()
-                                .replace(
-                                    R.id.frame_container,
-                                    mSearchMenuFragment,
-                                    SearchMenuFragment::class.java.simpleName
-                                )
-                                .commit()
+                            displaySearchMenu()
                         }
                     }
                     return false
                 }
             })
         }
-
         return true
+    }
+
+    fun displaySearchResult(query: String) {
+        fragment =
+            mFragmentManager.findFragmentByTag(SearchResultFragment::class.java.simpleName)
+        mFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.frame_container,
+                mSearchResultFragment,
+                SearchResultFragment::class.java.simpleName
+            )
+            .commit()
+        searchViewModel.setQuery(query)
+    }
+
+    fun displaySearchMenu() {
+        fragment =
+            mFragmentManager.findFragmentByTag(SearchMenuFragment::class.java.simpleName)
+        mFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.frame_container,
+                mSearchMenuFragment,
+                SearchMenuFragment::class.java.simpleName
+            )
+            .commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

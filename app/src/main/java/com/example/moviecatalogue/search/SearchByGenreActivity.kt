@@ -1,13 +1,11 @@
 package com.example.moviecatalogue.search
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.MenuItem
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
-import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.search.result.SearchResultFragment
 import com.example.moviecatalogue.utils.Constant
 import dagger.android.support.DaggerAppCompatActivity
@@ -20,7 +18,7 @@ class SearchByGenreActivity : DaggerAppCompatActivity() {
     lateinit var viewModel: SearchByGenreViewModel
     private lateinit var searchShowAdapter: SearchShowAdapter
     private lateinit var mLayoutManager: GridLayoutManager
-    private lateinit var scrollListener: CustomRecyclerViewScrollListener
+//    private lateinit var scrollListener: CustomRecyclerViewScrollListener
 
 
     companion object {
@@ -47,7 +45,7 @@ class SearchByGenreActivity : DaggerAppCompatActivity() {
             setGenre(genre?.id.toString())
             setShows(category)
         }
-        viewModel.getShows().observe(this, Observer {
+        viewModel.getShows().observe(this, Observer{
             if (it != null) {
                 searchShowAdapter.setData(it)
             }
@@ -69,35 +67,36 @@ class SearchByGenreActivity : DaggerAppCompatActivity() {
 
         }
         rv_search_genre.layoutManager = mLayoutManager
-        scrollListener =
-            CustomRecyclerViewScrollListener(
-                mLayoutManager
-            )
-        scrollListener.setOnLoadMoreListener(object :
-            CustomRecyclerViewScrollListener.OnLoadMoreListener {
-            override fun onLoadMore() {
-                loadMoreData()
-            }
-        })
-        rv_search_genre.addOnScrollListener(scrollListener)
         rv_search_genre.adapter = searchShowAdapter
+
+//        scrollListener =
+//            CustomRecyclerViewScrollListener(
+//                mLayoutManager
+//            )
+//        scrollListener.setOnLoadMoreListener(object :
+//            CustomRecyclerViewScrollListener.OnLoadMoreListener {
+//            override fun onLoadMore() {
+//                loadMoreData()
+//            }
+//        })
+//        rv_search_genre.addOnScrollListener(scrollListener)
     }
 
 
-    private fun loadMoreData() {
-        searchShowAdapter.addLoadingView()
-        //disini get data//
-        Handler().postDelayed({
-            viewModel.loadMore()
-            //end//
-            searchShowAdapter.removeLoadingView()
-            scrollListener.setLoaded()
-            rv_search_genre.post {
-                searchShowAdapter.notifyDataSetChanged()
-            }
-        }, 100)
-
-    }
+//    private fun loadMoreData() {
+//        searchShowAdapter.addLoadingView()
+//        //disini get data//
+//        Handler().postDelayed({
+//            viewModel.loadMore()
+//            //end//
+//            searchShowAdapter.removeLoadingView()
+//            scrollListener.setLoaded()
+//            rv_search_genre.post {
+//                searchShowAdapter.notifyDataSetChanged()
+//            }
+//        }, 100)
+//
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {

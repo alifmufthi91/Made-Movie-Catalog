@@ -1,14 +1,11 @@
 package com.example.moviecatalogue.data.source.local
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
-import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.data.source.local.room.MovieCatalogueXDao
 import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import com.example.moviecatalogue.utils.Constant.SHOW_TV
-import java.util.*
 import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val mMovieCatalogueXDao: MovieCatalogueXDao) {
@@ -53,7 +50,7 @@ class LocalDataSource @Inject constructor(private val mMovieCatalogueXDao: Movie
         mMovieCatalogueXDao.updateShow(show)
     }
 
-    fun updateShow(show: ShowEntity){
+    fun updateShow(show: ShowEntity) {
         mMovieCatalogueXDao.updateShow(show)
     }
 

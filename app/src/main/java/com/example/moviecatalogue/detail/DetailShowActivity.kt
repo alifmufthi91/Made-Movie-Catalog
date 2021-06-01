@@ -25,7 +25,6 @@ class DetailShowActivity : DaggerAppCompatActivity() {
     lateinit var viewModel: DetailShowViewModel
 
     companion object {
-        const val REQUEST_VIEW = 100
         const val DETAIL_SHOW = "detailShow"
         const val EXTRA_POSITION = "position"
         const val EXTRA_TYPE = "movie type"
@@ -36,7 +35,6 @@ class DetailShowActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_detail_show)
         viewModel.apply {
             setDetailData(
-//                this@DetailShowActivity,
                 intent.getLongExtra(DETAIL_SHOW, 0),
                 intent.getStringExtra(EXTRA_TYPE) as String,
                 intent.getIntExtra(EXTRA_POSITION, 0)
@@ -48,7 +46,6 @@ class DetailShowActivity : DaggerAppCompatActivity() {
                         Status.SUCCESS -> {
                             response.data?.let { show ->
                                 showEntity = show
-//                                updateShow(show)
                                 displayShowInfo(showEntity)
                             }
                         }
@@ -70,7 +67,7 @@ class DetailShowActivity : DaggerAppCompatActivity() {
         iv_favorites.setOnClickListener {
             viewModel.apply {
                 setFavorite(!showEntity.isFavorited)
-                if(!showEntity.isFavorited){
+                if (!showEntity.isFavorited) {
                     updateFavoriteIcon(false)
                     Toast.makeText(
                         applicationContext,
@@ -80,7 +77,7 @@ class DetailShowActivity : DaggerAppCompatActivity() {
                         ),
                         Toast.LENGTH_SHORT
                     ).show()
-                }else{
+                } else {
                     updateFavoriteIcon(true)
                     Toast.makeText(
                         applicationContext,

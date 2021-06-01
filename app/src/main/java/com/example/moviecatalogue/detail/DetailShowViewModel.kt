@@ -1,6 +1,5 @@
 package com.example.moviecatalogue.detail
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -28,25 +27,14 @@ class DetailShowViewModel @Inject constructor(
         this.type = type
     }
 
-    var showInfo :LiveData<Resource<ShowEntity>> = Transformations.switchMap(showId){ showId ->
+    var showInfo: LiveData<Resource<ShowEntity>> = Transformations.switchMap(showId) { showId ->
         movieCatalogueXRepository.getShowDetail(type, showId)
     }
 
     fun setDetailData(showId: Long, type: String, position: Int) {
-//        this.context = context
         this.type = type
         this.position = position
         setShow(showId)
-    }
-
-    fun updateShow(show: ShowEntity){
-        showEntity.genreList = show.genreList
-        showEntity.voter = show.voter
-        showEntity.popularity = show.popularity
-        showEntity.overview = show.overview
-        showEntity.vote_average = show.vote_average
-        showEntity.imgPath = show.imgPath
-        showEntity.name = show.name
     }
 
     fun setFavorite(status: Boolean) {
@@ -54,7 +42,5 @@ class DetailShowViewModel @Inject constructor(
         movieCatalogueXRepository.updateShow(showEntity)
     }
 
-
     fun getShow() = showEntity
-    fun getType() = type
 }

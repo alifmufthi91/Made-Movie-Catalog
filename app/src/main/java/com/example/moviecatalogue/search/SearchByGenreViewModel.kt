@@ -17,16 +17,6 @@ class SearchByGenreViewModel @Inject constructor(val movieCatalogueXRepository: 
         movieCatalogueXRepository.setSearchedShowsByGenre(category, currentPage, selectedGenre)
     }
 
-
-    internal fun loadMore() {
-        setPage(++currentPage)
-        movieCatalogueXRepository.loadMoreSearchedShowsByGenre(category, currentPage, selectedGenre)
-    }
-
-    private fun setPage(page: Int) {
-        currentPage = page
-    }
-
     internal fun setGenre(genre: String) {
         selectedGenre = genre
     }
@@ -38,8 +28,15 @@ class SearchByGenreViewModel @Inject constructor(val movieCatalogueXRepository: 
     internal fun getShows(): LiveData<List<ShowEntity>> =
         movieCatalogueXRepository.getSearchedShows()
 
-    internal fun getGenre() = selectedGenre
-
     internal fun getCategory(): String = category
 
+//    internal fun getGenre() = selectedGenre
+//    internal fun loadMore() {
+//        setPage(++currentPage)
+//        movieCatalogueXRepository.loadMoreSearchedShowsByGenre(category, currentPage, selectedGenre)
+//    }
+//
+//    private fun setPage(page: Int) {
+//        currentPage = page
+//    }
 }

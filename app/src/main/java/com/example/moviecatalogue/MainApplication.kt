@@ -5,16 +5,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 
 
-open class MainApplication : DaggerApplication(){
-
-//    companion object{
-//        lateinit var appComponent: AppComponent
-//    }
-
-    override fun onCreate() {
-        super.onCreate()
-    }
-
+open class MainApplication : DaggerApplication() {
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerAppComponent.factory().create(this)

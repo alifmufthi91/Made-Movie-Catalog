@@ -24,15 +24,6 @@ import javax.inject.Singleton
 )
 interface AppComponent : AndroidInjector<MainApplication> {
 
-//    fun inject(activity: HomeActivity)
-
     @Component.Factory
-    abstract class Builder: AndroidInjector.Factory<MainApplication>
-//    @Component.Builder
-//    interface Builder {
-//        @BindsInstance
-//        fun applicationBind(application: Application): Builder
-//        fun build(): AppComponent
-//    }
-
+    abstract class Builder : AndroidInjector.Factory<MainApplication>
 }

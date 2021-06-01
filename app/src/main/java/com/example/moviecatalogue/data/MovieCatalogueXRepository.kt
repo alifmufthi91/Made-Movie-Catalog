@@ -16,9 +16,7 @@ import com.example.moviecatalogue.utils.AppExecutors
 import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import com.example.moviecatalogue.utils.Constant.SHOW_TV
 import com.example.moviecatalogue.vo.Resource
-import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 class MovieCatalogueXRepository @Inject constructor(
     val remoteDataSource: RemoteDataSource, val localDataSource: LocalDataSource,
@@ -62,14 +60,17 @@ class MovieCatalogueXRepository @Inject constructor(
 
                 public override fun createCall(): LiveData<ApiResponse<List<ShowResponse>>> {
                     val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
-                    remoteDataSource.getMovies(page, object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
-                        override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
-                            results.postValue(data)
-                        }
+                    remoteDataSource.getMovies(
+                        page,
+                        object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
+                            override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                                results.postValue(data)
+                            }
 
-                        override fun onError(t: Throwable) {
-                        }
-                    })
+                            override fun onError(t: Throwable) {
+                                throw t
+                            }
+                        })
                     return results
                 }
 
@@ -85,21 +86,6 @@ class MovieCatalogueXRepository @Inject constructor(
                 }
             }.asLiveData()
         moviesLiveData = moviesData
-    }
-
-    //
-    override fun loadMoreMovies(page: Int): LiveData<ApiResponse<List<ShowResponse>>> {
-        val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
-        remoteDataSource.getMovies(page, object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
-            override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
-                results.postValue(data)
-            }
-
-            override fun onError(t: Throwable) {
-                TODO("Not yet implemented")
-            }
-        })
-        return results
     }
 
     override fun setTvShows(page: Int) {
@@ -127,10 +113,12 @@ class MovieCatalogueXRepository @Inject constructor(
                             }
 
                             override fun onError(t: Throwable) {
+                                throw t
                             }
                         })
                     return results
                 }
+
                 public override fun saveCallResult(data: List<ShowResponse>) {
                     val showList = ArrayList<ShowEntity>()
                     for (response in data) {
@@ -143,20 +131,6 @@ class MovieCatalogueXRepository @Inject constructor(
         tvShowsLiveData = tvShowsData
     }
 
-    //
-    override fun loadMoreTvShows(page: Int) : LiveData<ApiResponse<List<ShowResponse>>>{
-        val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
-        remoteDataSource.getTvShows(page, object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
-            override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
-                results.postValue(data)
-            }
-
-            override fun onError(t: Throwable) {
-                TODO("Not yet implemented")
-            }
-        })
-        return results
-    }
 
     override fun setSearchedShowsByQuery(
         category: String,
@@ -164,20 +138,24 @@ class MovieCatalogueXRepository @Inject constructor(
         query: String
     ) {
         val resultLiveData = MutableLiveData<List<ShowEntity>>()
-        remoteDataSource.getSearchedShowByQuery(category, page, query, object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>>{
-            override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
-                val showList = ArrayList<ShowEntity>()
-                for (response in data.body) {
-                    val show = ShowEntity(response, category)
-                    showList.add(show)
+        remoteDataSource.getSearchedShowByQuery(
+            category,
+            page,
+            query,
+            object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
+                override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                    val showList = ArrayList<ShowEntity>()
+                    for (response in data.body) {
+                        val show = ShowEntity(response, category)
+                        showList.add(show)
+                    }
+                    resultLiveData.postValue(showList)
                 }
-                resultLiveData.postValue(showList)
-            }
 
-            override fun onError(t: Throwable) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onError(t: Throwable) {
+                    throw t
+                }
+            })
         searchedShowsLiveData = resultLiveData
     }
 
@@ -191,7 +169,7 @@ class MovieCatalogueXRepository @Inject constructor(
             category,
             page,
             genre,
-            object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>>{
+            object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
                 override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
                     val showList = ArrayList<ShowEntity>()
                     for (response in data.body) {
@@ -202,54 +180,11 @@ class MovieCatalogueXRepository @Inject constructor(
                 }
 
                 override fun onError(t: Throwable) {
-                    TODO("Not yet implemented")
+                    throw t
                 }
 
             })
         searchedShowsLiveData = resultLiveData
-    }
-
-
-    //
-    override fun loadMoreSearchedShowsByQuery(category: String, page: Int, query: String): LiveData<ApiResponse<List<ShowResponse>>> {
-        val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
-        remoteDataSource.getSearchedShowByQuery(
-            category,
-            page,
-            query,
-            object: RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>>{
-                override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
-                    results.postValue(data)
-                }
-
-                override fun onError(t: Throwable) {
-                    TODO("Not yet implemented")
-                }
-
-            }
-        )
-        return results
-    }
-
-    //
-    override fun loadMoreSearchedShowsByGenre(category: String, page: Int, genre: String): LiveData<ApiResponse<List<ShowResponse>>> {
-        val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
-        remoteDataSource.getSearchedShowByGenre(
-            category,
-            page,
-            genre,
-            object: RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>>{
-                override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
-                    results.postValue(data)
-                }
-
-                override fun onError(t: Throwable) {
-                    TODO("Not yet implemented")
-                }
-
-            }
-        )
-        return results
     }
 
     override fun updateShow(show: ShowEntity) =
@@ -278,7 +213,7 @@ class MovieCatalogueXRepository @Inject constructor(
                         }
 
                         override fun onError(t: Throwable) {
-                            TODO("Not yet implemented")
+                            throw t
                         }
 
                     }
@@ -289,12 +224,12 @@ class MovieCatalogueXRepository @Inject constructor(
             override fun saveCallResult(data: ShowResponse) {
                 val localShow = localDataSource.getShowEntityById(data.movieDbId)
                 val showResponse = ShowEntity(data, type)
-                if(localShow != null){
-                    Log.d("localshow:",localShow.toString())
+                if (localShow != null) {
+                    Log.d("localshow:", localShow.toString())
                     localShow.updateDataFromEntity(showResponse)
                     localDataSource.updateShow(localShow)
-                }else{
-                    Log.d("resshow:",showResponse.toString())
+                } else {
+                    Log.d("resshow:", showResponse.toString())
                     localDataSource.insertShow(showResponse)
                 }
             }
@@ -306,18 +241,20 @@ class MovieCatalogueXRepository @Inject constructor(
     override fun setGenres(category: String) {
         val resultLiveData = MutableLiveData<List<GenreEntity>>()
         val arrGenres = ArrayList<GenreEntity>()
-        remoteDataSource.getGenres(category, object: RemoteDataSource.CustomCallback<ApiResponse<List<GenreResponse>>>{
-            override fun onResponse(data: ApiResponse<List<GenreResponse>>) {
-                data.body.forEach {
-                    arrGenres.add(GenreEntity(it.id, it.name, category))
+        remoteDataSource.getGenres(
+            category,
+            object : RemoteDataSource.CustomCallback<ApiResponse<List<GenreResponse>>> {
+                override fun onResponse(data: ApiResponse<List<GenreResponse>>) {
+                    data.body.forEach {
+                        arrGenres.add(GenreEntity(it.id, it.name, category))
+                    }
+                    resultLiveData.postValue(arrGenres)
                 }
-                resultLiveData.postValue(arrGenres)
-            }
 
-            override fun onError(t: Throwable) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onError(t: Throwable) {
+                    throw t
+                }
+            })
         genresLiveData = resultLiveData
     }
 
@@ -329,8 +266,10 @@ class MovieCatalogueXRepository @Inject constructor(
             .setEnablePlaceholders(false)
             .setPageSize(100)
             .build()
-        return LivePagedListBuilder(localDataSource.getFavouriteShowsByType(SHOW_MOVIE
-        ), config
+        return LivePagedListBuilder(
+            localDataSource.getFavouriteShowsByType(
+                SHOW_MOVIE
+            ), config
         ).build()
     }
 
@@ -339,8 +278,90 @@ class MovieCatalogueXRepository @Inject constructor(
             .setEnablePlaceholders(false)
             .setPageSize(100)
             .build()
-        return LivePagedListBuilder(localDataSource.getFavouriteShowsByType(SHOW_TV
-        ), config
+        return LivePagedListBuilder(
+            localDataSource.getFavouriteShowsByType(
+                SHOW_TV
+            ), config
         ).build()
     }
+
+
+//    override fun loadMoreMovies(page: Int) {
+//        val loadMoreData = moviesLiveData
+//        remoteDataSource.getMovies(page, object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
+//            override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+//                val showList = ArrayList<ShowEntity>()
+//                if(data.body.isNotEmpty()){
+//                    for (response in data.body) {
+//                        val show = ShowEntity(
+//                            response, SHOW_MOVIE
+//                        )
+//                        showList.add(show)
+//                        loadMoreData.
+//                    }
+//                }
+//            }
+//
+//            override fun onError(t: Throwable) {
+//            }
+//        })
+//    }
+
+//    override fun loadMoreTvShows(page: Int){
+//        remoteDataSource.getTvShows(page, object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
+//            override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+//                val showList = ArrayList<ShowEntity>()
+//                if(data.body.isNotEmpty()){
+//                    for (response in data.body) {
+//                        val show = ShowEntity(
+//                            response, SHOW_TV
+//                        )
+//                        showList.add(show)
+//                    }
+//                }
+//            }
+//
+//            override fun onError(t: Throwable) {
+//            }
+//        })
+//    }
+
+//    override fun loadMoreSearchedShowsByQuery(category: String, page: Int, query: String): LiveData<ApiResponse<List<ShowResponse>>> {
+//        val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
+//        remoteDataSource.getSearchedShowByQuery(
+//            category,
+//            page,
+//            query,
+//            object: RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>>{
+//                override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+//                    results.postValue(data)
+//                }
+//
+//                override fun onError(t: Throwable) {
+//                }
+//
+//            }
+//        )
+//        return results
+//    }
+
+
+//    override fun loadMoreSearchedShowsByGenre(category: String, page: Int, genre: String): LiveData<ApiResponse<List<ShowResponse>>> {
+//        val results = MutableLiveData<ApiResponse<List<ShowResponse>>>()
+//        remoteDataSource.getSearchedShowByGenre(
+//            category,
+//            page,
+//            genre,
+//            object: RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>>{
+//                override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+//                    results.postValue(data)
+//                }
+//
+//                override fun onError(t: Throwable) {
+//                }
+//
+//            }
+//        )
+//        return results
+//    }
 }

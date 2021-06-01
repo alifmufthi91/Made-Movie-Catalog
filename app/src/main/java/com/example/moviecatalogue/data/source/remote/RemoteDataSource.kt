@@ -1,13 +1,10 @@
 package com.example.moviecatalogue.data.source.remote
 
 import com.example.moviecatalogue.BuildConfig
-import com.example.moviecatalogue.data.source.local.entity.GenreEntity
-import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.data.source.remote.response.GenreListResponse
 import com.example.moviecatalogue.data.source.remote.response.GenreResponse
 import com.example.moviecatalogue.data.source.remote.response.ShowListResponse
 import com.example.moviecatalogue.data.source.remote.response.ShowResponse
-import com.example.moviecatalogue.shows.movie.MovieFragment
 import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import com.example.moviecatalogue.utils.Constant.SHOW_TV
 import com.example.moviecatalogue.utils.EspressoIdlingResource
@@ -18,22 +15,14 @@ import java.util.*
 import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(
-    val apiService: ApiService
+    private val apiService: ApiService
 ) {
-
-//    @Inject
-//    lateinit var apiService: ApiService
 
     companion object {
 
         @Volatile
         private var instance: RemoteDataSource? = null
 
-
-//        fun getInstance(): RemoteDataSource =
-//            instance ?: synchronized(this) {
-//                instance ?: RemoteDataSource()
-//            }
     }
 
     fun getMovies(page: Int, callback: CustomCallback<ApiResponse<List<ShowResponse>>>) {
@@ -44,7 +33,10 @@ class RemoteDataSource @Inject constructor(
             page,
             null
         ).enqueue(object : Callback<ShowListResponse> {
-            override fun onResponse(call: Call<ShowListResponse>, response: Response<ShowListResponse>) {
+            override fun onResponse(
+                call: Call<ShowListResponse>,
+                response: Response<ShowListResponse>
+            ) {
                 response.body()?.let {
                     callback.onResponse(ApiResponse.success(it.list))
                 }
@@ -65,8 +57,11 @@ class RemoteDataSource @Inject constructor(
             BuildConfig.API_KEY,
             page,
             null
-        ).enqueue(object : Callback<ShowListResponse>{
-            override fun onResponse(call: Call<ShowListResponse>, response: Response<ShowListResponse>) {
+        ).enqueue(object : Callback<ShowListResponse> {
+            override fun onResponse(
+                call: Call<ShowListResponse>,
+                response: Response<ShowListResponse>
+            ) {
                 response.body()?.let {
                     callback.onResponse(ApiResponse.success(it.list))
                 }
@@ -93,7 +88,10 @@ class RemoteDataSource @Inject constructor(
             page,
             query
         ).enqueue(object : Callback<ShowListResponse> {
-            override fun onResponse(call: Call<ShowListResponse>, response: Response<ShowListResponse>) {
+            override fun onResponse(
+                call: Call<ShowListResponse>,
+                response: Response<ShowListResponse>
+            ) {
                 response.body()?.let {
                     callback.onResponse(ApiResponse.success(it.list))
                 }
@@ -120,7 +118,10 @@ class RemoteDataSource @Inject constructor(
             page,
             genre
         ).enqueue(object : Callback<ShowListResponse> {
-            override fun onResponse(call: Call<ShowListResponse>, response: Response<ShowListResponse>) {
+            override fun onResponse(
+                call: Call<ShowListResponse>,
+                response: Response<ShowListResponse>
+            ) {
                 response.body()?.let {
                     callback.onResponse(ApiResponse.success(it.list))
                 }
@@ -134,12 +135,18 @@ class RemoteDataSource @Inject constructor(
         })
     }
 
-    fun getShowDetail(type: String, showId: Long, callback: CustomCallback<ApiResponse<ShowResponse>>) {
+    fun getShowDetail(
+        type: String,
+        showId: Long,
+        callback: CustomCallback<ApiResponse<ShowResponse>>
+    ) {
         EspressoIdlingResource.increment()
         val call = when (type) {
             SHOW_MOVIE -> showId.let { apiService.movie(it, BuildConfig.API_KEY) }
             SHOW_TV -> showId.let { apiService.tv(it, BuildConfig.API_KEY) }
-            else -> { return }
+            else -> {
+                return
+            }
         }
         call.enqueue(object : Callback<ShowResponse> {
             override fun onResponse(call: Call<ShowResponse>, response: Response<ShowResponse>) {
@@ -162,8 +169,11 @@ class RemoteDataSource @Inject constructor(
             category.toLowerCase(Locale.getDefault()),
             BuildConfig.API_KEY
         ).enqueue(object : Callback<GenreListResponse> {
-            override fun onResponse(call: Call<GenreListResponse>, response: Response<GenreListResponse>) {
-                response.body()?.let{
+            override fun onResponse(
+                call: Call<GenreListResponse>,
+                response: Response<GenreListResponse>
+            ) {
+                response.body()?.let {
                     callback.onResponse(ApiResponse.success(it.list))
                 }
                 EspressoIdlingResource.decrement()

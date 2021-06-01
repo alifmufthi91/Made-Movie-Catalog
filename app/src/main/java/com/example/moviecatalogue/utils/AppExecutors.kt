@@ -12,5 +12,4 @@ class AppExecutors @VisibleForTesting @Inject constructor(
     val networkIO: Executor,
     @Named("mainThreadExecutor")
     val mainThread: Executor
-) {
-}
+)

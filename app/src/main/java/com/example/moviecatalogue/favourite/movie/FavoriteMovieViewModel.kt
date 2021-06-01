@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.example.moviecatalogue.data.MovieCatalogueXRepository
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
-import com.example.moviecatalogue.vo.Resource
 import javax.inject.Inject
 
 class FavoriteMovieViewModel @Inject constructor(val movieCatalogueXRepository: MovieCatalogueXRepository) :

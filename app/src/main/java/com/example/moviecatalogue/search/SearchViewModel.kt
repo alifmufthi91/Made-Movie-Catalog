@@ -1,13 +1,12 @@
 package com.example.moviecatalogue.search
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.moviecatalogue.data.MovieCatalogueXRepository
-import com.example.moviecatalogue.data.source.local.LocalDataSource
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
-import com.example.moviecatalogue.data.source.remote.RemoteDataSource
-import com.example.moviecatalogue.utils.AppExecutors
 import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import javax.inject.Inject
 
@@ -15,9 +14,9 @@ class SearchViewModel @Inject constructor(val movieCatalogueXRepository: MovieCa
     ViewModel() {
     private var category = SHOW_MOVIE
     private var currentPage = 1
-    private var query = ""
+    private val query = MutableLiveData<String>("")
 
-    internal fun setShows(category: String, query: String) {
+    private fun setShows(category: String, query: String) {
         movieCatalogueXRepository.setSearchedShowsByQuery(category, currentPage, query)
     }
 
@@ -26,20 +25,20 @@ class SearchViewModel @Inject constructor(val movieCatalogueXRepository: MovieCa
     }
 
     internal fun setQuery(query: String) {
-        this.query = query
-    }
-
-    fun loadMore() {
-        setPage(++currentPage)
-        movieCatalogueXRepository.loadMoreSearchedShowsByQuery(category, currentPage, query)
+        this.query.value = query
     }
 
     private fun setPage(page: Int) {
         currentPage = page
     }
 
-    internal fun setGenres(){
+    internal fun setGenres() {
         movieCatalogueXRepository.setGenres(getCategory())
+    }
+
+    var searchedShows: LiveData<List<ShowEntity>> = Transformations.switchMap(query) { query ->
+        setShows(category, query)
+        getShows()
     }
 
     internal fun getShows(): LiveData<List<ShowEntity>> =
@@ -49,5 +48,11 @@ class SearchViewModel @Inject constructor(val movieCatalogueXRepository: MovieCa
 
     internal fun getCategory() = category
 
-    internal fun getQuery() = query
+//        fun loadMore() {
+//        setPage(++currentPage)
+//        movieCatalogueXRepository.loadMoreSearchedShowsByQuery(
+//            category, currentPage,
+//            query.value.toString()
+//        )
+//    }
 }

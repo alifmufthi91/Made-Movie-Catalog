@@ -5,15 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.utils.Converters
-import java.util.concurrent.Executors
 
-@Database(entities = [ShowEntity::class],
+@Database(
+    entities = [ShowEntity::class],
     version = 1,
-    exportSchema = false)
+    exportSchema = false
+)
 @TypeConverters(Converters::class)
 abstract class MovieCatalogueXDatabase : RoomDatabase() {
     abstract fun movieCatalogueXDao(): MovieCatalogueXDao
@@ -24,9 +23,11 @@ abstract class MovieCatalogueXDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): MovieCatalogueXDatabase {
             if (INSTANCE == null) {
-                synchronized(MovieCatalogueXDatabase::class.java){
-                    INSTANCE = Room.databaseBuilder(context.applicationContext,
-                            MovieCatalogueXDatabase::class.java, "movies_database")
+                synchronized(MovieCatalogueXDatabase::class.java) {
+                    INSTANCE = Room.databaseBuilder(
+                        context.applicationContext,
+                        MovieCatalogueXDatabase::class.java, "movies_database"
+                    )
                         .build()
                 }
             }

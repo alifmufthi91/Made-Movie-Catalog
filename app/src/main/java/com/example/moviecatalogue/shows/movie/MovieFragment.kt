@@ -2,7 +2,6 @@ package com.example.moviecatalogue.shows.movie
 
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
 import com.example.moviecatalogue.shows.ListShowAdapter
 import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import com.example.moviecatalogue.vo.Status
@@ -29,8 +27,7 @@ class MovieFragment : DaggerFragment() {
     lateinit var listViewModel: MovieViewModel
     private lateinit var listShowAdapter: ListShowAdapter
     private lateinit var mLayoutManger: RecyclerView.LayoutManager
-    private lateinit var scrollListener: CustomRecyclerViewScrollListener
-
+//    private lateinit var scrollListener: CustomRecyclerViewScrollListener
 
 
     override fun onCreateView(
@@ -43,15 +40,14 @@ class MovieFragment : DaggerFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         showRecyclerList()
-        listViewModel.setShows()
-        listViewModel.getShows().observe(viewLifecycleOwner, Observer { response ->
+        listViewModel.shows.observe(viewLifecycleOwner, Observer{ response ->
             if (response != null) {
                 when (response.status) {
                     Status.SUCCESS -> {
                         listShowAdapter.submitList(response.data)
-//                        listShowAdapter.notifyDataSetChanged()
                     }
-                    else -> {}
+                    else -> {
+                    }
                 }
             }
         })
@@ -59,32 +55,29 @@ class MovieFragment : DaggerFragment() {
 
     private fun showRecyclerList() {
         listShowAdapter = ListShowAdapter(this, SHOW_MOVIE)
-//        listShowAdapter.notifyDataSetChanged()
         mLayoutManger = LinearLayoutManager(context)
         rv_movie.layoutManager = mLayoutManger
-        scrollListener =
-            CustomRecyclerViewScrollListener(
-                mLayoutManger as LinearLayoutManager
-            )
-        scrollListener.setOnLoadMoreListener(object :
-            CustomRecyclerViewScrollListener.OnLoadMoreListener {
-            override fun onLoadMore() {
-                loadMoreData()
-            }
-        })
-        rv_movie.addOnScrollListener(scrollListener)
         rv_movie.adapter = listShowAdapter
+
+//        scrollListener =
+//            CustomRecyclerViewScrollListener(
+//                mLayoutManger as LinearLayoutManager
+//            )
+//        scrollListener.setOnLoadMoreListener(object :
+//            CustomRecyclerViewScrollListener.OnLoadMoreListener {
+//            override fun onLoadMore() {
+//                loadMoreData()
+//            }
+//        })
+//        rv_movie.addOnScrollListener(scrollListener)
     }
 
-    private fun loadMoreData() {
-        Handler().postDelayed({
-            listViewModel.loadMore()
-            scrollListener.setLoaded()
-//            rv_movie.post {
-//                listShowAdapter.notifyDataSetChanged()
-//            }
-        }, 100)
-    }
+//    private fun loadMoreData() {
+//        Handler().postDelayed({
+//            listViewModel.nextPage()
+//            scrollListener.setLoaded()
+//        }, 100)
+//    }
 
 
 }

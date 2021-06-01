@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.detail.DetailShowActivity
@@ -19,7 +18,6 @@ import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_POSI
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_TYPE
 import com.example.moviecatalogue.listener.CustomOnItemClickListener
 import com.example.moviecatalogue.utils.GlideApp
-import com.example.moviecatalogue.utils.MovieGlideApp
 import kotlinx.android.synthetic.main.item_show.view.*
 
 class ListShowAdapter(private val fragment: Fragment, showType: String) :
@@ -84,7 +82,7 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
         }
     }
 
-    inner class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+//    inner class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         val show = getItem(position)

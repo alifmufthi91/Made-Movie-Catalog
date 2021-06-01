@@ -32,7 +32,8 @@ import javax.inject.Inject
  */
 class SearchMenuFragment : DaggerFragment() {
 
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
     private val searchViewModel: SearchViewModel by lazy {
         ViewModelProvider(requireActivity(), viewModelFactory).get(SearchViewModel::class.java)
     }
@@ -60,9 +61,8 @@ class SearchMenuFragment : DaggerFragment() {
                 }
             }
         lv_genre.adapter = adapter
-        val observer = Observer<List<GenreEntity>>{
+        val observer = Observer<List<GenreEntity>> {
             if (it != null) {
-                adapter.clear()
                 for (genre in it.toList()) {
                     adapter.add(genre.name)
                 }
@@ -70,28 +70,36 @@ class SearchMenuFragment : DaggerFragment() {
             }
         }
         rg_category.setOnCheckedChangeListener { _, checkedId ->
+            adapter.clear()
             when (checkedId) {
                 R.id.radio_movie -> {
-                    searchViewModel.setCategory(SHOW_MOVIE)
-                    searchViewModel.setGenres()
-                    searchViewModel.getGenres().observe(viewLifecycleOwner, observer)
+                    searchViewModel.apply {
+                        setCategory(SHOW_MOVIE)
+                        setGenres()
+                        getGenres().observe(viewLifecycleOwner, observer)
+                    }
                     Log.d("radio", "movie")
                 }
                 R.id.radio_tv -> {
-                    searchViewModel.setCategory(SHOW_TV)
-                    searchViewModel.setGenres()
-                    searchViewModel.getGenres().observe(viewLifecycleOwner, observer)
+                    searchViewModel.apply {
+                        setCategory(SHOW_TV)
+                        setGenres()
+                        getGenres().observe(viewLifecycleOwner, observer)
+                    }
                     Log.d("radio", "tv")
                 }
             }
         }
-        searchViewModel.setGenres()
-        searchViewModel.getGenres().observeForever(observer)
+        searchViewModel.apply {
+            setGenres()
+            getGenres().observeForever(observer)
+        }
         lv_genre.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
                 val intent = Intent(context, SearchByGenreActivity::class.java)
                 intent.putExtra(SELECTED_CATEGORY, searchViewModel.getCategory())
-                intent.putExtra(SELECTED_GENRE,
+                intent.putExtra(
+                    SELECTED_GENRE,
                     searchViewModel.getGenres().value?.get(position)
                 )
                 startActivity(intent)
