@@ -1,12 +1,14 @@
 package com.example.moviecatalogue.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.example.moviecatalogue.data.source.LocalMain
 import com.example.moviecatalogue.data.source.local.LocalDataSource
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.data.source.remote.RemoteDataSource
 import com.example.moviecatalogue.utils.AppExecutors
+import com.example.moviecatalogue.utils.Constant
 import com.example.moviecatalogue.utils.LiveDataTestUtil
 import com.example.moviecatalogue.utils.PagedListUtil
 import com.example.moviecatalogue.vo.Resource
@@ -14,7 +16,6 @@ import com.nhaarman.mockitokotlin2.any
 import junit.framework.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.doAnswer
@@ -36,8 +37,8 @@ class MovieCatalogueRepositoryTest {
     private val showDetailResponse = dummyData.getShow()
 
     private val page = 1
-    private val type = "Movie"
-    private val showId = 475557
+    private val type = Constant.SHOW_MOVIE
+    private val showId: Long = 475557
 
     @Test
     fun getMovies() {
@@ -59,16 +60,14 @@ class MovieCatalogueRepositoryTest {
         assertNotNull(tvEntities.data)
     }
 
-//    @Test
-//    fun getShowDetail() {
-//        doAnswer { invocation ->
-//            (invocation.arguments[2] as RemoteDataSource.CustomCallback<ShowEntity>)
-//                .onResponse(showDetailResponse)
-//            null
-//        }.`when`(remote).getShowDetail(eq(type), eq(showId.toLong()), any())
-//        val showsEntity = LiveDataTestUtil.getValue(repository.getShowDetail(type, showId.toLong()))
-//        verify(remote).getShowDetail(eq(type), eq(showId.toLong()), any())
-//        assertNotNull(showsEntity)
-//    }
+    @Test
+    fun getShowDetail() {
+        val dummyShow = MutableLiveData<ShowEntity>()
+        dummyShow.value = showDetailResponse
+        `when`(local.getShow(type, showId)).thenReturn(dummyShow)
+        val showsEntity = LiveDataTestUtil.getValue(repository.getShowDetail(type, showId))
+        verify(local).getShow(type, showId)
+        assertNotNull(showsEntity)
+    }
 
 }

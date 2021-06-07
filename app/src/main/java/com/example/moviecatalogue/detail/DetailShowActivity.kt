@@ -64,7 +64,7 @@ class DetailShowActivity : DaggerAppCompatActivity() {
             ShareCompat.IntentBuilder(this).apply {
                 setType(mimeType)
                 setChooserTitle("Bagikan aplikasi ini sekarang.")
-                setText(resources.getString(R.string.share_text, viewModel.getShow().name))
+                setText(resources.getString(R.string.share_text, viewModel.showEntity.name))
                 startChooser()
             }
         }

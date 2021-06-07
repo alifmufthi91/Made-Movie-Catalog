@@ -7,6 +7,7 @@ import com.example.moviecatalogue.data.source.LocalMain
 import com.example.moviecatalogue.data.ShowRepository
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.data.source.remote.ApiResponse
+import com.example.moviecatalogue.utils.Constant
 import com.example.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
@@ -17,6 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -26,7 +28,8 @@ class DetailShowViewModelTest {
     val rule = InstantTaskExecutorRule()
 
     private lateinit var viewModel: DetailShowViewModel
-    private val dummyMovie = LocalMain().getMovies()[0]
+
+    private val dummyMovie = LocalMain().getShow()
 
     @Mock
     private lateinit var showRepository: ShowRepository
@@ -34,27 +37,29 @@ class DetailShowViewModelTest {
     @Mock
     private lateinit var showObserver: Observer<Resource<ShowEntity>>
 
+    private val type = Constant.SHOW_MOVIE
+    private val showId: Long = 475557
+
     @Before
     fun setUp() {
         viewModel = DetailShowViewModel(showRepository)
+        viewModel.setShow(showId)
+        viewModel.setType(type)
     }
 
     @Test
     fun getDetailShow() {
         val movie = MutableLiveData<Resource<ShowEntity>>()
         movie.value = Resource.success(dummyMovie)
-
-        Mockito.`when`(
+        `when`(
             showRepository.getShowDetail(
-                "movie",
-                dummyMovie.movieDbId
+                type,
+                showId
             )
         ).thenReturn(movie)
-        viewModel.setShow(dummyMovie.movieDbId)
-        viewModel.setType("movie")
 
-        val showEntity = viewModel.showInfo.value?.data
-        verify(showRepository).getShowDetail("movie", dummyMovie.movieDbId)
+        val showEntity = viewModel.getShow(type, showId).value?.data
+        verify(showRepository).getShowDetail(type, showId)
         assertNotNull(showEntity)
         assertEquals(dummyMovie.name, showEntity?.name)
         assertEquals(dummyMovie.overview, showEntity?.overview)

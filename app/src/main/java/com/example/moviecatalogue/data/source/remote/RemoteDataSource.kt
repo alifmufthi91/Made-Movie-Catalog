@@ -53,7 +53,7 @@ class RemoteDataSource @Inject constructor(
     fun getTvShows(page: Int, callback: CustomCallback<ApiResponse<List<ShowResponse>>>) {
         EspressoIdlingResource.increment()
         apiService.showList(
-            SHOW_TV.toLowerCase(Locale.getDefault()),
+            SHOW_TV,
             BuildConfig.API_KEY,
             page,
             null
@@ -83,7 +83,7 @@ class RemoteDataSource @Inject constructor(
     ) {
         EspressoIdlingResource.increment()
         apiService.search(
-            category.toLowerCase(Locale.getDefault()),
+            category,
             BuildConfig.API_KEY,
             page,
             query
@@ -113,7 +113,7 @@ class RemoteDataSource @Inject constructor(
     ) {
         EspressoIdlingResource.increment()
         apiService.showList(
-            category.toLowerCase(Locale.getDefault()),
+            category,
             BuildConfig.API_KEY,
             page,
             genre
@@ -166,7 +166,7 @@ class RemoteDataSource @Inject constructor(
     fun getGenres(category: String, callback: CustomCallback<ApiResponse<List<GenreResponse>>>) {
         EspressoIdlingResource.increment()
         apiService.getGenreList(
-            category.toLowerCase(Locale.getDefault()),
+            category,
             BuildConfig.API_KEY
         ).enqueue(object : Callback<GenreListResponse> {
             override fun onResponse(

@@ -28,7 +28,7 @@ class DetailShowViewModel @Inject constructor(
     }
 
     var showInfo: LiveData<Resource<ShowEntity>> = Transformations.switchMap(showId) { showId ->
-        showRepository.getShowDetail(type, showId)
+        getShow(type, showId)
     }
 
     fun setDetailData(showId: Long, type: String, position: Int) {
@@ -42,5 +42,7 @@ class DetailShowViewModel @Inject constructor(
         showRepository.updateShow(showEntity)
     }
 
-    fun getShow() = showEntity
+    fun getShow(type: String, showId: Long): LiveData<Resource<ShowEntity>> {
+        return showRepository.getShowDetail(type, showId)
+    }
 }
