@@ -4,26 +4,29 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import com.example.moviecatalogue.R
+import com.example.moviecatalogue.databinding.ActivityHomeBinding
 import com.example.moviecatalogue.favourite.FavouriteActivity
 import com.example.moviecatalogue.search.SearchActivity
 import com.example.moviecatalogue.settings.SettingsActivity
-import kotlinx.android.synthetic.main.activity_home.*
+import dagger.android.support.DaggerAppCompatActivity
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : DaggerAppCompatActivity() {
+
+    private lateinit var binding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         val sectionsPagerAdapter =
             SectionsPagerAdapter(
                 this,
                 supportFragmentManager
             )
-        view_pager.adapter = sectionsPagerAdapter
-        tabs.setupWithViewPager(view_pager)
+        binding.viewPager.adapter = sectionsPagerAdapter
+        binding.tabs.setupWithViewPager(binding.viewPager)
         supportActionBar?.elevation = 0f
 
     }

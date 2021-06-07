@@ -1,20 +1,23 @@
 package com.example.moviecatalogue.search
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.example.moviecatalogue.data.model.Genre
-import com.example.moviecatalogue.data.model.Show
-import com.example.moviecatalogue.data.source.MovieCatalogueXRepository
-import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
+import com.example.moviecatalogue.data.ShowRepository
+import com.example.moviecatalogue.data.source.local.entity.GenreEntity
+import com.example.moviecatalogue.data.source.local.entity.ShowEntity
+import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
+import javax.inject.Inject
 
-class SearchViewModel(private val movieCatalogueXRepository: MovieCatalogueXRepository) :
+class SearchViewModel @Inject constructor(val showRepository: ShowRepository) :
     ViewModel() {
     private var category = SHOW_MOVIE
     private var currentPage = 1
-    private var query = ""
+    private val query = MutableLiveData<String>("")
 
-    internal fun setShows(category: String, query: String) {
-        movieCatalogueXRepository.setSearchedShowsByQuery(category, currentPage, query)
+    private fun setShows(category: String, query: String) {
+        showRepository.setSearchedShowsByQuery(category, currentPage, query)
     }
 
     internal fun setCategory(category: String) {
@@ -22,28 +25,34 @@ class SearchViewModel(private val movieCatalogueXRepository: MovieCatalogueXRepo
     }
 
     internal fun setQuery(query: String) {
-        this.query = query
-    }
-
-    internal fun setGenres() {
-        movieCatalogueXRepository.setGenres(category)
-    }
-
-    fun loadMore() {
-        setPage(++currentPage)
-        movieCatalogueXRepository.loadMoreSearchedShowsByQuery(category, currentPage, query)
+        this.query.value = query
     }
 
     private fun setPage(page: Int) {
         currentPage = page
     }
 
-    internal fun getShows(): LiveData<ArrayList<Show>> =
-        movieCatalogueXRepository.getSearchedShows()
+    internal fun setGenres() {
+        showRepository.setGenres(getCategory())
+    }
 
-    internal fun getGenres(): LiveData<ArrayList<Genre>> = movieCatalogueXRepository.getGenres()
+    var searchedShows: LiveData<List<ShowEntity>> = Transformations.switchMap(query) { query ->
+        setShows(category, query)
+        getShows()
+    }
+
+    internal fun getShows(): LiveData<List<ShowEntity>> =
+        showRepository.getSearchedShows()
+
+    internal fun getGenres(): LiveData<List<GenreEntity>> = showRepository.getGenres()
 
     internal fun getCategory() = category
 
-    internal fun getQuery() = query
+//        fun loadMore() {
+//        setPage(++currentPage)
+//        movieCatalogueXRepository.loadMoreSearchedShowsByQuery(
+//            category, currentPage,
+//            query.value.toString()
+//        )
+//    }
 }

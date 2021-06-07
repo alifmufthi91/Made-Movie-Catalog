@@ -2,90 +2,86 @@ package com.example.moviecatalogue.shows.tv
 
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.moviecatalogue.R
-import com.example.moviecatalogue.listener.CustomRecyclerViewScrollListener
+import com.example.moviecatalogue.databinding.FragmentTvListBinding
 import com.example.moviecatalogue.shows.ListShowAdapter
-import com.example.moviecatalogue.viewmodel.ViewModelFactory
-import kotlinx.android.synthetic.main.fragment_tv_list.*
+import com.example.moviecatalogue.utils.Constant.SHOW_TV
+import com.example.moviecatalogue.vo.Status
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 
 /**
  * A simple [Fragment] subclass.
  */
-class TvFragment : Fragment() {
+class TvFragment : DaggerFragment() {
 
+    @Inject
+    lateinit var listViewModel: TvViewModel
     private lateinit var listShowAdapter: ListShowAdapter
-    private lateinit var listViewModel: TvViewModel
     private lateinit var mLayoutManger: RecyclerView.LayoutManager
-    private lateinit var scrollListener: CustomRecyclerViewScrollListener
-    private var currentPage = 1
-
-    companion object {
-        const val SHOW_TV = "Tv"
-    }
+    private var _binding: FragmentTvListBinding? = null
+    private val binding get() = _binding!!
+//    private lateinit var scrollListener: CustomRecyclerViewScrollListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_tv_list, container, false)
+    ): View {
+        _binding = FragmentTvListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         showRecyclerList()
-        Log.d("listCategory", SHOW_TV)
-        listViewModel.setShows()
-        listViewModel.getShows().observe(viewLifecycleOwner, Observer { Shows ->
-            if (Shows != null) {
-                listShowAdapter.setData(Shows)
+        listViewModel.shows.observe(viewLifecycleOwner, Observer { shows ->
+            if (shows != null) {
+                when (shows.status) {
+                    Status.SUCCESS -> {
+                        listShowAdapter.submitList(shows.data)
+                    }
+                    else -> {
+                    }
+                }
             }
         })
     }
-
 
     private fun showRecyclerList() {
         listShowAdapter = ListShowAdapter(this, SHOW_TV)
-        listShowAdapter.notifyDataSetChanged()
         mLayoutManger = LinearLayoutManager(context)
-        rv_tv.layoutManager = mLayoutManger
-        scrollListener = CustomRecyclerViewScrollListener(mLayoutManger as LinearLayoutManager)
-        scrollListener.setOnLoadMoreListener(object :
-            CustomRecyclerViewScrollListener.OnLoadMoreListener {
-            override fun onLoadMore() {
-                loadMoreData()
-            }
-        })
-        rv_tv.addOnScrollListener(scrollListener)
-        rv_tv.adapter = listShowAdapter
-        val factory = ViewModelFactory.getInstance()
-        listViewModel = ViewModelProvider(
-            this,
-            factory
-        )[TvViewModel::class.java]
+        binding.rvTv.layoutManager = mLayoutManger
+        binding.rvTv.adapter = listShowAdapter
+
+//        scrollListener = CustomRecyclerViewScrollListener(mLayoutManger as LinearLayoutManager)
+//        scrollListener.setOnLoadMoreListener(object :
+//            CustomRecyclerViewScrollListener.OnLoadMoreListener {
+//            override fun onLoadMore() {
+//                loadMoreData()
+//            }
+//        })
+//        rv_tv.addOnScrollListener(scrollListener)
     }
 
-    private fun loadMoreData() {
-        listShowAdapter.addLoadingView()
-        Handler().postDelayed({
-            listViewModel.loadMore()
-            listShowAdapter.removeLoadingView()
-            scrollListener.setLoaded()
-            rv_tv.post {
-                listShowAdapter.notifyDataSetChanged()
-            }
-        }, 100)
-    }
+//    private fun loadMoreData() {
+//        Handler().postDelayed({
+//            listViewModel.nextPage()
+//            scrollListener.setLoaded()
+//        }, 100)
+//    }
 
 
 }

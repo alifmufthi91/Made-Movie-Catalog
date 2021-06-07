@@ -16,7 +16,7 @@ object Utility {
     }
 
 
-    //sumber fungsi: https://stackoverflow.com/questions/4753251/how-to-go-about-formatting-1200-to-1-2k-in-java
+    //source: https://stackoverflow.com/questions/4753251/how-to-go-about-formatting-1200-to-1-2k-in-java
     fun longToSuffixes(value: Long): String {
         if (value == java.lang.Long.MIN_VALUE) return longToSuffixes(java.lang.Long.MIN_VALUE + 1)
         if (value < 0) return "-" + longToSuffixes(-value)

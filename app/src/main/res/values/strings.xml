@@ -46,7 +46,7 @@ This application was created to meet the Module on Learning Android Jetpack Pro 
     <string name="title_reminder">Today Reminder</string>
     <string name="category_reminder">Reminder</string>
     <string name="category_advanced">Advanced</string>
-    <string name="delete_favorites">Delete Favorited Shows</string>
+    <string name="delete_favorites">Delete Favorites</string>
     <string name="key_change_language">KEY_CHANGE_LANGUAGE</string>
     <string name="key_delete_favorites">KEY_DELETE_FAVORITES</string>
     <string name="are_you_sure">Are you sure?</string>

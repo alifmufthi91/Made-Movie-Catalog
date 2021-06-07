@@ -1,34 +1,31 @@
 package com.example.moviecatalogue.detail
 
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.data.model.Genre
-import com.example.moviecatalogue.data.model.Show
-import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_MOVIE_URI
-import com.example.moviecatalogue.db.DatabaseContract.FavoritesColumns.Companion.CONTENT_TV_URI
-import com.example.moviecatalogue.shows.movie.MovieFragment.Companion.SHOW_MOVIE
+import com.example.moviecatalogue.data.source.local.entity.ShowEntity
+import com.example.moviecatalogue.databinding.ActivityDetailShowBinding
 import com.example.moviecatalogue.utils.Utility
-import com.example.moviecatalogue.viewmodel.ViewModelFactory
-import kotlinx.android.synthetic.main.activity_detail_show.*
+import com.example.moviecatalogue.vo.Status
+import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
 
 @Suppress("NAME_SHADOWING")
-class DetailShowActivity : AppCompatActivity() {
+class DetailShowActivity : DaggerAppCompatActivity() {
 
-    private lateinit var viewModel: DetailShowViewModel
+    @Inject
+    lateinit var viewModel: DetailShowViewModel
+    private lateinit var binding: ActivityDetailShowBinding
 
     companion object {
-        const val REQUEST_VIEW = 100
         const val DETAIL_SHOW = "detailShow"
         const val EXTRA_POSITION = "position"
         const val EXTRA_TYPE = "movie type"
@@ -36,149 +33,100 @@ class DetailShowActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_show)
-        val factory = ViewModelFactory.getInstance()
-        viewModel = ViewModelProvider(this, factory)[DetailShowViewModel::class.java]
+        binding = ActivityDetailShowBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        Log.d(EXTRA_TYPE, intent.getStringExtra(EXTRA_TYPE).toString())
         viewModel.apply {
             setDetailData(
-                this@DetailShowActivity,
-                intent.getParcelableExtra(DETAIL_SHOW) as Show,
+                intent.getLongExtra(DETAIL_SHOW, 0),
                 intent.getStringExtra(EXTRA_TYPE) as String,
                 intent.getIntExtra(EXTRA_POSITION, 0)
             )
-            getShowInfo().observe(this@DetailShowActivity, Observer {
-                displayShowInfo(it)
+            showInfo.observe(this@DetailShowActivity, Observer { response ->
+                Log.d("response detail: ", response.toString())
+                if (response != null) {
+                    when (response.status) {
+                        Status.SUCCESS -> {
+                            response.data?.let { show ->
+                                showEntity = show
+                                displayShowInfo(showEntity)
+                            }
+                        }
+                        else -> {
+                        }
+                    }
+                }
             })
-            isFavourite.observe(this@DetailShowActivity, Observer {
-                updateFavoriteIcon(it)
-            })
-            getShowInfo()
-            getFavouriteStatus()
         }
-        displayShowData()
-        iv_share.setOnClickListener {
+        binding.ivShare.setOnClickListener {
             val mimeType = "text/plain"
-            ShareCompat.IntentBuilder.from(this).apply {
+            ShareCompat.IntentBuilder(this).apply {
                 setType(mimeType)
                 setChooserTitle("Bagikan aplikasi ini sekarang.")
-                setText(resources.getString(R.string.share_text, viewModel.getShow().name))
+                setText(resources.getString(R.string.share_text, viewModel.showEntity.name))
                 startChooser()
             }
         }
-        iv_favorites.setOnClickListener {
-            try {
-                if (viewModel.isFavourite.value as Boolean) {
-                    when (viewModel.getType()) {
-                        SHOW_MOVIE -> {
-                            val uriWithId =
-                                Uri.parse(CONTENT_MOVIE_URI.toString() + "/" + viewModel.getShow().movieDbId)
-                            contentResolver.delete(uriWithId, null, null)
-                        }
-                        else -> {
-                            val uriWithId =
-                                Uri.parse(CONTENT_TV_URI.toString() + "/" + viewModel.getShow().movieDbId)
-                            contentResolver.delete(uriWithId, null, null)
-                        }
-                    }
-                    setFavorite(false)
+        binding.ivFavorites.setOnClickListener {
+            viewModel.apply {
+                setFavorite(!showEntity.isFavorited)
+                if (!showEntity.isFavorited) {
+                    updateFavoriteIcon(false)
                     Toast.makeText(
                         applicationContext,
                         getString(
                             R.string.delete_favorite,
-                            viewModel.getShow().name
+                            showEntity.name
                         ),
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    when (viewModel.getType()) {
-                        SHOW_MOVIE -> contentResolver.insert(
-                            CONTENT_MOVIE_URI,
-                            viewModel.getShow().let { it ->
-                                viewModel.setValues(
-                                    it,
-                                    viewModel.getType()
-                                )
-                            }
-                        )
-                        else -> contentResolver.insert(
-                            CONTENT_TV_URI,
-                            viewModel.getShow().let { it ->
-                                viewModel.setValues(
-                                    it,
-                                    viewModel.getType()
-                                )
-                            }
-                        )
-                    }
-                    setFavorite(true)
+                    updateFavoriteIcon(true)
                     Toast.makeText(
                         applicationContext,
                         getString(
                             R.string.add_favorite,
-                            viewModel.getShow().name
+                            showEntity.name
                         ),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
-    private fun displayShowData() {
-        val showData: Show? = viewModel.getShow()
-        Glide.with(this).load(showData?.getLandscapePhoto()).apply(
+    private fun displayShowInfo(show: ShowEntity) {
+        Glide.with(this).load(show.getLandscapePhoto()).apply(
             RequestOptions.placeholderOf(R.drawable.ic_image_black)
-                .error(R.drawable.ic_image_error_black)
-        ).into(show_cover)
-        tv_show_title.text = showData?.name
-        tv_show_overview.text = showData?.overview
-    }
-
-    private fun displayShowInfo(show: Show?) {
-        tv_show_release.text = show?.aired_date
-        tv_show_release.visibility = when (show?.aired_date) {
-            null -> View.INVISIBLE
-            else -> View.VISIBLE
-        }
-        tv_movie_rating.text = show?.vote_average.toString()
-        tv_movie_rating.visibility = when (show?.vote_average) {
-            null -> View.INVISIBLE
-            else -> View.VISIBLE
-        }
-        tv_movie_popularity.text = show?.popularity?.toLong()?.let { Utility.longToSuffixes(it) }
-        tv_movie_popularity.visibility = when (show?.popularity) {
-            null -> View.INVISIBLE
-            else -> View.VISIBLE
-        }
-        tv_movie_voter.text = show?.voter?.toLong()?.let { Utility.longToSuffixes(it) }
-        tv_movie_voter.visibility = when (show?.voter) {
-            0 -> View.INVISIBLE
-            else -> View.VISIBLE
-        }
-        tv_show_genre.text = getGenres(show?.genreList)
-        tv_show_genre.visibility = when (show?.genreList) {
-            null -> View.INVISIBLE
-            else -> View.VISIBLE
-        }
-    }
-
-
-    private fun setFavorite(favoriteStatus: Boolean) {
-        viewModel.setFavorite(favoriteStatus)
+                .error(R.drawable.ic_image_not_exist)
+        ).into(binding.showCover)
+        binding.tvShowTitle.text = show.name
+        binding.tvShowOverview.text = show.overview
+        binding.tvShowRelease.text = show.aired_date
+        binding.tvShowRelease.visibility = View.VISIBLE
+        binding.tvMovieRating.text = show.vote_average.toString()
+        binding.tvMovieRating.visibility = View.VISIBLE
+        binding.tvMoviePopularity.text =
+            show.popularity?.toLong()?.let { Utility.longToSuffixes(it) }
+        binding.tvMoviePopularity.visibility = View.VISIBLE
+        binding.tvMovieVoter.text = Utility.longToSuffixes(show.voter.toLong())
+        binding.tvMovieVoter.visibility = View.VISIBLE
+        binding.tvShowGenre.text = show.genreList
+        binding.tvShowGenre.visibility = View.VISIBLE
+        updateFavoriteIcon(show.isFavorited)
     }
 
     private fun updateFavoriteIcon(isFavorite: Boolean) {
         if (isFavorite) {
-            iv_favorites.setImageDrawable(
+            binding.ivFavorites.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_favorite
                 )
             )
         } else {
-            iv_favorites.setImageDrawable(
+            binding.ivFavorites.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_favorite_border
@@ -187,15 +135,6 @@ class DetailShowActivity : AppCompatActivity() {
         }
     }
 
-    private fun getGenres(list: ArrayList<Genre>?): String? {
-        var genres = ""
-        list?.forEach {
-            genres += if (it != list[0]) {
-                ", " + it.name
-            } else {
-                it.name
-            }
-        }
-        return genres
-    }
 }
+
+

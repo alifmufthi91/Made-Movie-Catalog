@@ -3,24 +3,27 @@ package com.example.moviecatalogue.favourite
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import com.example.moviecatalogue.R
-import kotlinx.android.synthetic.main.activity_favourite.*
+import com.example.moviecatalogue.databinding.ActivityFavouriteBinding
+import dagger.android.support.DaggerAppCompatActivity
 
-class FavouriteActivity : AppCompatActivity() {
+class FavouriteActivity : DaggerAppCompatActivity() {
+    private lateinit var binding: ActivityFavouriteBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_favourite)
+        binding = ActivityFavouriteBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         val favoritesPagerAdapter =
             FavouritePagerAdapter(
                 this,
                 supportFragmentManager
             )
-        view_pager.adapter = favoritesPagerAdapter
-        tabs.setupWithViewPager(view_pager)
+        binding.viewPager.adapter = favoritesPagerAdapter
+        binding.tabs.setupWithViewPager(binding.viewPager)
         supportActionBar?.elevation = 0f
         supportActionBar?.title = getString(R.string.favorites)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

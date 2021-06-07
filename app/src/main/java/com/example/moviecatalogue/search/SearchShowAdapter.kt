@@ -2,32 +2,31 @@ package com.example.moviecatalogue.search
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.Glide
 import com.example.moviecatalogue.R
-import com.example.moviecatalogue.data.model.Show
+import com.example.moviecatalogue.data.source.local.entity.ShowEntity
+import com.example.moviecatalogue.databinding.ItemShowGridBinding
 import com.example.moviecatalogue.detail.DetailShowActivity
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.DETAIL_SHOW
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_POSITION
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_TYPE
 import com.example.moviecatalogue.listener.CustomOnItemClickListener
 import com.example.moviecatalogue.utils.Constant
-import kotlinx.android.synthetic.main.item_show_grid.view.*
 
 class SearchShowAdapter(private val activity: Activity, showType: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val showsType = showType
+    private val type = showType
 
-    private var listShow = ArrayList<Show?>()
+    private var listShow = ArrayList<ShowEntity?>()
 
 
-    fun setData(items: ArrayList<Show>) {
+    fun setData(items: List<ShowEntity>) {
         listShow.clear()
         listShow.addAll(items)
         notifyDataSetChanged()
@@ -42,19 +41,6 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
         }
     }
 
-    fun addLoadingView() {
-        Handler().post {
-            listShow.add(null)
-            notifyItemInserted(listShow.size - 1)
-        }
-    }
-
-    fun removeLoadingView() {
-        if (listShow.size != 0) {
-            listShow.removeAt(listShow.size - 1)
-            notifyItemRemoved(listShow.size)
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -80,34 +66,31 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
     }
 
     inner class GridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(show: Show) {
+        val binding = ItemShowGridBinding.bind(itemView)
+        fun bind(show: ShowEntity) {
             with(itemView) {
-                com.bumptech.glide.Glide.with(itemView.context)
+                Glide.with(itemView.context)
                     .load(show.getPortraitPhoto())
-                    .apply(
-                        RequestOptions.placeholderOf(R.drawable.ic_image_black)
-                            .error(R.drawable.ic_image_error_black)
-                    )
-                    .into(img_item_photo_grid)
+                    .placeholder(R.drawable.ic_image_black)
+                    .error(R.drawable.ic_image_not_exist)
+                    .into(binding.imgItemPhotoGrid)
                 show.name?.let {
-                    tv_item_name_grid.text = show.name?.substring(0, it.length.coerceAtMost(50))
+                    binding.tvItemNameGrid.text =
+                        show.name?.substring(0, it.length.coerceAtMost(50))
                 }
                 itemView.setOnClickListener(
                     CustomOnItemClickListener(
-                        adapterPosition,
+                        bindingAdapterPosition,
                         object :
                             CustomOnItemClickListener.OnItemClickCallback {
                             override fun onItemClicked(view: View, position: Int) {
                                 val detailIntent =
                                     Intent(context, DetailShowActivity::class.java)
-                                Log.d("show type", showsType)
-                                detailIntent.putExtra(DETAIL_SHOW, show)
-                                detailIntent.putExtra(EXTRA_TYPE, showsType)
+                                Log.d("show type", type)
+                                detailIntent.putExtra(DETAIL_SHOW, show.movieDbId)
+                                detailIntent.putExtra(EXTRA_TYPE, type)
                                 detailIntent.putExtra(EXTRA_POSITION, position)
-                                activity.startActivityForResult(
-                                    detailIntent,
-                                    DetailShowActivity.REQUEST_VIEW
-                                )
+                                activity.startActivity(detailIntent)
                             }
                         })
                 )
@@ -117,4 +100,17 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
 
     inner class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
+//        fun addLoadingView() {
+//        Handler().post {
+//            listShow.add(null)
+//            notifyItemInserted(listShow.size - 1)
+//        }
+//    }
+//
+//    fun removeLoadingView() {
+//        if (listShow.size != 0) {
+//            listShow.removeAt(listShow.size - 1)
+//            notifyItemRemoved(listShow.size)
+//        }
+//    }
 }
