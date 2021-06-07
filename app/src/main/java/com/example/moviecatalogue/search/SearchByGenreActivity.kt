@@ -1,15 +1,16 @@
 package com.example.moviecatalogue.search
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
+import com.example.moviecatalogue.databinding.ActivitySearchByGenreBinding
 import com.example.moviecatalogue.search.result.SearchResultFragment
 import com.example.moviecatalogue.utils.Constant
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_search_by_genre.*
 import javax.inject.Inject
 
 class SearchByGenreActivity : DaggerAppCompatActivity() {
@@ -18,6 +19,7 @@ class SearchByGenreActivity : DaggerAppCompatActivity() {
     lateinit var viewModel: SearchByGenreViewModel
     private lateinit var searchShowAdapter: SearchShowAdapter
     private lateinit var mLayoutManager: GridLayoutManager
+    private lateinit var binding: ActivitySearchByGenreBinding
 //    private lateinit var scrollListener: CustomRecyclerViewScrollListener
 
 
@@ -28,24 +30,26 @@ class SearchByGenreActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search_by_genre)
+        binding = ActivitySearchByGenreBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        search_result.text = getString(R.string.search_result)
+        binding.searchResult.text = getString(R.string.search_result)
 
         val category = intent.getStringExtra(SELECTED_CATEGORY)
+        Log.d("category: ",category.toString())
         val genre = intent.getParcelableExtra<GenreEntity>(SELECTED_GENRE)
 
         supportActionBar?.title = genre?.name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        showRecyclerList()
 
         viewModel.apply {
             setCategory(category as String)
             setGenre(genre?.id.toString())
             setShows(category)
         }
-        viewModel.getShows().observe(this, Observer{
+        showRecyclerList()
+        viewModel.getShows().observe(this, Observer {
             if (it != null) {
                 searchShowAdapter.setData(it)
             }
@@ -66,8 +70,8 @@ class SearchByGenreActivity : DaggerAppCompatActivity() {
             }
 
         }
-        rv_search_genre.layoutManager = mLayoutManager
-        rv_search_genre.adapter = searchShowAdapter
+        binding.rvSearchGenre.layoutManager = mLayoutManager
+        binding.rvSearchGenre.adapter = searchShowAdapter
 
 //        scrollListener =
 //            CustomRecyclerViewScrollListener(

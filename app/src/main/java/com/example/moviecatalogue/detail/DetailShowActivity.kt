@@ -7,14 +7,14 @@ import android.widget.Toast
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
-import com.example.moviecatalogue.utils.GlideApp
+import com.example.moviecatalogue.databinding.ActivityDetailShowBinding
 import com.example.moviecatalogue.utils.Utility
 import com.example.moviecatalogue.vo.Status
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_detail_show.*
 import javax.inject.Inject
 
 
@@ -23,6 +23,7 @@ class DetailShowActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModel: DetailShowViewModel
+    private lateinit var binding: ActivityDetailShowBinding
 
     companion object {
         const val DETAIL_SHOW = "detailShow"
@@ -32,7 +33,10 @@ class DetailShowActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_show)
+        binding = ActivityDetailShowBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        Log.d(EXTRA_TYPE, intent.getStringExtra(EXTRA_TYPE).toString())
         viewModel.apply {
             setDetailData(
                 intent.getLongExtra(DETAIL_SHOW, 0),
@@ -55,16 +59,16 @@ class DetailShowActivity : DaggerAppCompatActivity() {
                 }
             })
         }
-        iv_share.setOnClickListener {
+        binding.ivShare.setOnClickListener {
             val mimeType = "text/plain"
-            ShareCompat.IntentBuilder.from(this).apply {
+            ShareCompat.IntentBuilder(this).apply {
                 setType(mimeType)
                 setChooserTitle("Bagikan aplikasi ini sekarang.")
                 setText(resources.getString(R.string.share_text, viewModel.getShow().name))
                 startChooser()
             }
         }
-        iv_favorites.setOnClickListener {
+        binding.ivFavorites.setOnClickListener {
             viewModel.apply {
                 setFavorite(!showEntity.isFavorited)
                 if (!showEntity.isFavorited) {
@@ -93,35 +97,36 @@ class DetailShowActivity : DaggerAppCompatActivity() {
     }
 
     private fun displayShowInfo(show: ShowEntity) {
-        GlideApp.with(this).load(show.getLandscapePhoto()).apply(
+        Glide.with(this).load(show.getLandscapePhoto()).apply(
             RequestOptions.placeholderOf(R.drawable.ic_image_black)
-                .error(R.drawable.ic_image_error_black)
-        ).into(show_cover)
-        tv_show_title.text = show.name
-        tv_show_overview.text = show.overview
-        tv_show_release.text = show.aired_date
-        tv_show_release.visibility = View.VISIBLE
-        tv_movie_rating.text = show.vote_average.toString()
-        tv_movie_rating.visibility = View.VISIBLE
-        tv_movie_popularity.text = show.popularity?.toLong()?.let { Utility.longToSuffixes(it) }
-        tv_movie_popularity.visibility = View.VISIBLE
-        tv_movie_voter.text = Utility.longToSuffixes(show.voter.toLong())
-        tv_movie_voter.visibility = View.VISIBLE
-        tv_show_genre.text = show.genreList
-        tv_show_genre.visibility = View.VISIBLE
+                .error(R.drawable.ic_image_not_exist)
+        ).into(binding.showCover)
+        binding.tvShowTitle.text = show.name
+        binding.tvShowOverview.text = show.overview
+        binding.tvShowRelease.text = show.aired_date
+        binding.tvShowRelease.visibility = View.VISIBLE
+        binding.tvMovieRating.text = show.vote_average.toString()
+        binding.tvMovieRating.visibility = View.VISIBLE
+        binding.tvMoviePopularity.text =
+            show.popularity?.toLong()?.let { Utility.longToSuffixes(it) }
+        binding.tvMoviePopularity.visibility = View.VISIBLE
+        binding.tvMovieVoter.text = Utility.longToSuffixes(show.voter.toLong())
+        binding.tvMovieVoter.visibility = View.VISIBLE
+        binding.tvShowGenre.text = show.genreList
+        binding.tvShowGenre.visibility = View.VISIBLE
         updateFavoriteIcon(show.isFavorited)
     }
 
     private fun updateFavoriteIcon(isFavorite: Boolean) {
         if (isFavorite) {
-            iv_favorites.setImageDrawable(
+            binding.ivFavorites.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_favorite
                 )
             )
         } else {
-            iv_favorites.setImageDrawable(
+            binding.ivFavorites.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_favorite_border

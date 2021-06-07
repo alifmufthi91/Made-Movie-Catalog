@@ -8,7 +8,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
 import com.example.moviecatalogue.R
 import dagger.android.support.DaggerAppCompatActivity
 
@@ -47,18 +46,18 @@ class SettingsActivity : DaggerAppCompatActivity() {
 
 //        private lateinit var alarmReceiver: AlarmReceiver
 
-        private lateinit var reminderPreference: SwitchPreferenceCompat
-        private lateinit var releaseTodayPreference: SwitchPreferenceCompat
+//        private lateinit var reminderPreference: SwitchPreferenceCompat
+//        private lateinit var releaseTodayPreference: SwitchPreferenceCompat
         private lateinit var changeLanguagePreference: Preference
         private lateinit var deleteFavoritesPreference: Preference
-        private lateinit var changeNightMode: SwitchPreferenceCompat
+//        private lateinit var changeNightMode: SwitchPreferenceCompat
 
 //        private lateinit var favsHelper: FavouriteHelper
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.settings, rootKey)
             init()
-            setSummaries()
+//            setSummaries()
         }
 
         override fun onResume() {
@@ -71,11 +70,11 @@ class SettingsActivity : DaggerAppCompatActivity() {
             preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         }
 
-        private fun setSummaries() {
-            val sh = preferenceManager.sharedPreferences
-            reminderPreference.isChecked = sh.getBoolean(REMINDER, false)
-            releaseTodayPreference.isChecked = sh.getBoolean(RELEASE_TODAY, false)
-        }
+//        private fun setSummaries() {
+//            val sh = preferenceManager.sharedPreferences
+//            reminderPreference.isChecked = sh.getBoolean(REMINDER, false)
+//            releaseTodayPreference.isChecked = sh.getBoolean(RELEASE_TODAY, false)
+//        }
 
         private fun init() {
 //            favsHelper = FavouriteHelper(requireContext())
@@ -87,10 +86,10 @@ class SettingsActivity : DaggerAppCompatActivity() {
 //            alarmReceiver =
 //                AlarmReceiver()
 
-            reminderPreference =
-                findPreference<SwitchPreferenceCompat>(REMINDER) as SwitchPreferenceCompat
-            releaseTodayPreference =
-                findPreference<SwitchPreferenceCompat>(RELEASE_TODAY) as SwitchPreferenceCompat
+//            reminderPreference =
+//                findPreference<SwitchPreferenceCompat>(REMINDER) as SwitchPreferenceCompat
+//            releaseTodayPreference =
+//                findPreference<SwitchPreferenceCompat>(RELEASE_TODAY) as SwitchPreferenceCompat
 //            changeNightMode = findPreference<SwitchPreferenceCompat>(NIGHT_MODE) as SwitchPreferenceCompat
             changeLanguagePreference = findPreference<Preference>(CHANGE_LANGUAGE) as Preference
 
@@ -129,34 +128,33 @@ class SettingsActivity : DaggerAppCompatActivity() {
         }
 
         override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-            when (key) {
-                REMINDER -> {
-                    reminderPreference.isChecked = sharedPreferences.getBoolean(REMINDER, false)
+//            when (key) {
+//                REMINDER -> {
+//                    reminderPreference.isChecked = sharedPreferences.getBoolean(REMINDER, false)
 //                    if (reminderPreference.isChecked) {
 //                        alarmReceiver.setReminderAlarm(requireContext())
 //                    } else {
 //                        alarmReceiver.cancelReminderAlarm(requireContext())
 //                    }
-                }
-                RELEASE_TODAY -> {
-                    releaseTodayPreference.isChecked =
-                        sharedPreferences.getBoolean(RELEASE_TODAY, false)
+//                }
+//                RELEASE_TODAY -> {
+//                    releaseTodayPreference.isChecked =
+//                        sharedPreferences.getBoolean(RELEASE_TODAY, false)
 //                    if (releaseTodayPreference.isChecked) {
 //                        alarmReceiver.setTodayReleaseAlarm(requireContext())
 //                    } else {
 //                        alarmReceiver.cancelTodayReleaseAlarm(requireContext())
 //                    }
-                }
-                NIGHT_MODE -> {
-                    changeNightMode.isChecked = sharedPreferences.getBoolean(NIGHT_MODE, false)
-                    if (changeNightMode.isChecked) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    }
-                }
-            }
-
+//                }
+//                NIGHT_MODE -> {
+//                    changeNightMode.isChecked = sharedPreferences.getBoolean(NIGHT_MODE, false)
+//                    if (changeNightMode.isChecked) {
+//                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//                    } else {
+//                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//                    }
+//                }
+//            }
         }
     }
 

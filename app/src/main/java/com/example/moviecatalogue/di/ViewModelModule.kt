@@ -2,7 +2,7 @@ package com.example.moviecatalogue.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.ShowRepository
 import com.example.moviecatalogue.detail.DetailShowViewModel
 import com.example.moviecatalogue.search.SearchByGenreViewModel
 import com.example.moviecatalogue.search.SearchViewModel
@@ -20,36 +20,36 @@ class ViewModelModule {
     @Provides
     @IntoMap
     @ViewModelKey(MovieViewModel::class)
-    fun provideMovieViewModel(movieCatalogueXRepository: MovieCatalogueXRepository): ViewModel {
-        return MovieViewModel(movieCatalogueXRepository)
+    fun provideMovieViewModel(showRepository: ShowRepository): ViewModel {
+        return MovieViewModel(showRepository)
     }
 
     @Provides
     @IntoMap
     @ViewModelKey(TvViewModel::class)
-    fun provideTvViewModel(movieCatalogueXRepository: MovieCatalogueXRepository): ViewModel {
-        return TvViewModel(movieCatalogueXRepository)
+    fun provideTvViewModel(showRepository: ShowRepository): ViewModel {
+        return TvViewModel(showRepository)
     }
 
     @Provides
     @IntoMap
     @ViewModelKey(SearchViewModel::class)
-    fun provideSearchViewModel(movieCatalogueXRepository: MovieCatalogueXRepository): ViewModel {
-        return SearchViewModel(movieCatalogueXRepository)
+    fun provideSearchViewModel(showRepository: ShowRepository): ViewModel {
+        return SearchViewModel(showRepository)
     }
 
     @Provides
     @IntoMap
     @ViewModelKey(SearchByGenreViewModel::class)
-    fun provideSearchByGenreViewModel(movieCatalogueXRepository: MovieCatalogueXRepository): ViewModel {
-        return SearchByGenreViewModel(movieCatalogueXRepository)
+    fun provideSearchByGenreViewModel(showRepository: ShowRepository): ViewModel {
+        return SearchByGenreViewModel(showRepository)
     }
 
     @Provides
     @IntoMap
     @ViewModelKey(DetailShowViewModel::class)
-    fun provideDetailShowViewModel(movieCatalogueXRepository: MovieCatalogueXRepository): ViewModel {
-        return DetailShowViewModel(movieCatalogueXRepository)
+    fun provideDetailShowViewModel(showRepository: ShowRepository): ViewModel {
+        return DetailShowViewModel(showRepository)
     }
 
     @Provides

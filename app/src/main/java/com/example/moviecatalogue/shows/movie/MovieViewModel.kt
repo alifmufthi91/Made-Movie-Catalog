@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
-import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.ShowRepository
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.vo.Resource
 import javax.inject.Inject
 
-class MovieViewModel @Inject constructor(val movieCatalogueXRepository: MovieCatalogueXRepository) :
+class MovieViewModel @Inject constructor(val showRepository: ShowRepository) :
     ViewModel() {
 
     private val currentPage = MutableLiveData<Int>(1)
@@ -27,7 +27,7 @@ class MovieViewModel @Inject constructor(val movieCatalogueXRepository: MovieCat
         }
 
     private fun setShows(page: Int) {
-        movieCatalogueXRepository.setMovies(page)
+        showRepository.setMovies(page)
 //        if (page == 1) {
 //            movieCatalogueXRepository.setMovies(page)
 //            return
@@ -36,7 +36,7 @@ class MovieViewModel @Inject constructor(val movieCatalogueXRepository: MovieCat
     }
 
     internal fun getShows(): LiveData<Resource<PagedList<ShowEntity>>> =
-        movieCatalogueXRepository.getMovies()
+        showRepository.getMovies()
 
 //    fun loadMore() {
 //        setPage(++currentPage)

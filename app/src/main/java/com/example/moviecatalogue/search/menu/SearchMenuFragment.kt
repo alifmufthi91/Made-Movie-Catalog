@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
+import com.example.moviecatalogue.databinding.FragmentSearchMenuBinding
 import com.example.moviecatalogue.search.SearchByGenreActivity
 import com.example.moviecatalogue.search.SearchByGenreActivity.Companion.SELECTED_CATEGORY
 import com.example.moviecatalogue.search.SearchByGenreActivity.Companion.SELECTED_GENRE
@@ -24,7 +25,6 @@ import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import com.example.moviecatalogue.utils.Constant.SHOW_TV
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_search_menu.*
 import javax.inject.Inject
 
 /**
@@ -38,17 +38,22 @@ class SearchMenuFragment : DaggerFragment() {
         ViewModelProvider(requireActivity(), viewModelFactory).get(SearchViewModel::class.java)
     }
     private lateinit var adapter: ArrayAdapter<String>
-
-    companion object;
+    private var _binding: FragmentSearchMenuBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search_menu, container, false)
+        _binding = FragmentSearchMenuBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,7 +65,7 @@ class SearchMenuFragment : DaggerFragment() {
                     return customTv
                 }
             }
-        lv_genre.adapter = adapter
+        binding.lvGenre.adapter = adapter
         val observer = Observer<List<GenreEntity>> {
             if (it != null) {
                 for (genre in it.toList()) {
@@ -69,7 +74,7 @@ class SearchMenuFragment : DaggerFragment() {
                 adapter.notifyDataSetChanged()
             }
         }
-        rg_category.setOnCheckedChangeListener { _, checkedId ->
+        binding.rgCategory.setOnCheckedChangeListener { _, checkedId ->
             adapter.clear()
             when (checkedId) {
                 R.id.radio_movie -> {
@@ -94,7 +99,7 @@ class SearchMenuFragment : DaggerFragment() {
             setGenres()
             getGenres().observeForever(observer)
         }
-        lv_genre.onItemClickListener =
+        binding.lvGenre.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
                 val intent = Intent(context, SearchByGenreActivity::class.java)
                 intent.putExtra(SELECTED_CATEGORY, searchViewModel.getCategory())

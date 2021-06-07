@@ -9,12 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.moviecatalogue.R
+import com.example.moviecatalogue.databinding.FragmentMovieListBinding
 import com.example.moviecatalogue.shows.ListShowAdapter
 import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import com.example.moviecatalogue.vo.Status
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_movie_list.*
 import javax.inject.Inject
 
 
@@ -27,20 +26,28 @@ class MovieFragment : DaggerFragment() {
     lateinit var listViewModel: MovieViewModel
     private lateinit var listShowAdapter: ListShowAdapter
     private lateinit var mLayoutManger: RecyclerView.LayoutManager
+    private var _binding: FragmentMovieListBinding? = null
+    private val binding get() = _binding!!
 //    private lateinit var scrollListener: CustomRecyclerViewScrollListener
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_movie_list, container, false)
+    ): View {
+        _binding = FragmentMovieListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         showRecyclerList()
-        listViewModel.shows.observe(viewLifecycleOwner, Observer{ response ->
+        listViewModel.shows.observe(viewLifecycleOwner, Observer { response ->
             if (response != null) {
                 when (response.status) {
                     Status.SUCCESS -> {
@@ -56,8 +63,8 @@ class MovieFragment : DaggerFragment() {
     private fun showRecyclerList() {
         listShowAdapter = ListShowAdapter(this, SHOW_MOVIE)
         mLayoutManger = LinearLayoutManager(context)
-        rv_movie.layoutManager = mLayoutManger
-        rv_movie.adapter = listShowAdapter
+        binding.rvMovie.layoutManager = mLayoutManger
+        binding.rvMovie.adapter = listShowAdapter
 
 //        scrollListener =
 //            CustomRecyclerViewScrollListener(

@@ -6,7 +6,7 @@ import androidx.room.*
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 
 @Dao
-interface MovieCatalogueXDao {
+interface ShowDao {
 
     @Query("SELECT * FROM showentities")
     fun getAllShows(): DataSource.Factory<Int, ShowEntity>

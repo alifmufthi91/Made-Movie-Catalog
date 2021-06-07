@@ -6,7 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.moviecatalogue.data.source.remote.response.ShowResponse
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = "showentities")
@@ -35,7 +35,7 @@ data class ShowEntity(
     var showType: String? = null,
     @ColumnInfo(name = "isFavorited")
     var isFavorited: Boolean = false
-): Parcelable{
+) : Parcelable {
     constructor(showResponse: ShowResponse, category: String) : this(
         showResponse.movieDbId,
         showResponse.name,
@@ -46,7 +46,7 @@ data class ShowEntity(
         showResponse.popularity,
         showResponse.voter,
         showType = category
-    ){
+    ) {
         var genres = ""
         showResponse.genreList?.forEachIndexed { index, genreResponse ->
             genres += if (index != 0) {
@@ -57,7 +57,8 @@ data class ShowEntity(
         }
         this.genreList = genres
     }
-    fun updateDataFromEntity(show: ShowEntity){
+
+    fun updateDataFromEntity(show: ShowEntity) {
         this.name = show.name
         this.genreList = show.genreList
         this.aired_date = show.aired_date
@@ -67,6 +68,7 @@ data class ShowEntity(
         this.imgPath = show.imgPath
         this.popularity = show.popularity
     }
+
     fun getPortraitPhoto(): String = "https://image.tmdb.org/t/p/w188_and_h282_bestv2/$imgPath"
     fun getLandscapePhoto(): String = "https://image.tmdb.org/t/p/w500_and_h282_face/$imgPath"
 }

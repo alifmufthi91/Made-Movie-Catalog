@@ -10,15 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
+import com.example.moviecatalogue.databinding.ItemShowBinding
 import com.example.moviecatalogue.detail.DetailShowActivity
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.DETAIL_SHOW
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_POSITION
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_TYPE
 import com.example.moviecatalogue.listener.CustomOnItemClickListener
-import com.example.moviecatalogue.utils.GlideApp
-import kotlinx.android.synthetic.main.item_show.view.*
 
 class ListShowAdapter(private val fragment: Fragment, showType: String) :
     PagedListAdapter<ShowEntity, ListShowAdapter.ListViewHolder>(DIFF_CALLBACK) {
@@ -45,18 +45,19 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
     }
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val binding = ItemShowBinding.bind(itemView)
         fun bind(show: ShowEntity) {
             with(itemView) {
-                GlideApp.with(itemView.context)
+                Glide.with(itemView.context)
                     .load(show.getPortraitPhoto())
                     .placeholder(R.drawable.ic_image_black)
-                    .error(R.drawable.ic_image_error_black)
-                    .into(img_item_photo)
+                    .error(R.drawable.ic_image_not_exist)
+                    .into(binding.imgItemPhoto)
                 show.name?.let {
-                    tv_item_name.text = show.name?.substring(0, it.length.coerceAtMost(50))
+                    binding.tvItemName.text = show.name?.substring(0, it.length.coerceAtMost(50))
                 }
                 show.overview?.let {
-                    tv_item_overview.text = context.getString(
+                    binding.tvItemOverview.text = context.getString(
                         R.string.overview_list,
                         show.overview?.substring(0, it.length.coerceAtMost(120))
                     )
@@ -64,7 +65,7 @@ class ListShowAdapter(private val fragment: Fragment, showType: String) :
 
                 itemView.setOnClickListener(
                     CustomOnItemClickListener(
-                        adapterPosition,
+                        bindingAdapterPosition,
                         object :
                             CustomOnItemClickListener.OnItemClickCallback {
                             override fun onItemClicked(view: View, position: Int) {

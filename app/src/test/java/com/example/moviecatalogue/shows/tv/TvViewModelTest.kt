@@ -3,9 +3,10 @@ package com.example.moviecatalogue.shows.tv
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.example.moviecatalogue.data.source.LocalMain
-import com.example.moviecatalogue.data.source.MovieCatalogueXRepository
-import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import androidx.paging.PagedList
+import com.example.moviecatalogue.data.ShowRepository
+import com.example.moviecatalogue.data.source.local.entity.ShowEntity
+import com.example.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -16,7 +17,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
 
 @RunWith(MockitoJUnitRunner::class)
 class TvViewModelTest {
@@ -28,29 +28,33 @@ class TvViewModelTest {
     private lateinit var viewModel: TvViewModel
 
     @Mock
-    private lateinit var movieCatalogueXRepository: MovieCatalogueXRepository
+    private lateinit var showRepository: ShowRepository
 
     @Mock
-    private lateinit var observer: Observer<ArrayList<Show>>
+    private lateinit var observer: Observer<Resource<PagedList<ShowEntity>>>
+
+    @Mock
+    private lateinit var pagedList: PagedList<ShowEntity>
 
     @Before
     fun setUp() {
-        viewModel = TvViewModel(movieCatalogueXRepository)
+        viewModel = TvViewModel(showRepository)
     }
 
     @Test
     fun getShows() {
-        val dummyTvShows = LocalMain().getTvShows()
-        val tvShows = MutableLiveData<ArrayList<Show>>()
-        tvShows.value = dummyTvShows
+        val dummyTvs = Resource.success(pagedList)
+        Mockito.`when`(dummyTvs.data?.size).thenReturn(5)
+        val shows = MutableLiveData<Resource<PagedList<ShowEntity>>>()
+        shows.value = dummyTvs
 
-        Mockito.`when`(movieCatalogueXRepository.getTvShows()).thenReturn(tvShows)
-        val tvShowList = viewModel.getShows().value
-        verify(movieCatalogueXRepository).getTvShows()
-        assertNotNull(tvShowList)
-        assertEquals(20, tvShowList?.size)
+        Mockito.`when`(showRepository.getTvShows()).thenReturn(shows)
+        val tvsList = viewModel.getShows().value?.data
+        verify(showRepository).getTvShows()
+        assertNotNull(tvsList)
+        assertEquals(5, tvsList?.size)
 
         viewModel.getShows().observeForever(observer)
-        verify(observer).onChanged(dummyTvShows)
+        verify(observer).onChanged(dummyTvs)
     }
 }

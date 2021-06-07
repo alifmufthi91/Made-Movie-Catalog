@@ -4,8 +4,10 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.moviecatalogue.data.source.LocalMain
-import com.example.moviecatalogue.data.source.MovieCatalogueXRepository
-import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.ShowRepository
+import com.example.moviecatalogue.data.source.local.entity.ShowEntity
+import com.example.moviecatalogue.data.source.remote.ApiResponse
+import com.example.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -16,7 +18,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.verify
 
 @RunWith(MockitoJUnitRunner::class)
 class DetailShowViewModelTest {
@@ -28,37 +29,37 @@ class DetailShowViewModelTest {
     private val dummyMovie = LocalMain().getMovies()[0]
 
     @Mock
-    private lateinit var movieCatalogueXRepository: MovieCatalogueXRepository
+    private lateinit var showRepository: ShowRepository
 
     @Mock
-    private lateinit var showObserver: Observer<Show>
+    private lateinit var showObserver: Observer<Resource<ShowEntity>>
 
     @Before
     fun setUp() {
-        viewModel = DetailShowViewModel(movieCatalogueXRepository)
+        viewModel = DetailShowViewModel(showRepository)
     }
 
     @Test
     fun getDetailShow() {
-        val movie = MutableLiveData<Show>()
-        movie.value = dummyMovie
+        val movie = MutableLiveData<Resource<ShowEntity>>()
+        movie.value = Resource.success(dummyMovie)
 
         Mockito.`when`(
-            movieCatalogueXRepository.getShowDetail(
+            showRepository.getShowDetail(
                 "movie",
-                dummyMovie.movieDbId.toInt()
+                dummyMovie.movieDbId
             )
         ).thenReturn(movie)
-        viewModel.setShow(dummyMovie)
+        viewModel.setShow(dummyMovie.movieDbId)
         viewModel.setType("movie")
 
-        val showEntity = viewModel.getShowInfo().value
-        verify(movieCatalogueXRepository).getShowDetail("movie", dummyMovie.movieDbId.toInt())
+        val showEntity = viewModel.showInfo.value?.data
+        verify(showRepository).getShowDetail("movie", dummyMovie.movieDbId)
         assertNotNull(showEntity)
         assertEquals(dummyMovie.name, showEntity?.name)
         assertEquals(dummyMovie.overview, showEntity?.overview)
 
-        viewModel.getShowInfo().observeForever(showObserver)
-        verify(showObserver).onChanged(dummyMovie)
+        viewModel.showInfo.observeForever(showObserver)
+        verify(showObserver).onChanged(movie.value)
     }
 }

@@ -14,24 +14,24 @@ import com.example.moviecatalogue.utils.Converters
     exportSchema = false
 )
 @TypeConverters(Converters::class)
-abstract class MovieCatalogueXDatabase : RoomDatabase() {
-    abstract fun movieCatalogueXDao(): MovieCatalogueXDao
+abstract class ShowDatabase : RoomDatabase() {
+    abstract fun movieCatalogueXDao(): ShowDao
 
     companion object {
         @Volatile
-        private var INSTANCE: MovieCatalogueXDatabase? = null
+        private var INSTANCE: ShowDatabase? = null
 
-        fun getInstance(context: Context): MovieCatalogueXDatabase {
+        fun getInstance(context: Context): ShowDatabase {
             if (INSTANCE == null) {
-                synchronized(MovieCatalogueXDatabase::class.java) {
+                synchronized(ShowDatabase::class.java) {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext,
-                        MovieCatalogueXDatabase::class.java, "movies_database"
+                        ShowDatabase::class.java, "show_database"
                     )
                         .build()
                 }
             }
-            return INSTANCE as MovieCatalogueXDatabase
+            return INSTANCE as ShowDatabase
         }
 
     }

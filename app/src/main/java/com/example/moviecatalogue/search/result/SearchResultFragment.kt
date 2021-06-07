@@ -12,12 +12,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviecatalogue.R
+import com.example.moviecatalogue.databinding.FragmentSearchResultBinding
 import com.example.moviecatalogue.search.SearchShowAdapter
 import com.example.moviecatalogue.search.SearchViewModel
 import com.example.moviecatalogue.utils.Constant
 import com.example.moviecatalogue.viewmodel.ViewModelFactory
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_search_result.*
 import javax.inject.Inject
 
 /**
@@ -31,6 +31,8 @@ class SearchResultFragment : DaggerFragment() {
     }
     private lateinit var searchShowAdapter: SearchShowAdapter
     private lateinit var mLayoutManager: GridLayoutManager
+    private var _binding: FragmentSearchResultBinding? = null
+    private val binding get() = _binding!!
 //    private lateinit var scrollListener: CustomRecyclerViewScrollListener
 
 
@@ -41,16 +43,22 @@ class SearchResultFragment : DaggerFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_search_result, container, false)
+    ): View {
+        _binding = FragmentSearchResultBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        search_result_fragment.text = getString(R.string.search_result)
+        binding.searchResultFragment.text = getString(R.string.search_result)
         showRecyclerList()
         searchViewModel.apply {
-            searchedShows.observe(viewLifecycleOwner, Observer{ shows ->
+            searchedShows.observe(viewLifecycleOwner, Observer { shows ->
                 Log.d("shows :", shows.toString())
                 if (shows != null) {
                     searchShowAdapter.setData(shows)
@@ -74,8 +82,8 @@ class SearchResultFragment : DaggerFragment() {
             }
 
         }
-        rv_search.layoutManager = mLayoutManager
-        rv_search.adapter = searchShowAdapter
+        binding.rvSearch.layoutManager = mLayoutManager
+        binding.rvSearch.adapter = searchShowAdapter
 
 //        scrollListener =
 //            CustomRecyclerViewScrollListener(

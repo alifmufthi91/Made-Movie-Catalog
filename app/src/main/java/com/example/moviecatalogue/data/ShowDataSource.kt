@@ -6,7 +6,7 @@ import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.vo.Resource
 
-interface MovieCatalogueXDataSource {
+interface ShowDataSource {
 
     fun setMovies(page: Int)
 

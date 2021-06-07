@@ -4,20 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.ShowRepository
 import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import javax.inject.Inject
 
-class SearchViewModel @Inject constructor(val movieCatalogueXRepository: MovieCatalogueXRepository) :
+class SearchViewModel @Inject constructor(val showRepository: ShowRepository) :
     ViewModel() {
     private var category = SHOW_MOVIE
     private var currentPage = 1
     private val query = MutableLiveData<String>("")
 
     private fun setShows(category: String, query: String) {
-        movieCatalogueXRepository.setSearchedShowsByQuery(category, currentPage, query)
+        showRepository.setSearchedShowsByQuery(category, currentPage, query)
     }
 
     internal fun setCategory(category: String) {
@@ -33,7 +33,7 @@ class SearchViewModel @Inject constructor(val movieCatalogueXRepository: MovieCa
     }
 
     internal fun setGenres() {
-        movieCatalogueXRepository.setGenres(getCategory())
+        showRepository.setGenres(getCategory())
     }
 
     var searchedShows: LiveData<List<ShowEntity>> = Transformations.switchMap(query) { query ->
@@ -42,9 +42,9 @@ class SearchViewModel @Inject constructor(val movieCatalogueXRepository: MovieCa
     }
 
     internal fun getShows(): LiveData<List<ShowEntity>> =
-        movieCatalogueXRepository.getSearchedShows()
+        showRepository.getSearchedShows()
 
-    internal fun getGenres(): LiveData<List<GenreEntity>> = movieCatalogueXRepository.getGenres()
+    internal fun getGenres(): LiveData<List<GenreEntity>> = showRepository.getGenres()
 
     internal fun getCategory() = category
 

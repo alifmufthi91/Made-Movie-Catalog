@@ -2,19 +2,19 @@ package com.example.moviecatalogue.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.ShowRepository
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.utils.Constant.SHOW_MOVIE
 import javax.inject.Inject
 
-class SearchByGenreViewModel @Inject constructor(val movieCatalogueXRepository: MovieCatalogueXRepository) :
+class SearchByGenreViewModel @Inject constructor(val showRepository: ShowRepository) :
     ViewModel() {
     private var category = SHOW_MOVIE
     private var currentPage = 1
     private lateinit var selectedGenre: String
 
     internal fun setShows(category: String) {
-        movieCatalogueXRepository.setSearchedShowsByGenre(category, currentPage, selectedGenre)
+        showRepository.setSearchedShowsByGenre(category, currentPage, selectedGenre)
     }
 
     internal fun setGenre(genre: String) {
@@ -26,7 +26,7 @@ class SearchByGenreViewModel @Inject constructor(val movieCatalogueXRepository: 
     }
 
     internal fun getShows(): LiveData<List<ShowEntity>> =
-        movieCatalogueXRepository.getSearchedShows()
+        showRepository.getSearchedShows()
 
     internal fun getCategory(): String = category
 

@@ -18,11 +18,11 @@ import com.example.moviecatalogue.utils.Constant.SHOW_TV
 import com.example.moviecatalogue.vo.Resource
 import javax.inject.Inject
 
-class MovieCatalogueXRepository @Inject constructor(
+class ShowRepository @Inject constructor(
     val remoteDataSource: RemoteDataSource, val localDataSource: LocalDataSource,
     val appExecutors: AppExecutors
 ) :
-    MovieCatalogueXDataSource {
+    ShowDataSource {
 
     private lateinit var moviesLiveData: MutableLiveData<Resource<PagedList<ShowEntity>>>
     private lateinit var tvShowsLiveData: MutableLiveData<Resource<PagedList<ShowEntity>>>
@@ -32,14 +32,14 @@ class MovieCatalogueXRepository @Inject constructor(
     companion object {
 
         @Volatile
-        private var instance: MovieCatalogueXRepository? = null
+        private var instance: ShowRepository? = null
         fun getInstance(
             remoteData: RemoteDataSource,
             localData: LocalDataSource,
             appExecutors: AppExecutors
-        ): MovieCatalogueXRepository =
+        ): ShowRepository =
             instance ?: synchronized(this) {
-                instance ?: MovieCatalogueXRepository(remoteData, localData, appExecutors)
+                instance ?: ShowRepository(remoteData, localData, appExecutors)
             }
     }
 

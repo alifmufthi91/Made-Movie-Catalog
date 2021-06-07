@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.example.moviecatalogue.data.MovieCatalogueXRepository
+import com.example.moviecatalogue.data.ShowRepository
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.vo.Resource
 import javax.inject.Inject
 
 class DetailShowViewModel @Inject constructor(
-    val movieCatalogueXRepository: MovieCatalogueXRepository
+    val showRepository: ShowRepository
 
 ) : ViewModel() {
 
@@ -28,7 +28,7 @@ class DetailShowViewModel @Inject constructor(
     }
 
     var showInfo: LiveData<Resource<ShowEntity>> = Transformations.switchMap(showId) { showId ->
-        movieCatalogueXRepository.getShowDetail(type, showId)
+        showRepository.getShowDetail(type, showId)
     }
 
     fun setDetailData(showId: Long, type: String, position: Int) {
@@ -39,7 +39,7 @@ class DetailShowViewModel @Inject constructor(
 
     fun setFavorite(status: Boolean) {
         showEntity.isFavorited = status
-        movieCatalogueXRepository.updateShow(showEntity)
+        showRepository.updateShow(showEntity)
     }
 
     fun getShow() = showEntity

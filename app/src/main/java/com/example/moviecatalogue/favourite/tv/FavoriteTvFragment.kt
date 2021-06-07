@@ -9,11 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.moviecatalogue.R
+import com.example.moviecatalogue.databinding.FragmentFavouriteTvListBinding
 import com.example.moviecatalogue.shows.ListShowAdapter
 import com.example.moviecatalogue.utils.Constant.SHOW_TV
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_favourite_tv_list.*
 import javax.inject.Inject
 
 /**
@@ -24,19 +23,22 @@ class FavoriteTvFragment : DaggerFragment() {
     @Inject
     lateinit var listViewModel: FavoriteTvViewModel
     private lateinit var listShowAdapter: ListShowAdapter
+    private var _binding: FragmentFavouriteTvListBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_favourite_tv_list, container, false)
+    ): View {
+        _binding = FragmentFavouriteTvListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showRecyclerList()
         Log.d("listCategory", SHOW_TV)
-        listViewModel.getFavoriteTvShows().observe(viewLifecycleOwner, Observer{
+        listViewModel.getFavoriteTvShows().observe(viewLifecycleOwner, Observer {
             Log.d("favorite tvs: ", it.toString())
             if (it != null) {
                 listShowAdapter.submitList(it)
@@ -44,11 +46,16 @@ class FavoriteTvFragment : DaggerFragment() {
         })
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun showRecyclerList() {
         listShowAdapter = ListShowAdapter(this, SHOW_TV)
         listShowAdapter.notifyDataSetChanged()
-        rv_favourite_tv.layoutManager = LinearLayoutManager(activity)
-        rv_favourite_tv.adapter = listShowAdapter
+        binding.rvFavouriteTv.layoutManager = LinearLayoutManager(activity)
+        binding.rvFavouriteTv.adapter = listShowAdapter
 
     }
 

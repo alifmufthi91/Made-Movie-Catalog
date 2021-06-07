@@ -7,16 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.moviecatalogue.R
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
+import com.example.moviecatalogue.databinding.ItemShowGridBinding
 import com.example.moviecatalogue.detail.DetailShowActivity
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.DETAIL_SHOW
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_POSITION
 import com.example.moviecatalogue.detail.DetailShowActivity.Companion.EXTRA_TYPE
 import com.example.moviecatalogue.listener.CustomOnItemClickListener
 import com.example.moviecatalogue.utils.Constant
-import com.example.moviecatalogue.utils.GlideApp
-import kotlinx.android.synthetic.main.item_show_grid.view.*
 
 class SearchShowAdapter(private val activity: Activity, showType: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -40,7 +40,6 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
             Constant.VIEW_TYPE_ITEM
         }
     }
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -67,19 +66,21 @@ class SearchShowAdapter(private val activity: Activity, showType: String) :
     }
 
     inner class GridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val binding = ItemShowGridBinding.bind(itemView)
         fun bind(show: ShowEntity) {
             with(itemView) {
-                GlideApp.with(itemView.context)
+                Glide.with(itemView.context)
                     .load(show.getPortraitPhoto())
                     .placeholder(R.drawable.ic_image_black)
-                    .error(R.drawable.ic_image_error_black)
-                    .into(img_item_photo_grid)
+                    .error(R.drawable.ic_image_not_exist)
+                    .into(binding.imgItemPhotoGrid)
                 show.name?.let {
-                    tv_item_name_grid.text = show.name?.substring(0, it.length.coerceAtMost(50))
+                    binding.tvItemNameGrid.text =
+                        show.name?.substring(0, it.length.coerceAtMost(50))
                 }
                 itemView.setOnClickListener(
                     CustomOnItemClickListener(
-                        adapterPosition,
+                        bindingAdapterPosition,
                         object :
                             CustomOnItemClickListener.OnItemClickCallback {
                             override fun onItemClicked(view: View, position: Int) {
