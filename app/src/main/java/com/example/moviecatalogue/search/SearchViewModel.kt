@@ -14,7 +14,7 @@ class SearchViewModel @Inject constructor(val showRepository: ShowRepository) :
     ViewModel() {
     private var category = SHOW_MOVIE
     private var currentPage = 1
-    private val query = MutableLiveData<String>("")
+    private val query = MutableLiveData("")
 
     private fun setShows(category: String, query: String) {
         showRepository.setSearchedShowsByQuery(category, currentPage, query)

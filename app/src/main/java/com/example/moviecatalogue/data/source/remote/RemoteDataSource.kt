@@ -11,7 +11,6 @@ import com.example.moviecatalogue.utils.EspressoIdlingResource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(

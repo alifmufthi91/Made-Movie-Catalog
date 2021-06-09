@@ -47,11 +47,7 @@ class HomeActivityTest {
                 click()
             )
         )
-        onView(withId(R.id.tv_show_title)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_show_overview)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_show_release)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_show_genre)).check(matches(isDisplayed()))
-        onView(withId(R.id.show_cover)).check(matches(isDisplayed()))
+        onView(withId(R.id.iv_favorites)).check(matches(isDisplayed()))
     }
 
     @Test

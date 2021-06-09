@@ -3,9 +3,7 @@ package com.example.moviecatalogue.shows.movie
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.example.moviecatalogue.data.source.LocalMain
 import com.example.moviecatalogue.data.ShowRepository
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.vo.Resource

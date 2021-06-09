@@ -13,7 +13,7 @@ import javax.inject.Inject
 class MovieViewModel @Inject constructor(val showRepository: ShowRepository) :
     ViewModel() {
 
-    private val currentPage = MutableLiveData<Int>(1)
+    private val currentPage = MutableLiveData(1)
 
     internal fun setPage(page: Int) {
         currentPage.value = page

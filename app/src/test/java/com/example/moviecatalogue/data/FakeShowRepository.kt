@@ -5,14 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.moviecatalogue.data.source.local.LocalDataSource
+import com.example.moviecatalogue.data.source.local.entity.GenreEntity
 import com.example.moviecatalogue.data.source.local.entity.ShowEntity
 import com.example.moviecatalogue.data.source.remote.ApiResponse
 import com.example.moviecatalogue.data.source.remote.RemoteDataSource
+import com.example.moviecatalogue.data.source.remote.response.GenreResponse
 import com.example.moviecatalogue.data.source.remote.response.ShowResponse
 import com.example.moviecatalogue.utils.AppExecutors
 import com.example.moviecatalogue.utils.Constant
 import com.example.moviecatalogue.vo.Resource
-import javax.inject.Inject
 
 class FakeShowRepository constructor(
     private val remoteDataSource: RemoteDataSource,
@@ -144,6 +145,105 @@ class FakeShowRepository constructor(
                 }
             }
         }.asLiveData()
+    }
+
+    override fun getFavoriteMovies(): LiveData<PagedList<ShowEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(100)
+            .build()
+        return LivePagedListBuilder(
+            localDataSource.getFavouriteShowsByType(
+                Constant.SHOW_MOVIE
+            ), config
+        ).build()
+    }
+
+    override fun getFavoriteTvShows(): LiveData<PagedList<ShowEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(100)
+            .build()
+        return LivePagedListBuilder(
+            localDataSource.getFavouriteShowsByType(
+                Constant.SHOW_TV
+            ), config
+        ).build()
+    }
+
+    override fun getGenres(category: String): LiveData<List<GenreEntity>> {
+        val resultLiveData = MutableLiveData<List<GenreEntity>>()
+        val arrGenres = ArrayList<GenreEntity>()
+        remoteDataSource.getGenres(
+            category,
+            object : RemoteDataSource.CustomCallback<ApiResponse<List<GenreResponse>>> {
+                override fun onResponse(data: ApiResponse<List<GenreResponse>>) {
+                    data.body.forEach {
+                        arrGenres.add(GenreEntity(it.id, it.name, category))
+                    }
+                    resultLiveData.postValue(arrGenres)
+                }
+
+                override fun onError(t: Throwable) {
+                    throw t
+                }
+            })
+        return resultLiveData
+    }
+
+    override fun getSearchedShowsByGenre(
+        category: String,
+        page: Int,
+        genre: String
+    ): LiveData<List<ShowEntity>> {
+        val resultLiveData = MutableLiveData<List<ShowEntity>>()
+        remoteDataSource.getSearchedShowByGenre(
+            category,
+            page,
+            genre,
+            object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
+                override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                    val showList = ArrayList<ShowEntity>()
+                    for (response in data.body) {
+                        val show = ShowEntity(response, category)
+                        showList.add(show)
+                    }
+                    resultLiveData.postValue(showList)
+                }
+
+                override fun onError(t: Throwable) {
+                    throw t
+                }
+
+            })
+        return resultLiveData
+    }
+
+    override fun getSearchedShowsByQuery(
+        category: String,
+        page: Int,
+        query: String
+    ): LiveData<List<ShowEntity>> {
+        val resultLiveData = MutableLiveData<List<ShowEntity>>()
+        remoteDataSource.getSearchedShowByQuery(
+            category,
+            page,
+            query,
+            object : RemoteDataSource.CustomCallback<ApiResponse<List<ShowResponse>>> {
+                override fun onResponse(data: ApiResponse<List<ShowResponse>>) {
+                    val showList = ArrayList<ShowEntity>()
+                    for (response in data.body) {
+                        val show = ShowEntity(response, category)
+                        showList.add(show)
+                    }
+                    resultLiveData.postValue(showList)
+                }
+
+                override fun onError(t: Throwable) {
+                    throw t
+                }
+            })
+        return resultLiveData
     }
 
 }
